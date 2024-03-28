@@ -11,7 +11,7 @@ echo Assistant pour reconfigurer ARCH Plasma après un formatage
 echo ----------------------------------------------------
 
 echo Config pacman
-sudo sed -i 's/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
 sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
 
