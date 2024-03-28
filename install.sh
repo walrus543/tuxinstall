@@ -6,9 +6,16 @@ if [[ $(whoami) == 'root' ]]; then
     exit 1
 fi
 
-echo ----------------------------------------------------
-echo Assistant pour reconfigurer ARCH Plasma après un formatage
-echo ----------------------------------------------------
+#Coloration du texte
+export RESET=$(tput sgr0)
+export RED=$(tput setaf 1)
+export GREEN=$(tput setaf 2)
+export YELLOW=$(tput setaf 3)
+export BLUE=$(tput setaf 4)
+
+echo \n----------------------------------------------------\n
+echo Assistant pour reconfigurer ARCH Plasma après un formatage\n
+echo ----------------------------------------------------\n
 
 echo Config pacman
 sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
