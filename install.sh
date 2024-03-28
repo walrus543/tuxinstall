@@ -21,18 +21,46 @@ sudo pacman -Syu
 echo Installation de paquets relatifs à OSHeden
 sudo pacman -S --needed dos2unix xclip xsel npm fdupes
 
-echo Creation des liens symboliques pour les thèmes
 if [ -d ~/AndroidAll/Thèmes_Shorts/ ]
-    then echo Créationd en-cours
+    then echo Creation des liens symboliques pour les thèmes
+    ln -s /home/arnaud/Thèmes/Alta/app/src/main/ Alta
+    ln -s /home/arnaud/Thèmes/Altess/app/src/main Altess
+    ln -s /home/arnaud/Thèmes/Azulox/app/src/main/ Azulox
+    ln -s /home/arnaud/Thèmes/Black_Army_Diamond/app/src/main/ BlackArmyDiamond
+    ln -s /home/arnaud/Thèmes/Black_Army_Emerald/app/src/main/ BlackArmyEmerald
+    ln -s /home/arnaud/Thèmes/Black_Army_Omni/app/src/main/ BlackArmyOmni
+    ln -s /home/arnaud/Thèmes/Black_Army_Ruby/app/src/main/ BlackArmyRuby
+    ln -s /home/arnaud/Thèmes/Black_Army_Sapphire/app/src/main/ BlackArmySapphire
+    ln -s /home/arnaud/Thèmes/Caya/app/src/main/ Caya
+    ln -s /home/arnaud/Thèmes/Ciclo/app/src/main/ Ciclo
+    ln -s /home/arnaud/Thèmes/Darky/app/src/main/ Darky
+    ln -s /home/arnaud/Thèmes/Darly/app/src/main/ Darly
+    ln -s /home/arnaud/Thèmes/Distraction_Free/app/src/main/ Distraction
+    ln -s /home/arnaud/Thèmes/Ecliptic/app/src/main/ Ecliptic
+    ln -s /home/arnaud/Thèmes/Friendly/app/src/main/ Friendly
+    ln -s /home/arnaud/Thèmes/GIN/app/src/main/ GIN
+    ln -s /home/arnaud/Thèmes/GoldOx/app/src/main/ GoldOx
+    ln -s /home/arnaud/Thèmes/Goody/app/src/main/ Goody
+    ln -s /home/arnaud/Thèmes/Lox/app/src/main/ Lox
+    ln -s /home/arnaud/Thèmes/Luzicon/app/src/main/ Luzicon
+    ln -s /home/arnaud/Thèmes/NubeReloaded/app/src/main/ NubeReloaded
+    ln -s /home/arnaud/Thèmes/Oscuro/app/src/main/ Oscuro
+    ln -s /home/arnaud/Thèmes/Raya_Black/app/src/main/ RayaBlack
+    ln -s /home/arnaud/Thèmes/RayaReloaded/app/src/main/ RayaReloaded
+    ln -s /home/arnaud/Thèmes/Shapy/app/src/main/ Shapy
+    ln -s /home/arnaud/Thèmes/Sinfonia/app/src/main/ Sinfonia
+    ln -s /home/arnaud/Thèmes/Spark/app/src/main/ Spark
+    ln -s /home/arnaud/Thèmes/Stony/app/src/main/ Stony
+    ln -s /home/arnaud/Thèmes/Supernova/app/src/main/ Supernova
+    ln -s /home/arnaud/Thèmes/Whirl/app/src/main/ Whirl
+    ln -s /home/arnaud/Thèmes/WhirlBlack/app/src/main/ WhirlBlack
     ln -s /home/arnaud/Thèmes/Whirless/app/src/main Whirless
-
-
-
-
-
+    ln -s /home/arnaud/Thèmes/WhitArt/app/src/main/ WhitArt
+    ln -s /home/arnaud/Thèmes/Whity/app/src/main/ Whity
+fi
 
 echo Installation de divers utilitaires généraux
-sudo pacman -S --needed bat btop duf element-desktop eza fastfetch firefox flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird timeshift transmission-qt yt-dlp
+sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird timeshift transmission-qt yt-dlp
 
 echo Installation de divers paquets propres à Arch
 sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
@@ -94,9 +122,21 @@ echo Activation du pavé numérique
 echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null
 echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
 
+echo Syncthing
+sudo systemctl --user enable syncthing.service
+sudo systemctl --user start syncthing.service
+
+echo Config bash et zsh
+cat <<EOF >> ~/.bashrc
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+EOF
+
+echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
+echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+sed 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
+sed 's/^plugins=.*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
+
 echo Nettoyage de tuxinstall
 rm -rf ~/tuxinstall
-
-#TODO
-#syncthing
-#zsh: config du fichier, activation plugin, thème...
