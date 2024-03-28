@@ -1,6 +1,4 @@
 #!/bin/bash
-# How to use
-# sudo pacman -S --needed git base-devel && git clone https://gist.githubusercontent.com/walrus543/413a22f4213d9cdab8f8aada51f27a83/raw/8b28d816a2d41f60108ab1073f03c54b144884df/install.sh ~/InstallPerso && cd ~/InstallPerso && chmod +x ./install.sh && ./install.sh
 
 # On quitte tout de suite si le script est exécuté en tant que root
 if [[ $(whoami) == 'root' ]]; then
