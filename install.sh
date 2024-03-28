@@ -33,8 +33,15 @@ git clone https://aur.archlinux.org/paru.git
 cd paru
 makepkg -si
 
+echo Paru NewsOnUpdate
+sudo sed -i '/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
+
 echo Installation de paquets avec paru
 paru -S brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils
+
+echo Gestion de la carte réseau Realtek
+echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
 
 echo "Activation de l'imprimante et du bluetooth au démarrage"
 sudo systemctl enable --now cups.socket
@@ -69,12 +76,14 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 echo Installation du thème powerlevel10k
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
+echo Désactiver le bruit lors de la recherche
+echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+
 echo Nettoyage de tuxinstall
 rm -rf ~/tuxinstall
 
 #TODO
-#Gérer la config de pacman.conf / paru.conf
-#Désactiver le bruit quand une recherche ne trouve aucun résultat
 #Anomalie Wifi Realtek Lenovo L340
 #pika - source actuelle ?
 #obsidian
