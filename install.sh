@@ -84,7 +84,7 @@ else
 fi
     # Que paru soit installé ou pas, on contrôle les news
     echo Paru NewsOnUpdate
-    sudo sed -i '/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
+    sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
     
 echo Installation de paquets avec paru
 paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
