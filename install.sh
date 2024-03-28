@@ -21,8 +21,18 @@ sudo pacman -Syu
 echo Installation de paquets relatifs à OSHeden
 sudo pacman -S --needed dos2unix xclip xsel npm fdupes
 
+echo Creation des liens symboliques pour les thèmes
+if [ -d ~/AndroidAll/Thèmes_Shorts/ ]
+    then echo Créationd en-cours
+    ln -s /home/arnaud/Thèmes/Whirless/app/src/main Whirless
+
+
+
+
+
+
 echo Installation de divers utilitaires généraux
-sudo pacman -S --needed bat btop duf element-desktop eza fastfetch firefox flameshot kdeconnect kio-admin meld ncdu pdfarranger simple-scan systemdgenie telegram-desktop thunar thunderbird timeshift transmission-qt yt-dlp
+sudo pacman -S --needed bat btop duf element-desktop eza fastfetch firefox flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird timeshift transmission-qt yt-dlp
 
 echo Installation de divers paquets propres à Arch
 sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
@@ -37,7 +47,7 @@ echo Paru NewsOnUpdate
 sudo sed -i '/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
 
 echo Installation de paquets avec paru
-paru -S brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils
+paru -S brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
 
 echo Gestion de la carte réseau Realtek
 echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
@@ -80,16 +90,13 @@ echo Désactiver le bruit lors de la recherche
 echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
 echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
 
+echo Activation du pavé numérique
+echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null
+echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
+
 echo Nettoyage de tuxinstall
 rm -rf ~/tuxinstall
 
 #TODO
-#Anomalie Wifi Realtek Lenovo L340
-#pika - source actuelle ?
-#obsidian
 #syncthing
-#pavé numérique
-#samba/smb
 #zsh: config du fichier, activation plugin, thème...
-
-#sudo pacman -S --needed git base-devel && git clone https://github.com/Cardiacman13/Architect.git ~/Architect && cd ~/Architect && chmod +x ./architect.sh && ./architect.sh
