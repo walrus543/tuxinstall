@@ -75,7 +75,7 @@ echo Paru NewsOnUpdate
 sudo sed -i '/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
 
 echo Installation de paquets avec paru
-paru -S brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
+paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
 
 echo Gestion de la carte réseau Realtek
 echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
@@ -87,7 +87,7 @@ sudo systemctl enable cups.service
 sudo systemctl enable --now bluetooth.service
 
 echo Installation de VirtualBox pour linux et linux-lts
-sudo pacman -S virtualbox virtualbox-guest-iso virtualbox-host-modules-arch virtualbox-host-dkms
+sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-modules-arch virtualbox-host-dkms
 
 echo Activation du nettoyage du cache des paquets
 sudo systemctl enable paccache.timer
@@ -99,7 +99,7 @@ echo Installation du dépôt officiel Flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 echo Installation de ZSH et configuration
-sudo pacman -S zsh
+sudo pacman -S --needed zsh
 #definir zsh par défaut
 
 echo Installation Oh My ZSH
