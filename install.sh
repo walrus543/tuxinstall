@@ -130,24 +130,35 @@ echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
 echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
 
 echo Activation du pavé numérique
-echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null
-echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
+[[ -f /etc/sddm.conf ]] && echo Le fichier sddm.conf existe déjà || echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
 
 echo Syncthing
 sudo systemctl --user enable syncthing.service
 sudo systemctl --user start syncthing.service
 
 echo Config bash et zsh
-cat <<EOF >> ~/.bashrc
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if grep -Fxq "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
+then echo config bash ok
+else
+#    cat <<EOF >> ~/.bashrc
+#    if [ -f ~/.bash_aliases ]; then
+#        . ~/.bash_aliases
+#    fi
+#    EOF
 fi
-EOF
 
-echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
-echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+if grep -Fxq "source $HOME/.bash_aliases" ~/.zshrc;
+then echo source bash_aliases déjà ok
+else echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
+fi
+
+if grep -Fxq "alias lsl" ~/.zshrc;
+then echo "l'alias lsl existe déjà"
+else echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+fi
+
 sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
-sed -i 's/^plugins=.*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
+sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
 
 echo Nettoyage de tuxinstall
 rm -rf ~/tuxinstall
