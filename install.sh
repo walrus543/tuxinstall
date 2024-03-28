@@ -10,6 +10,11 @@ echo ----------------------------------------------------
 echo Assistant pour reconfigurer ARCH Plasma après un formatage
 echo ----------------------------------------------------
 
+echo Config pacman
+sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+sudo sed -i '/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+
 echo Actualisation des dépôts et mises à jour
 sudo pacman -Syu
 
@@ -63,6 +68,9 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 
 echo Installation du thème powerlevel10k
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+echo Nettoyage de tuxinstall
+rm -rf ~/tuxinstall
 
 #TODO
 #Gérer la config de pacman.conf / paru.conf
