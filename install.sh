@@ -14,8 +14,8 @@ if [[ $(whoami) == 'root' ]]; then
     echo Interdiction de lancer ce script avec le compte root.
     echo ----------------------------------------------------${RESET}
     echo ""
-    cd ..
-    #rm -rf tuxinstall
+    cd ~
+    rm -rf ~/tuxinstall && echo "Dossier tuxinstall supprimé"
     exit 1
 fi
 
@@ -291,5 +291,6 @@ then
     echo ----------------------------------------------------${RESET}
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
-    rm -rf ~/tuxinstall
+    cd ~
+    rm -rf ~/tuxinstall && echo "Dossier tuxinstall supprimé"
 fi
