@@ -33,6 +33,7 @@ then
     sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
     sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+    echo "Configuration pacman terminée"
 
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -129,6 +130,7 @@ then
     echo ----------------------------------------------------${RESET}
     echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
     echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -137,6 +139,7 @@ then
     sudo systemctl enable --now cups.socket
     sudo systemctl enable cups.service
     sudo systemctl enable --now bluetooth.service
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -149,6 +152,7 @@ then
     echo Activation du nettoyage du cache des paquets
     echo ----------------------------------------------------${RESET}
     sudo systemctl enable paccache.timer
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -161,6 +165,7 @@ then
     echo Installation du dépôt officiel Flatpak
     echo ----------------------------------------------------${RESET}
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -195,6 +200,7 @@ then
     then echo ${GREEN}"=> Blacklist snd_pcsp déjà configuré"${RESET}
     else echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -204,6 +210,7 @@ then
     then echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
     else echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
     fi
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -211,6 +218,7 @@ then
     echo ----------------------------------------------------${RESET}
     sudo systemctl --user enable syncthing.service
     sudo systemctl --user start syncthing.service
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -235,6 +243,8 @@ then
     
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
     sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
+
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -242,6 +252,8 @@ then
     echo ----------------------------------------------------${RESET}
     cd ~
     rm -rf ~/tuxinstall
+
+    echo ${GREEN}"Fin du process. Merci et bonne journée."${RESET}
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
     rm -rf ~/tuxinstall
