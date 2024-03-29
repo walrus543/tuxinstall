@@ -117,34 +117,61 @@ then
         echo ${BLUE}Paru NewsOnUpdate${RESET}
         sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
         
-    echo ${BLUE}Installation de paquets avec paru${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Installation de paquets avec paru
+    echo ----------------------------------------------------${RESET}
     paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
     
-    echo ${BLUE}Gestion de la carte réseau Realtek${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Gestion de la carte réseau Realtek
+    echo ----------------------------------------------------${RESET}
     echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
     echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
     
-    echo ${BLUE}"Activation de l'imprimante et du bluetooth au démarrage"${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo "Activation de l'imprimante et du bluetooth au démarrage"
+    echo ----------------------------------------------------${RESET}
     sudo systemctl enable --now cups.socket
     sudo systemctl enable cups.service
     sudo systemctl enable --now bluetooth.service
     
-    echo ${BLUE}Installation de VirtualBox pour linux et linux-lts${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo "Installation de VirtualBox + Guest + Host DKMS"
+    echo ----------------------------------------------------${RESET}
     sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-dkms
     
-    echo ${BLUE}Activation du nettoyage du cache des paquets${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Activation du nettoyage du cache des paquets
+    echo ----------------------------------------------------${RESET}
     sudo systemctl enable paccache.timer
     
-    echo ${BLUE}Installation de paquets pour carte graphique NVIDIA${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Installation de paquets pour carte graphique NVIDIA
+    echo ----------------------------------------------------${RESET}
     sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
     
-    echo ${BLUE}Installation du dépôt officiel Flatpak${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Installation du dépôt officiel Flatpak
+    echo ----------------------------------------------------${RESET}
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     
-    echo ${BLUE}Installation de ZSH et configuration${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Installation de ZSH et configuration
+    echo ----------------------------------------------------${RESET}
     sudo pacman -S --needed zsh
     
-    echo ${BLUE}Oh My ZSH${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Oh My ZSH
+    echo ----------------------------------------------------${RESET}
     [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     
     echo ${BLUE}Installation zsh-autosuggestions${RESET}
@@ -156,7 +183,10 @@ then
     echo ${BLUE}Installation du thème powerlevel10k${RESET}
     [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}=> powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     
-    echo ${BLUE}Désactiver le bruit lors de la recherche${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Désactiver le bruit lors de la recherche
+    echo ----------------------------------------------------${RESET}
     if grep -Fxq "blacklist pcspkr" /etc/modprobe.d/nobeep.conf;
     then echo ${GREEN}"=> Blacklist pcspkr déjà configuré"${RESET}
     else echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
@@ -166,17 +196,26 @@ then
     else echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
     
-    echo ${BLUE}Activation du pavé numérique pour SDDM${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Activation du pavé numérique pour SDDM
+    echo ----------------------------------------------------${RESET}
     if grep -Fxq "Numlock=on" /etc/sddm.conf;
     then echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
     else echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
     fi
     
-    echo ${BLUE}Syncthing au démarrage${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Syncthing au démarrage
+    echo ----------------------------------------------------${RESET}
     sudo systemctl --user enable syncthing.service
     sudo systemctl --user start syncthing.service
     
-    echo ${BLUE}Config bash et zsh${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Config bash et zsh
+    echo ----------------------------------------------------${RESET}
     if grep -Fxq "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
     then
         echo ${GREEN}=> config bash ok${RESET}
@@ -197,7 +236,10 @@ then
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
     sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
     
-    echo ${BLUE}Nettoyage de tuxinstall${RESET}
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Nettoyage de tuxinstall
+    echo ----------------------------------------------------${RESET}
     cd ~
     rm -rf ~/tuxinstall
 else
