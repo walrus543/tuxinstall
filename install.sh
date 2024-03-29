@@ -15,12 +15,12 @@ export BLUE=$(tput setaf 4)
 
 echo ""
 echo ${BLUE}----------------------------------------------------
-echo Assistant pour reconfigurer ARCH Plasma après un formatage
+echo Assistant pour configurer ARCH Plasma après un formatage
 echo ----------------------------------------------------${RESET}
 echo ""
 
 # get confirmation
-read -t 15 -N 1 -p "Prêt à faire la post install de Arch sur KDE Plasma?. On continue? (y/N) " start
+read -t 15 -N 1 -p "Prêt à faire la post install de Arch sur KDE Plasma? (y/N) " start
 echo 
  
 # if answer is yes within 15 seconds start installing...
@@ -105,6 +105,7 @@ then
     if [[ "$whereisparu" -eq 'not' ]]; then
 
         # get confirmation
+        echo ""
         read -t 15 -N 1 -p "Voulez-vous installer paru ? (y/N) " paruinstall
         echo 
          
@@ -196,16 +197,16 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Oh My ZSH
     echo ----------------------------------------------------${RESET}
-    [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && echo ${GREEN}"=> Installation de Oh My ZSH terminée"${RESET}
     
     echo ${BLUE}Installation zsh-autosuggestions${RESET}
-    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}=> zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}=> zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && echo ${GREEN}"=> Installation de zsh-autosuggestions terminée"${RESET}
     
     echo ${BLUE}Installation zsh-syntax-highlighting${RESET}
-    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && echo ${GREEN}"=> Installation de zsh-syntax-highlighting terminée"${RESET}
     
     echo ${BLUE}Installation du thème powerlevel10k${RESET}
-    [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}=> powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}=> powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && echo ${GREEN}"=> Installation du thème powerlevel10k terminée"${RESET}
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -235,9 +236,15 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Syncthing au démarrage
     echo ----------------------------------------------------${RESET}
-    sudo systemctl --user enable syncthing.service
-    sudo systemctl --user start syncthing.service
-    echo Configuration terminée
+    synchtingrun=$(systemctl --user status syncthing.service | grep enabled)
+    if [[ "$synchtingrun" == *"enabled"* ]];
+    then
+        echo "Syncthing est déjà actif"
+    else
+        echo "Activation du service"
+        sudo systemctl --user enable syncthing.service
+        sudo systemctl --user start syncthing.service
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -270,9 +277,12 @@ then
     echo Nettoyage de tuxinstall
     echo ----------------------------------------------------${RESET}
     cd ~
-    rm -rf ~/tuxinstall
+    rm -rf ~/tuxinstall && echo "Dossier tuxinstall supprimé"
 
-    echo ${GREEN}"Fin du process. Merci et bonne journée."${RESET}
+    echo ""
+    echo ${GREEN}----------------------------------------------------
+    echo "Fin du process. Merci et bonne journée."
+    echo ----------------------------------------------------${RESET}
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
     rm -rf ~/tuxinstall
