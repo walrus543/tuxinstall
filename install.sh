@@ -306,21 +306,27 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Config bash et zsh
     echo ----------------------------------------------------${RESET}
-    if grep -q "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
+    if grep -q "bash_aliases" ~/.bashrc;
     then
         echo ${GREEN}=> config bash ok${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
+        echo "=> ajout bash_aliases dans .bashrc"
     fi
     
-    if grep -q "source $HOME/.bash_aliases" ~/.zshrc;
-    then echo ${GREEN}=> source bash_aliases déjà ok${RESET}
-    else echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null && echo bash_aliases ajouté dans le fichier de configuration .zshrc
+    if grep -q "bash_aliases" ~/.zshrc;
+    then
+        echo ${GREEN}=> source bash_aliases déjà ok${RESET}
+    else
+        echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
+        echo "=> bash_aliases ajouté en source dans .zshrc"
     fi
     
     if grep -q "alias lsl" ~/.zshrc;
-    then echo ${GREEN}"=> l'alias lsl existe déjà"${RESET}
-    else echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+    then
+        echo ${GREEN}"=> l'alias lsl existe déjà"${RESET}
+    else
+        echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
     fi
     
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
