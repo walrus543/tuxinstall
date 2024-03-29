@@ -114,7 +114,7 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Installation de divers paquets propres à Arch
     echo ----------------------------------------------------${RESET}
-    sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
+    sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
 
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -260,7 +260,22 @@ then
     [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && echo ${GREEN}"=> Installation de zsh-syntax-highlighting terminée"${RESET}
     
     echo ${BLUE}Installation du thème powerlevel10k${RESET}
-    [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}=> powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && echo ${GREEN}"=> Installation du thème powerlevel10k terminée"${RESET}
+    if [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]
+    then
+        echo ${GREEN}=> powerlevel10k déjà installé${RESET}
+    else
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+        echo ${GREEN}"=> Installation du thème powerlevel10k terminée"${RESET}
+        echo ${YELLOW}"=> Téléchargement des polices sur le bureau. À installer manuellement !"${RESET}
+        mkdir -p ~/Bureau/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/Bureau/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P ~/Bureau/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P ~/Bureau/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P ~/Bureau/Polices_a_installer
+        echo ""
+        echo ${GREEN}"=> Téléchargement des polices terminé"${RESET}
+        sleep 2
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
