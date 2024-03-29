@@ -25,6 +25,16 @@ echo "Assistant pour configurer ARCH Plasma après un formatage"
 echo ----------------------------------------------------${RESET}
 echo ""
 
+OSvm=$(sudo dmidecode -s system-product-name)
+if [[ "$OSvm" = 'VirtualBox' ]]
+then
+    vm=true
+    echo ${YELLOW}"VirtualBox détecté"${RESET}
+    sleep 1
+else
+    vm=false
+fi
+
 # get confirmation
 read -t 15 -N 1 -p "Prêt à faire la post install de Arch sur KDE Plasma? (y/N) " start
 echo 
@@ -205,12 +215,17 @@ then
     sudo systemctl enable cups.service
     sudo systemctl enable --now bluetooth.service
     echo Configuration terminée
-    
-    echo ""
-    echo ${BLUE}----------------------------------------------------
-    echo "Installation de VirtualBox + Guest + Host DKMS"
-    echo ----------------------------------------------------${RESET}
-    sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-dkms
+
+    if [[ "$vm" = true ]]
+    then
+        echo ""
+        echo ${BLUE}----------------------------------------------------
+        echo "Installation de VirtualBox + Guest + Host DKMS"
+        echo ----------------------------------------------------${RESET}
+        sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-dkms
+    else
+        echo "Virtualbox ignoré car on est dans une vm"
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
