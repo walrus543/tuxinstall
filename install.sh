@@ -80,16 +80,16 @@ then
     
     echo ${BLUE}Installation de divers paquets propres à Arch${RESET}
     sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
-    
-    paru --version; if echo $? = 0;
-    then
-        echo ${GREEN}=> paru déjà installé${RESET}
+
+    whereisparu=$(which paru | cut -f2 -d " ")
+    if [[ "$whereisparu" -eq 'not' ]]; then
+            echo ${BLUE}Installation de paru${RESET}
+            sudo pacman -S --needed git base-devel
+            git clone https://aur.archlinux.org/paru.git
+            cd paru
+            makepkg -si
     else
-        echo ${BLUE}Installation de paru${RESET}
-        sudo pacman -S --needed git base-devel
-        git clone https://aur.archlinux.org/paru.git
-        cd paru
-        makepkg -si
+        echo ${GREEN}=> paru déjà installé${RESET}
     fi
         # Que paru soit installé ou pas, on contrôle les news
         echo ${BLUE}Paru NewsOnUpdate${RESET}
@@ -163,7 +163,7 @@ then
     fi
     
     if grep -Fxq "source $HOME/.bash_aliases" ~/.zshrc;
-    then echo source bash_aliases déjà ok${RESET}
+    then echo ${GREEN}=> source bash_aliases déjà ok${RESET}
     else echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null && echo bash_aliases ajouté dans le fichier de configuration .zshrc
     fi
     
