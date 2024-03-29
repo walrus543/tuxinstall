@@ -309,7 +309,7 @@ then
     echo ----------------------------------------------------${RESET}
     if grep -q "bash_aliases" ~/.bashrc;
     then
-        echo ${GREEN}=> config bash ok${RESET}
+        echo ${GREEN}"=> config bash ok"${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
         echo "=> ajout bash_aliases dans .bashrc"
@@ -317,7 +317,7 @@ then
     
     if grep -q "bash_aliases" ~/.zshrc;
     then
-        echo ${GREEN}=> source bash_aliases déjà ok${RESET}
+        echo ${GREEN}"=> source bash_aliases déjà ok"${RESET}
     else
         echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
         echo "=> bash_aliases ajouté en source dans .zshrc"
