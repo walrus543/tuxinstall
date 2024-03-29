@@ -157,16 +157,45 @@ then
         echo ${BLUE}----------------------------------------------------
         echo Installation de paquets avec paru
         echo ----------------------------------------------------${RESET}
-        paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
+        paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils pika-backup
     fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Gestion de la carte réseau Realtek
+    echo Gestion de la carte réseau Realtek RTL8821CE
     echo ----------------------------------------------------${RESET}
-    echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-    echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-    echo Configuration terminée
+    realtek=$(lspci | grep -E -i --color 'network|ethernet|wireless|wi-fi' | grep RTL8821CE)
+    if [[ "$realtek" == *"RTL8821CE"* ]];
+    then
+        echo "=> Carte réseau Realtek RTL8821CE détectée"*
+
+        whereisparu3=$(which paru | cut -f2 -d " ")
+        if [[ "$whereisparu3" -eq 'not' ]]; then
+            echo ${YELLOW}"paru non installé donc le paquet rtl8821ce-dkms-git ne sera pas installé"${RESET}
+        else
+            echo "=> Installation du paquet rtl8821ce-dkms-git"
+            paru -S rtl8821ce-dkms-git
+        fi
+
+        if [[ -f /etc/modprobe.d/blacklist.conf ]]
+        then
+            blacklistrealtek=$(grep "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf)
+            if [[ "$blacklistrealtek" == *"rtw88_8821ce"* ]];
+            then
+                echo ${GREEN}"=> Fichier blacklist.conf déjà à jour"${RESET}
+            else   
+                echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                echo "=> Fichier blacklist.conf mis à jour"
+            fi
+        else
+            echo "=> Création du fichier blacklist.conf"
+            echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+            echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+        fi
+    else
+        echo "Etape ignorée. Carte réseau Realtek RTL8821CE non détectée"
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -194,7 +223,16 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Installation de paquets pour carte graphique NVIDIA
     echo ----------------------------------------------------${RESET}
-    sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
+ # get confirmation
+    echo ""
+    read -t 15 -N 1 -p "Besoin des paquets pour NVIDIA ? (y/N) " nvidia
+     
+    # if answer is yes within 15 seconds start installing...
+    if [ "${nvidia,,}" == "y" ]
+        then
+            echo "=> Installation de nividia pour kernel Linux et Linux LTS"
+            sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -228,11 +266,11 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Désactiver le bruit lors de la recherche
     echo ----------------------------------------------------${RESET}
-    if grep -Fxq "blacklist pcspkr" /etc/modprobe.d/nobeep.conf;
+    if grep -q "blacklist pcspkr" /etc/modprobe.d/nobeep.conf;
     then echo ${GREEN}"=> Blacklist pcspkr déjà configuré"${RESET}
     else echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
-    if grep -Fxq "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf;
+    if grep -q "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf;
     then echo ${GREEN}"=> Blacklist snd_pcsp déjà configuré"${RESET}
     else echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
@@ -242,9 +280,11 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Activation du pavé numérique pour SDDM
     echo ----------------------------------------------------${RESET}
-    if grep -Fxq "Numlock=on" /etc/sddm.conf;
-    then echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
-    else echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
+    if grep -q "Numlock=on" /etc/sddm.conf;
+    then
+        echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
+    else
+        echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
     fi
     echo Configuration terminée
     
@@ -266,19 +306,19 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Config bash et zsh
     echo ----------------------------------------------------${RESET}
-    if grep -Fxq "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
+    if grep -q "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
     then
         echo ${GREEN}=> config bash ok${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
     fi
     
-    if grep -Fxq "source $HOME/.bash_aliases" ~/.zshrc;
+    if grep -q "source $HOME/.bash_aliases" ~/.zshrc;
     then echo ${GREEN}=> source bash_aliases déjà ok${RESET}
     else echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null && echo bash_aliases ajouté dans le fichier de configuration .zshrc
     fi
     
-    if grep -Fxq "alias lsl" ~/.zshrc;
+    if grep -q "alias lsl" ~/.zshrc;
     then echo ${GREEN}"=> l'alias lsl existe déjà"${RESET}
     else echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
     fi
