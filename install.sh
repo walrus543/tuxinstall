@@ -178,5 +178,6 @@ then
     echo ${BLUE}Nettoyage de tuxinstall${RESET}
     rm -rf ~/tuxinstall
 else
-    echo "Pas de soucis, on s'arrête là :-)"
+    echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
+    rm -rf ~/tuxinstall
 fi
