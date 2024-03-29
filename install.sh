@@ -176,8 +176,10 @@ then
     sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
     
     echo ${BLUE}Nettoyage de tuxinstall${RESET}
+    cd ~
     rm -rf ~/tuxinstall
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
+    cd ~
     rm -rf ~/tuxinstall
 fi
