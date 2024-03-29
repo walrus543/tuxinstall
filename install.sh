@@ -33,10 +33,9 @@ then
     echo ${YELLOW}"VirtualBox détecté"${RESET}
     sleep $sleepquick
 
-    # get confirmation
-    read -t 15 -N 1 -p "Besoin de configurer les dossiers partagés ? (y/N) " vmshare
+    read -p "Besoin de configurer les dossiers partagés ? (y/N) " -n 1 -r
     echo 
-    if [ "${vmshare,,}" == "y" ]
+    if [[ $REPLY =~ ^[Yy]$ ]]
     then
         sudo usermod -a -G vboxsf $USER
         sudo chown -R $USER:users /media/
@@ -46,12 +45,9 @@ then
     fi
 fi
 
-# get confirmation
-read -t 15 -N 1 -p "Prêt à faire la post install de Arch sur KDE Plasma? (y/N) " start
+read -p "Prêt à faire la post install de Arch sur KDE Plasma? (y/N) " -n 1 -r
 echo 
- 
-# if answer is yes within 15 seconds start installing...
-if [ "${start,,}" == "y" ]
+if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -75,15 +71,12 @@ then
     echo "Installation de paquets relatifs à OSHeden"
     echo ----------------------------------------------------${RESET}
 
-    # get confirmation
-        echo ""
-        read -t 15 -N 1 -p "Besoin des paquets pour OSheden ? (y/N) " osheden
-         
-        # if answer is yes within 15 seconds start installing...
-        if [ "${osheden,,}" == "y" ]
-            then
-                sudo pacman -S --needed dos2unix xclip xsel npm fdupes
-        fi
+    read -p "Besoin des paquets pour OSheden ? (y/N) " -n 1 -r
+    echo 
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        sudo pacman -S --needed dos2unix xclip xsel npm fdupes
+    fi
         
     if [ -d ~/AndroidAll/Thèmes_Shorts/ ]
         then
@@ -150,19 +143,16 @@ then
     
     whereisparu=$(which paru | cut -f2 -d " ")
     if [[ "$whereisparu" -eq 'not' ]]; then
-
-        # get confirmation
-        echo ""
-        read -t 15 -N 1 -p "Voulez-vous installer paru ? (y/N) " paruinstall
+    
+        read -p "Voulez-vous installer paru ? (y/N) " -n 1 -r
         echo 
-         
-        # if answer is yes within 15 seconds start installing...
-        if [ "${paruinstall,,}" == "y" ]
-            then
-                sudo pacman -S --needed git base-devel
-                git clone https://aur.archlinux.org/paru.git
-                cd paru
-                makepkg -si
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            sudo pacman -S --needed git base-devel
+            git clone https://aur.archlinux.org/paru.git
+            cd paru
+            makepkg -si
+            
             # Contrôler les news
             echo ${BLUE}Paru NewsOnUpdate${RESET}
             sleep $sleepquick
@@ -170,6 +160,7 @@ then
         fi
     else
         echo ${GREEN}=> paru déjà installé${RESET}
+        
         # Contrôler les news
         echo ${BLUE}Paru NewsOnUpdate${RESET}
         sleep $sleepquick
@@ -276,15 +267,14 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Installation de paquets pour carte graphique NVIDIA
     echo ----------------------------------------------------${RESET}
- # get confirmation
-    echo ""
-    read -t 15 -N 1 -p "Besoin des paquets pour NVIDIA ? (y/N) " nvidia
-     
-    # if answer is yes within 15 seconds start installing...
-    if [ "${nvidia,,}" == "y" ]
-        then
-            echo "=> Installation de nividia pour kernel Linux et Linux LTS"
-            sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
+
+    echo 
+    read -p "Besoin des paquets pour NVIDIA ? (y/N) " -n 1 -r
+    echo 
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        echo "=> Installation de nividia pour kernel Linux et Linux LTS"
+        sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
     fi
     
     echo ""
