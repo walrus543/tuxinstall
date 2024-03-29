@@ -15,7 +15,7 @@ if [[ $(whoami) == 'root' ]]; then
     echo ----------------------------------------------------${RESET}
     echo ""
     cd ..
-    rm -rf tuxinstall
+    #rm -rf tuxinstall
     exit 1
 fi
 
