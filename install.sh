@@ -309,7 +309,7 @@ then
     echo ----------------------------------------------------${RESET}
     if grep -q "bash_aliases" ~/.bashrc;
     then
-        echo ${GREEN}"=> config bash ok"${RESET}
+        echo ${GREEN}"=> config bashrc ok"${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
         echo "=> ajout bash_aliases dans .bashrc"
@@ -317,7 +317,7 @@ then
     
     if grep -q "bash_aliases" ~/.zshrc;
     then
-        echo ${GREEN}"=> source bash_aliases déjà ok"${RESET}
+        echo ${GREEN}"=> source bash_aliases déjà ok dans .zshrc"${RESET}
     else
         echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
         echo "=> bash_aliases ajouté en source dans .zshrc"
@@ -325,13 +325,14 @@ then
     
     if grep -q "alias lsl" ~/.zshrc;
     then
-        echo ${GREEN}"=> l'alias lsl existe déjà"${RESET}
+        echo ${GREEN}"=> l'alias lsl existe déjà dans .zshrc"${RESET}
     else
         echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
     fi
     
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
     sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
+    echo "Thème powerlevel10k et plugins activés"
 
     echo Configuration terminée
     
