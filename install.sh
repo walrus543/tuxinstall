@@ -103,26 +103,43 @@ then
 
     whereisparu=$(which paru | cut -f2 -d " ")
     if [[ "$whereisparu" -eq 'not' ]]; then
-        echo ""
-        echo ${BLUE}----------------------------------------------------
-        echo Installation de paru
-        echo ----------------------------------------------------${RESET}
-            sudo pacman -S --needed git base-devel
-            git clone https://aur.archlinux.org/paru.git
-            cd paru
-            makepkg -si
+
+        # get confirmation
+        read -t 15 -N 1 -p "Voulez-vous installer paru ? (y/N) " paruinstall
+        echo 
+         
+        # if answer is yes within 15 seconds start installing...
+        if [ "${paruinstall,,}" == "y" ]
+            then
+            echo ""
+            echo ${BLUE}----------------------------------------------------
+            echo Installation de paru
+            echo ----------------------------------------------------${RESET}
+                sudo pacman -S --needed git base-devel
+                git clone https://aur.archlinux.org/paru.git
+                cd paru
+                makepkg -si
+            # Contrôler les news
+            echo ${BLUE}Paru NewsOnUpdate${RESET}
+            sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
+        fi
     else
         echo ${GREEN}=> paru déjà installé${RESET}
-    fi
-        # Que paru soit installé ou pas, on contrôle les news
+        # Contrôler les news
         echo ${BLUE}Paru NewsOnUpdate${RESET}
         sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
-        
-    echo ""
-    echo ${BLUE}----------------------------------------------------
-    echo Installation de paquets avec paru
-    echo ----------------------------------------------------${RESET}
-    paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
+    fi
+
+    whereisparu2=$(which paru | cut -f2 -d " ")
+    if [[ "$whereisparu2" -eq 'not' ]]; then
+        echo ${YELLOW}"Paru n'étant pas installé, aucun paquet AUR ne sera traité..."${RESET}
+    else
+        echo ""
+        echo ${BLUE}----------------------------------------------------
+        echo Installation de paquets avec paru
+        echo ----------------------------------------------------${RESET}
+        paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple rtl8821ce-dkms-git uniutils pika-backup
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
