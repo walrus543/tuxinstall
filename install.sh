@@ -132,7 +132,9 @@ then
 
     whereisparu2=$(which paru | cut -f2 -d " ")
     if [[ "$whereisparu2" -eq 'not' ]]; then
-        echo ${YELLOW}"Paru n'étant pas installé, aucun paquet AUR ne sera traité..."${RESET}
+        echo ${YELLOW}----------------------------------------------------
+        echo "Paru n'étant pas installé, aucun paquet AUR ne sera traité..."
+        echo ----------------------------------------------------${RESET}
     else
         echo ""
         echo ${BLUE}----------------------------------------------------
