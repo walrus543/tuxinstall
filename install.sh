@@ -180,10 +180,7 @@ then
     rm -rf ~/tuxinstall
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
-    cd ~
-    cd
-    sleep 2
-    cd
-    cd ~
+    alias proj="cd ~"
+    proj
     rm -rf ~/tuxinstall
 fi
