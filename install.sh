@@ -295,12 +295,13 @@ then
     synchtingrun=$(systemctl --user status syncthing.service | grep enabled)
     if [[ "$synchtingrun" == *"enabled"* ]];
     then
-        echo "Syncthing est déjà actif"
+        echo ${GREEN}"Syncthing est déjà actif"${RESET}
     else
         echo "Activation du service"
         sudo systemctl --user enable syncthing.service
         sudo systemctl --user start syncthing.service
     fi
+    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
