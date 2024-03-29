@@ -32,6 +32,18 @@ if [[ "$OSvm" = 'VirtualBox' ]]
 then
     echo ${YELLOW}"VirtualBox détecté"${RESET}
     sleep $sleepquick
+
+    # get confirmation
+    read -t 15 -N 1 -p "Besoin de configurer les dossiers partagés ? (y/N) " vmshare
+    echo 
+    if [ "${vmshare,,}" == "y" ]
+    then
+        sudo usermod -a -G vboxsf $USER
+        sudo chown -R $USER:users /media/
+        sudo chown -R $USER:users /media/sf_PartageVM/
+        echo ${YELLOW}"Fonctionnel après redémarrage"${RESET}
+        sleep $sleepquick
+    fi
 fi
 
 # get confirmation
