@@ -14,6 +14,8 @@ if [[ $(whoami) == 'root' ]]; then
     echo Interdiction de lancer ce script avec le compte root.
     echo ----------------------------------------------------${RESET}
     echo ""
+    cd ..
+    rm -rf tuxinstall
     exit 1
 fi
 
