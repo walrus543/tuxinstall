@@ -8,6 +8,8 @@ export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
 
 sleepquick=1
+sleepmid=3
+sleeplong=6
 
 # On quitte tout de suite si le script est exécuté en tant que root
 if [[ $(whoami) == 'root' ]]; then
@@ -336,6 +338,9 @@ then
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
         echo ${GREEN}"=> Installation du thème powerlevel10k terminée"${RESET}
         echo ${YELLOW}"=> Téléchargement des polices sur le bureau. À installer manuellement !"${RESET}
+        echo ${YELLOW}"=> Voir le dossier sur le Bureau"${RESET}
+        sleep $sleeplong
+        
         mkdir -p ~/Bureau/Polices_a_installer
         wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/Bureau/Polices_a_installer
         wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P ~/Bureau/Polices_a_installer
