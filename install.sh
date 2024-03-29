@@ -1,17 +1,21 @@
 #!/bin/bash
 
-# On quitte tout de suite si le script est exécuté en tant que root
-if [[ $(whoami) == 'root' ]]; then
-    echo "\${RED}Do not run this script as root, use a user with sudo rights\${RESET}"
-    exit 1
-fi
-
 #Coloration du texte
 export RESET=$(tput sgr0)
 export RED=$(tput setaf 1)
 export GREEN=$(tput setaf 2)
 export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
+
+# On quitte tout de suite si le script est exécuté en tant que root
+if [[ $(whoami) == 'root' ]]; then
+    echo ""
+    echo ${RED}----------------------------------------------------
+    echo Interdiction de lancer ce script avec le compte root.
+    echo ----------------------------------------------------${RESET}
+    echo ""
+    exit 1
+fi
 
 echo ""
 echo ${BLUE}----------------------------------------------------
