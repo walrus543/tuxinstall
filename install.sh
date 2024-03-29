@@ -11,7 +11,7 @@ export BLUE=$(tput setaf 4)
 if [[ $(whoami) == 'root' ]]; then
     echo ""
     echo ${RED}----------------------------------------------------
-    echo Interdiction de lancer ce script avec le compte root.
+    echo "Interdiction de lancer ce script avec le compte root"
     echo ----------------------------------------------------${RESET}
     echo ""
     cd ~
@@ -21,7 +21,7 @@ fi
 
 echo ""
 echo ${BLUE}----------------------------------------------------
-echo Assistant pour configurer ARCH Plasma après un formatage
+echo "Assistant pour configurer ARCH Plasma après un formatage"
 echo ----------------------------------------------------${RESET}
 echo ""
 
@@ -34,7 +34,7 @@ if [ "${start,,}" == "y" ]
 then
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Config pacman
+    echo "Config pacman"
     echo ----------------------------------------------------${RESET}
     sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
     sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
@@ -43,16 +43,25 @@ then
 
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Actualisation des dépôts et mises à jour
+    echo "Actualisation des dépôts et mises à jour"
     echo ----------------------------------------------------${RESET}
     sudo pacman -Syu
     
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Installation de paquets relatifs à OSHeden
+    echo "Installation de paquets relatifs à OSHeden"
     echo ----------------------------------------------------${RESET}
-    sudo pacman -S --needed dos2unix xclip xsel npm fdupes
-    
+
+    # get confirmation
+        echo ""
+        read -t 15 -N 1 -p "Besoin des paquets pour OSheden ? (y/N) " osheden
+         
+        # if answer is yes within 15 seconds start installing...
+        if [ "${osheden,,}" == "y" ]
+            then
+                sudo pacman -S --needed dos2unix xclip xsel npm fdupes
+        fi
+        
     if [ -d ~/AndroidAll/Thèmes_Shorts/ ]
         then
             echo ""
@@ -99,7 +108,7 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Installation de divers utilitaires généraux
     echo ----------------------------------------------------${RESET}
-    sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird timeshift transmission-qt yt-dlp
+    sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift transmission-qt yt-dlp
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -107,6 +116,11 @@ then
     echo ----------------------------------------------------${RESET}
     sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
 
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Installation de paru
+    echo ----------------------------------------------------${RESET}
+    
     whereisparu=$(which paru | cut -f2 -d " ")
     if [[ "$whereisparu" -eq 'not' ]]; then
 
@@ -118,10 +132,6 @@ then
         # if answer is yes within 15 seconds start installing...
         if [ "${paruinstall,,}" == "y" ]
             then
-            echo ""
-            echo ${BLUE}----------------------------------------------------
-            echo Installation de paru
-            echo ----------------------------------------------------${RESET}
                 sudo pacman -S --needed git base-devel
                 git clone https://aur.archlinux.org/paru.git
                 cd paru
