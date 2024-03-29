@@ -126,15 +126,25 @@ then
     echo Installation de divers utilitaires généraux
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift transmission-qt yt-dlp
+    if [[ "$OSvm" = 'VirtualBox' ]]
+    then
+        sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger systemdgenie
+    else
+        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift transmission-qt yt-dlp
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Installation de divers paquets propres à Arch
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
-
+    if [[ "$OSvm" = 'VirtualBox' ]]
+    then
+        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools dkms dosfstools flatpak gwenview kimageformats kwallet linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
+    else
+        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
+    fi
+    
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Installation de paru
@@ -232,10 +242,15 @@ then
     echo "Activation de l'imprimante et du bluetooth au démarrage"
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    sudo systemctl enable --now cups.socket
-    sudo systemctl enable cups.service
-    sudo systemctl enable --now bluetooth.service
-    echo Configuration terminée
+    if [[ "$OSvm" = 'VirtualBox' ]]
+    then
+        echo "VM non concernée"
+    else
+        sudo systemctl enable --now cups.socket
+        sudo systemctl enable cups.service
+        sudo systemctl enable --now bluetooth.service
+        echo Configuration terminée
+    fi
 
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -245,7 +260,7 @@ then
         
     if [[ "$OSvm" = 'VirtualBox' ]]
     then
-        echo "Virtualbox ignoré car on est dans une vm"
+        echo "VM non concernée"
         sleep $sleepquick
     else
         echo "=> Installation des paquets pour VirtualBox"
@@ -268,13 +283,18 @@ then
     echo Installation de paquets pour carte graphique NVIDIA
     echo ----------------------------------------------------${RESET}
 
-    echo 
-    read -p "Besoin des paquets pour NVIDIA ? (y/N) " -n 1 -r
-    echo 
-    if [[ $REPLY =~ ^[Yy]$ ]]
+    if [[ "$OSvm" = 'VirtualBox' ]]
     then
-        echo "=> Installation de nividia pour kernel Linux et Linux LTS"
-        sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
+        echo "VM non concernée"
+    else
+        echo 
+        read -p "Besoin des paquets pour NVIDIA ? (y/N) " -n 1 -r
+        echo 
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            echo "=> Installation de nividia pour kernel Linux et Linux LTS"
+            sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
+        fi
     fi
     
     echo ""
@@ -360,18 +380,24 @@ then
     echo Syncthing au démarrage
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    synchtingrun=$(systemctl --user status syncthing.service | grep enabled)
-    if [[ "$synchtingrun" == *"enabled"* ]];
+
+    if [[ "$OSvm" = 'VirtualBox' ]]
     then
-        echo ${GREEN}"Syncthing est déjà actif"${RESET}
-        sleep $sleepquick
+        echo "VM non concernée"
     else
-        echo "Activation du service"
-        sleep $sleepquick
-        sudo systemctl --user enable syncthing.service
-        sudo systemctl --user start syncthing.service
+        synchtingrun=$(systemctl --user status syncthing.service | grep enabled)
+        if [[ "$synchtingrun" == *"enabled"* ]];
+        then
+            echo ${GREEN}"Syncthing est déjà actif"${RESET}
+            sleep $sleepquick
+        else
+            echo "Activation du service"
+            sleep $sleepquick
+            sudo systemctl --user enable syncthing.service
+            sudo systemctl --user start syncthing.service
+        fi
+        echo Configuration terminée
     fi
-    echo Configuration terminée
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -386,24 +412,29 @@ then
         echo "=> ajout bash_aliases dans .bashrc"
         sleep $sleepquick
     fi
-    
-    if grep -q "bash_aliases" ~/.zshrc;
+
+    if [[ "$OSvm" = 'VirtualBox' ]]
     then
-        echo ${GREEN}"=> source bash_aliases déjà ok dans .zshrc"${RESET}
-        sleep $sleepquick
+        echo "VM non concernée"
     else
-        echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
-        echo "=> bash_aliases ajouté en source dans .zshrc"
-        sleep $sleepquick
-    fi
-    
-    if grep -q "alias lsl" ~/.zshrc;
-    then
-        echo ${GREEN}"=> l'alias lsl existe déjà dans .zshrc"${RESET}
-        sleep $sleepquick
-    else
-        echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
-        sleep $sleepquick
+        if grep -q "bash_aliases" ~/.zshrc;
+        then
+            echo ${GREEN}"=> source bash_aliases déjà ok dans .zshrc"${RESET}
+            sleep $sleepquick
+        else
+            echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
+            echo "=> bash_aliases ajouté en source dans .zshrc"
+            sleep $sleepquick
+        fi
+        
+        if grep -q "alias lsl" ~/.zshrc;
+        then
+            echo ${GREEN}"=> l'alias lsl existe déjà dans .zshrc"${RESET}
+            sleep $sleepquick
+        else
+            echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+            sleep $sleepquick
+        fi
     fi
     
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
