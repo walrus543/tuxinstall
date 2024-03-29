@@ -7,6 +7,8 @@ export GREEN=$(tput setaf 2)
 export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
 
+sleepquick=1
+
 # On quitte tout de suite si le script est exécuté en tant que root
 if [[ $(whoami) == 'root' ]]; then
     echo ""
@@ -28,11 +30,8 @@ echo ""
 OSvm=$(sudo dmidecode -s system-product-name)
 if [[ "$OSvm" = 'VirtualBox' ]]
 then
-    vm=true
     echo ${YELLOW}"VirtualBox détecté"${RESET}
-    sleep 1
-else
-    vm=false
+    sleep $sleepquick
 fi
 
 # get confirmation
@@ -50,11 +49,13 @@ then
     sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
     echo "Configuration pacman terminée"
+    sleep $sleepquick
 
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo "Actualisation des dépôts et mises à jour"
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     sudo pacman -Syu
     
     echo ""
@@ -78,6 +79,7 @@ then
             echo ${BLUE}----------------------------------------------------
             echo Creation des liens symboliques pour les thèmes
             echo ----------------------------------------------------${RESET}
+            sleep $sleepquick
             ln -s /home/arnaud/Thèmes/Alta/app/src/main/ /AndroidAll/Thèmes_Shorts/Alta
             ln -s /home/arnaud/Thèmes/Altess/app/src/main /AndroidAll/Thèmes_Shorts/Altess
             ln -s /home/arnaud/Thèmes/Azulox/app/src/main/ /AndroidAll/Thèmes_Shorts/Azulox
@@ -118,18 +120,21 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Installation de divers utilitaires généraux
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift transmission-qt yt-dlp
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Installation de divers paquets propres à Arch
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools firefox flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
 
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Installation de paru
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     
     whereisparu=$(which paru | cut -f2 -d " ")
     if [[ "$whereisparu" -eq 'not' ]]; then
@@ -148,12 +153,14 @@ then
                 makepkg -si
             # Contrôler les news
             echo ${BLUE}Paru NewsOnUpdate${RESET}
+            sleep $sleepquick
             sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
         fi
     else
         echo ${GREEN}=> paru déjà installé${RESET}
         # Contrôler les news
         echo ${BLUE}Paru NewsOnUpdate${RESET}
+        sleep $sleepquick
         sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
     fi
 
@@ -162,11 +169,13 @@ then
         echo ${YELLOW}----------------------------------------------------
         echo "Paru n'étant pas installé, aucun paquet AUR ne sera traité..."
         echo ----------------------------------------------------${RESET}
+        sleep $sleepquick
     else
         echo ""
         echo ${BLUE}----------------------------------------------------
         echo Installation de paquets avec paru
         echo ----------------------------------------------------${RESET}
+        sleep $sleepquick
         paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils pika-backup
     fi
     
@@ -174,16 +183,20 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Gestion de la carte réseau Realtek RTL8821CE
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     realtek=$(lspci | grep -E -i --color 'network|ethernet|wireless|wi-fi' | grep RTL8821CE)
     if [[ "$realtek" == *"RTL8821CE"* ]];
     then
         echo "=> Carte réseau Realtek RTL8821CE détectée"*
+        sleep $sleepquick
 
         whereisparu3=$(which paru | cut -f2 -d " ")
         if [[ "$whereisparu3" -eq 'not' ]]; then
             echo ${YELLOW}"paru non installé donc le paquet rtl8821ce-dkms-git ne sera pas installé"${RESET}
+            sleep $sleepquick
         else
             echo "=> Installation du paquet rtl8821ce-dkms-git"
+            sleep $sleepquick
             paru -S rtl8821ce-dkms-git
         fi
 
@@ -193,38 +206,50 @@ then
             if [[ "$blacklistrealtek" == *"rtw88_8821ce"* ]];
             then
                 echo ${GREEN}"=> Fichier blacklist.conf déjà à jour"${RESET}
+                sleep $sleepquick
             else   
                 echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
                 echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
                 echo "=> Fichier blacklist.conf mis à jour"
+                sleep $sleepquick
             fi
         else
             echo "=> Création du fichier blacklist.conf"
             echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
             echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+            sleep $sleepquick
         fi
     else
         echo "Etape ignorée. Carte réseau Realtek RTL8821CE non détectée"
+        sleep $sleepquick
     fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo "Activation de l'imprimante et du bluetooth au démarrage"
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     sudo systemctl enable --now cups.socket
     sudo systemctl enable cups.service
     sudo systemctl enable --now bluetooth.service
     echo Configuration terminée
 
-    if [[ "$vm" = true ]]
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo "Installation de VirtualBox + Guest + Host DKMS"
+    echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
+        
+    if [[ "$OSvm" = 'VirtualBox' ]]
     then
-        echo ""
-        echo ${BLUE}----------------------------------------------------
-        echo "Installation de VirtualBox + Guest + Host DKMS"
-        echo ----------------------------------------------------${RESET}
-        sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-dkms
-    else
         echo "Virtualbox ignoré car on est dans une vm"
+        sleep $sleepquick
+    else
+        echo "=> Installation des paquets pour VirtualBox"
+        sleep $sleepquick
+        sleep $sleepquick
+        sudo pacman -S --needed virtualbox virtualbox-guest-iso virtualbox-host-dkms
+        
     fi
     
     echo ""
@@ -233,6 +258,7 @@ then
     echo ----------------------------------------------------${RESET}
     sudo systemctl enable paccache.timer
     echo Configuration terminée
+    sleep $sleepquick
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -255,29 +281,35 @@ then
     echo ----------------------------------------------------${RESET}
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     echo Configuration terminée
+    sleep $sleepquick
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Installation de ZSH et configuration
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     sudo pacman -S --needed zsh
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Oh My ZSH
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && echo ${GREEN}"=> Installation de Oh My ZSH terminée"${RESET}
     
     echo ${BLUE}Installation zsh-autosuggestions${RESET}
     [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}=> zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && echo ${GREEN}"=> Installation de zsh-autosuggestions terminée"${RESET}
+    sleep $sleepquick
     
     echo ${BLUE}Installation zsh-syntax-highlighting${RESET}
     [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && echo ${GREEN}"=> Installation de zsh-syntax-highlighting terminée"${RESET}
+    sleep $sleepquick
     
     echo ${BLUE}Installation du thème powerlevel10k${RESET}
     if [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]
     then
         echo ${GREEN}=> powerlevel10k déjà installé${RESET}
+        sleep $sleepquick
     else
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
         echo ${GREEN}"=> Installation du thème powerlevel10k terminée"${RESET}
@@ -289,13 +321,14 @@ then
         wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P ~/Bureau/Polices_a_installer
         echo ""
         echo ${GREEN}"=> Téléchargement des polices terminé"${RESET}
-        sleep 2
+        sleep $sleepquick
     fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Désactiver le bruit lors de la recherche
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     if grep -q "blacklist pcspkr" /etc/modprobe.d/nobeep.conf;
     then echo ${GREEN}"=> Blacklist pcspkr déjà configuré"${RESET}
     else echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
@@ -305,11 +338,13 @@ then
     else echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
     echo Configuration terminée
+    sleep $sleepquick
     
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo Activation du pavé numérique pour SDDM
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     if grep -q "Numlock=on" /etc/sddm.conf;
     then
         echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
@@ -322,12 +357,15 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Syncthing au démarrage
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     synchtingrun=$(systemctl --user status syncthing.service | grep enabled)
     if [[ "$synchtingrun" == *"enabled"* ]];
     then
         echo ${GREEN}"Syncthing est déjà actif"${RESET}
+        sleep $sleepquick
     else
         echo "Activation du service"
+        sleep $sleepquick
         sudo systemctl --user enable syncthing.service
         sudo systemctl --user start syncthing.service
     fi
@@ -337,32 +375,39 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Config bash et zsh
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     if grep -q "bash_aliases" ~/.bashrc;
     then
         echo ${GREEN}"=> config bashrc ok"${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
         echo "=> ajout bash_aliases dans .bashrc"
+        sleep $sleepquick
     fi
     
     if grep -q "bash_aliases" ~/.zshrc;
     then
         echo ${GREEN}"=> source bash_aliases déjà ok dans .zshrc"${RESET}
+        sleep $sleepquick
     else
         echo "source $HOME/.bash_aliases" | sudo tee -a ~/.zshrc > /dev/null
         echo "=> bash_aliases ajouté en source dans .zshrc"
+        sleep $sleepquick
     fi
     
     if grep -q "alias lsl" ~/.zshrc;
     then
         echo ${GREEN}"=> l'alias lsl existe déjà dans .zshrc"${RESET}
+        sleep $sleepquick
     else
         echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
+        sleep $sleepquick
     fi
     
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
     sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
     echo "Thème powerlevel10k et plugins activés"
+    sleep $sleepquick
 
     echo Configuration terminée
     
@@ -370,6 +415,7 @@ then
     echo ${BLUE}----------------------------------------------------
     echo Nettoyage de tuxinstall
     echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
     cd ~
     rm -rf ~/tuxinstall && echo "Dossier tuxinstall supprimé"
 
