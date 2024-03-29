@@ -83,7 +83,7 @@ then
     
     paru --version; if echo $? = 0;
     then
-        echo ${GREEN}paru déjà installé${RESET}
+        echo ${GREEN}=> paru déjà installé${RESET}
     else
         echo ${BLUE}Installation de paru${RESET}
         sudo pacman -S --needed git base-devel
@@ -123,30 +123,30 @@ then
     sudo pacman -S --needed zsh
     
     echo ${BLUE}Oh My ZSH${RESET}
-    [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     
     echo ${BLUE}Installation zsh-autosuggestions${RESET}
-    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}=> zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
     
     echo ${BLUE}Installation zsh-syntax-highlighting${RESET}
-    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     
     echo ${BLUE}Installation du thème powerlevel10k${RESET}
-    [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && echo ${GREEN}=> powerlevel10k déjà installé${RESET} || git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     
     echo ${BLUE}Désactiver le bruit lors de la recherche${RESET}
     if grep -Fxq "blacklist pcspkr" /etc/modprobe.d/nobeep.conf;
-    then echo ${GREEN}"Blacklist pcspkr déjà configuré"${RESET}
+    then echo ${GREEN}"=> Blacklist pcspkr déjà configuré"${RESET}
     else echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
     if grep -Fxq "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf;
-    then echo ${GREEN}"Blacklist snd_pcsp déjà configuré"${RESET}
+    then echo ${GREEN}"=> Blacklist snd_pcsp déjà configuré"${RESET}
     else echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     fi
     
     echo ${BLUE}Activation du pavé numérique pour SDDM${RESET}
     if grep -Fxq "Numlock=on" /etc/sddm.conf;
-    then echo ${GREEN}"Pavé numérique déjà configuré"${RESET}
+    then echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
     else echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
     fi
     
@@ -157,7 +157,7 @@ then
     echo ${BLUE}Config bash et zsh${RESET}
     if grep -Fxq "if [ -f ~/.bash_aliases ]; then" ~/.bashrc;
     then
-        echo ${GREEN}config bash ok${RESET}
+        echo ${GREEN}=> config bash ok${RESET}
     else
         echo "if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi" | sudo tee -a ~/.bashrc > /dev/null
     fi
@@ -168,7 +168,7 @@ then
     fi
     
     if grep -Fxq "alias lsl" ~/.zshrc;
-    then echo ${GREEN}"l'alias lsl existe déjà"${RESET}
+    then echo ${GREEN}"=> l'alias lsl existe déjà"${RESET}
     else echo "alias lsl='eza -la --color=always --group-directories-first'" | sudo tee -a ~/.zshrc > /dev/null
     fi
     
@@ -180,6 +180,10 @@ then
     rm -rf ~/tuxinstall
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
+    cd ~
+    cd
+    sleep 2
+    cd
     cd ~
     rm -rf ~/tuxinstall
 fi
