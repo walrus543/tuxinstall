@@ -166,17 +166,17 @@ then
             makepkg -si
             
             # Contrôler les news
-            echo ${BLUE}Paru NewsOnUpdate${RESET}
+            echo ${BLUE}Paru NewsOnUpgrade${RESET}
             sleep $sleepquick
-            sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
+            sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
         fi
     else
         echo ${GREEN}=> paru déjà installé${RESET}
         
         # Contrôler les news
-        echo ${BLUE}Paru NewsOnUpdate${RESET}
+        echo ${BLUE}Paru NewsOnUpgrade${RESET}
         sleep $sleepquick
-        sudo sed -i 's/^#NewsOnUpdate/NewsOnUpdate/' /etc/paru.conf
+        sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
     fi
 
     whereisparu2=$(which paru | cut -f2 -d " ")
