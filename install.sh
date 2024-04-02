@@ -191,7 +191,12 @@ then
         echo Installation de paquets avec paru
         echo ----------------------------------------------------${RESET}
         sleep $sleepquick
-        paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils pika-backup
+        if [[ "$OSvm" = 'VirtualBox' ]]
+        then
+            paru -S --needed brave-bin downgrade reflector-simple uniutils
+        else
+            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils pika-backup
+        fi
     fi
     
     echo ""
