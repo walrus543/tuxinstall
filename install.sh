@@ -460,6 +460,7 @@ then
     echo ""
     echo ${GREEN}----------------------------------------------------
     echo "Fin du process. Merci et bonne journée."
+    echo "Pour rappel : installer les polices et redémarrer."
     echo ----------------------------------------------------${RESET}
 else
     echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
