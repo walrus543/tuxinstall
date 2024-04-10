@@ -78,6 +78,21 @@ then
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
         sudo pacman -S --needed dos2unix xclip xsel npm fdupes
+
+        #NVM / NodeJS
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+        echo "On teste la bonne installation de nvm pour NodeJS..."
+        source ~/.bashrc
+        if [[ $(command -v nvm) = nvm ]]
+        then
+            echo "Installation de la dernière version LTS de NodeJS"
+            sleep $sleepquick
+            nvm install --lts
+        else
+            echo ${YELLOW}"Échec de l'installation de nvm!"${RESET}
+        fi
+        sleep $sleepmid
     fi
         
     if [ -d ~/AndroidAll/Thèmes_Shorts/ ]
