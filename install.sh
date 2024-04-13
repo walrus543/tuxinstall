@@ -29,8 +29,9 @@ echo "Assistant pour configurer ARCH Plasma après un formatage"
 echo ----------------------------------------------------${RESET}
 echo ""
 
-OSvm=$(sudo dmidecode -s system-product-name)
-if [[ "$OSvm" = 'VirtualBox' ]]
+OSvm=$(systemd-detect-virt)
+#Autre commande : sudo dmidecode -s system-product-name
+if [[ "$OSvm" != "none" ]]
 then
     echo ${YELLOW}"VirtualBox détecté"${RESET}
     sleep $sleepquick
@@ -143,7 +144,7 @@ then
     echo Installation de divers utilitaires généraux
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger systemdgenie
     else
@@ -155,7 +156,7 @@ then
     echo Installation de divers paquets propres à Arch
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools dkms dosfstools flatpak gwenview kimageformats kwallet linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
     else
@@ -206,7 +207,7 @@ then
         echo Installation de paquets avec paru
         echo ----------------------------------------------------${RESET}
         sleep $sleepquick
-        if [[ "$OSvm" = 'VirtualBox' ]]
+        if [[ "$OSvm" != "none" ]]
         then
             paru -S --needed brave-bin downgrade reflector-simple uniutils proton-vpn-gtk-app
         else
@@ -264,7 +265,7 @@ then
     echo "Activation de l'imprimante et du bluetooth au démarrage"
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
     else
@@ -280,7 +281,7 @@ then
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
         
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
         sleep $sleepquick
@@ -305,7 +306,7 @@ then
     echo Installation de paquets pour carte graphique NVIDIA
     echo ----------------------------------------------------${RESET}
 
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
     else
@@ -406,7 +407,7 @@ then
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
 
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
     else
@@ -438,7 +439,7 @@ then
         sleep $sleepquick
     fi
 
-    if [[ "$OSvm" = 'VirtualBox' ]]
+    if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
     else
