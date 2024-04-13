@@ -147,7 +147,7 @@ then
     then
         sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger systemdgenie
     else
-        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift transmission-qt yt-dlp
+        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
     fi
     
     echo ""
