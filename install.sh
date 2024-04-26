@@ -144,11 +144,25 @@ then
     echo Installation de divers utilitaires généraux
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
+    dekde=$(echo $DESKTOP_SESSION)
+    
     if [[ "$OSvm" != "none" ]]
     then
-        sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger systemdgenie
+        sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger
+        if [[ "$dekde" = 'plasma' ]]
+        then
+            sudo pacman -S --needed systemdgenie
+        fi
     else
-        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot kdeconnect kio-admin meld ncdu obsidian pdfarranger samba simple-scan smbclient systemdgenie telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
+        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot meld ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
+        if [[ "$dekde" = 'plasma' ]]
+        then
+            sudo pacman -S --needed kdeconnect kio-admin systemdgenie
+        fi
+        if [[ "$dekde" = 'xfce' ]]
+        then
+            sudo pacman -S --needed network-manager-applet font-manager gvfs-smb
+        fi
     fi
     
     echo ""
@@ -158,9 +172,17 @@ then
     sleep $sleepquick
     if [[ "$OSvm" != "none" ]]
     then
-        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools dkms dosfstools flatpak gwenview kimageformats kwallet linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
+        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools dkms dosfstools flatpak linux-lts-headers man-db man-pages ntfs-3g p7zip pacman-contrib perl-rename pkgfile print-manager xdg-desktop-portal-gtk
+        if [[ "$dekde" = 'plasma' ]]
+        then
+            sudo pacman -S --needed gwenview kimageformats kwallet okular qt5-imageformats
+        fi   
     else
-        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak gwenview jre-openjdk-headless kcalc kimageformats kwallet libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g okular p7zip pacman-contrib perl-rename pkgfile print-manager qt5-imageformats xdg-desktop-portal-gtk
+        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak jre-openjdk-headless libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g p7zip pacman-contrib perl-rename pkgfile print-manager xdg-desktop-portal-gtk
+        if [[ "$dekde" = 'plasma' ]]
+        then
+            sudo pacman -S --needed gwenview kcalc kimageformats kwallet okular qt5-imageformats
+        fi  
     fi
     
     echo ""
