@@ -157,7 +157,7 @@ then
         sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot meld ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
         if [[ "$dekde" = 'plasma' ]]
         then
-            sudo pacman -S --needed kdeconnect kio-admin systemdgenie
+            sudo pacman -S --needed kdeconnect kio-admin systemdgenie partitionmanager
         fi
         if [[ "$dekde" = 'xfce' ]]
         then
