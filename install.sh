@@ -432,7 +432,7 @@ then
             else
                 echo "Installation de numlockx pour XFCE puis configuration de lightdm"
                 sudo pacman -S --needed numlockx
-                echo "[Seat:*]" | sudo tee -a /etc/lightdm/lightdm.conf > /dev/null && echo "greeter-setup-script=/usr/bin/numlockx on" | sudo tee -a /etc/lightdm/lightdm.conf > /dev/null
+                sudo sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
             fi
     fi
     echo Configuration terminée
