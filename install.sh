@@ -412,14 +412,28 @@ then
     
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Activation du pavé numérique pour SDDM
+    echo Activation du pavé numérique
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
-    if grep -q "Numlock=on" /etc/sddm.conf;
-    then
-        echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
-    else
-        echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
+    if [[ "$dekde" = 'plasma' ]]
+        then
+            if grep -q "Numlock=on" /etc/sddm.conf;
+            then
+                echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
+            else
+                echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
+            fi
+    fi
+    if [[ "$dekde" = 'xfce' ]]
+        then
+            if grep -q "numlockx" /etc/lightdm/lightdm.conf;
+            then
+                echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
+            else
+                echo "Installation de numlockx pour XFCE puis configuration de lightdm"
+                sudo pacman -S --needed numlockx
+                echo "[Seat:*]" | sudo tee -a /etc/lightdm/lightdm.conf > /dev/null && echo "greeter-setup-script=/usr/bin/numlockx on" | sudo tee -a /etc/lightdm/lightdm.conf > /dev/null
+            fi
     fi
     echo Configuration terminée
     
