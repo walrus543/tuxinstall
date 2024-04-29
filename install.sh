@@ -233,7 +233,21 @@ then
         then
             paru -S --needed brave-bin downgrade reflector-simple uniutils proton-vpn-gtk-app
         else
-            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils pika-backup proton-vpn-gtk-app ventoy-bin
+            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils proton-vpn-gtk-app
+
+            read -p "Besoin de pika ? (y/N) " -n 1 -r
+            echo 
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                paru -S --needed pika-backup
+            fi
+
+            read -p "Besoin de ventoy ? (y/N) " -n 1 -r
+            echo 
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                paru -S --needed ventoy-bin
+            fi
         fi
     fi
     
