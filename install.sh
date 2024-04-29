@@ -56,8 +56,17 @@ then
     echo ${BLUE}----------------------------------------------------
     echo "Config pacman"
     echo ----------------------------------------------------${RESET}
-    sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+    echo "Configuration ILoveCandy"
+    ILC=$(grep "ILoveCandy" /etc/pacman.conf)
+    if [[ "$ILC" = 'ILoveCandy' ]]
+    then
+        echo ${GREEN}"ILoveCandy déjà configuré"${RESET}
+    else
+        sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+    fi
+    echo "Configuration Téléchargements parallèles"
     sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+    echo "Configuration des couleurs"
     sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
     echo "Configuration pacman terminée"
     sleep $sleepquick
