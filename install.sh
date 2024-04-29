@@ -191,8 +191,8 @@ then
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
     
-    whereisparu=$(which paru | cut -f2 -d " ")
-    if [[ "$whereisparu" -eq 'not' ]]; then
+    whereisparu=$(command -v paru | cut -f4 -d "/")
+    if [[ "$whereisparu" != 'paru' ]]; then
     
         read -p "Voulez-vous installer paru ? (y/N) " -n 1 -r
         echo 
@@ -204,21 +204,21 @@ then
             makepkg -si
             
             # Contrôler les news
-            echo ${BLUE}Paru NewsOnUpgrade${RESET}
+            echo ${BLUE}"Paru NewsOnUpgrade"${RESET}
             sleep $sleepquick
             sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
         fi
     else
-        echo ${GREEN}=> paru déjà installé${RESET}
+        echo ${GREEN}"=> paru déjà installé"${RESET}
         
         # Contrôler les news
-        echo ${BLUE}Paru NewsOnUpgrade${RESET}
+        echo ${BLUE}"Paru NewsOnUpgrade"${RESET}
         sleep $sleepquick
         sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
     fi
 
-    whereisparu2=$(which paru | cut -f2 -d " ")
-    if [[ "$whereisparu2" -eq 'not' ]]; then
+    whereisparu2=$(command -v paru | cut -f4 -d "/")
+    if [[ "$whereisparu2" != 'paru' ]]; then
         echo ${YELLOW}----------------------------------------------------
         echo "Paru n'étant pas installé, aucun paquet AUR ne sera traité..."
         echo ----------------------------------------------------${RESET}
