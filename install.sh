@@ -187,7 +187,7 @@ then
             sudo pacman -S --needed gwenview kimageformats kwallet okular qt5-imageformats
         fi   
     else
-        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak jre-openjdk-headless libreoffice-{fresh,fresh-fr} linux-lts-headers man-db man-pages ntfs-3g p7zip pacman-contrib perl-rename pkgfile print-manager xdg-desktop-portal-gtk
+        sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak jre-openjdk-headless linux-lts-headers man-db man-pages ntfs-3g p7zip pacman-contrib perl-rename pkgfile print-manager xdg-desktop-portal-gtk
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed gwenview kcalc kimageformats kwallet okular qt5-imageformats
@@ -240,9 +240,9 @@ then
         sleep $sleepquick
         if [[ "$OSvm" != "none" ]]
         then
-            paru -S --needed brave-bin downgrade reflector-simple uniutils
+            paru -S --needed brave-bin downgrade reflector-simple uniutils onlyoffice-bin
         else
-            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils proton-vpn-gtk-app
+            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils proton-vpn-gtk-app onlyoffice-bin
 
             read -p "Besoin de pika ? (y/N) " -n 1 -r
             echo 
