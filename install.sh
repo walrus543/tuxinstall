@@ -260,50 +260,50 @@ then
         fi
     fi
     
-#    echo ""
-#    echo ${BLUE}----------------------------------------------------
-#    echo Gestion de la carte réseau Realtek RTL8821CE
-#    echo ----------------------------------------------------${RESET}
-#    sleep $sleepquick
-#    realtek=$(lspci | grep -E -i --color 'network|ethernet|wireless|wi-fi' | grep RTL8821CE)
-#    if [[ "$realtek" == *"RTL8821CE"* ]];
-#    then
-#        echo "=> Carte réseau Realtek RTL8821CE détectée"*
-#        sleep $sleepquick
-#
-#        whereisparu3=$(which paru | cut -f2 -d " ")
-#        if [[ "$whereisparu3" -eq 'not' ]]; then
-#            echo ${YELLOW}"paru non installé donc le paquet rtl8821ce-dkms-git ne sera pas installé"${RESET}
-#            sleep $sleepquick
-#        else
-#            echo "=> Installation du paquet rtl8821ce-dkms-git"
-#            sleep $sleepquick
-#            paru -S rtl8821ce-dkms-git
-#        fi
-#
-#        if [[ -f /etc/modprobe.d/blacklist.conf ]]
-#        then
-#            blacklistrealtek=$(grep "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf)
-#            if [[ "$blacklistrealtek" == *"rtw88_8821ce"* ]];
-#            then
-#                echo ${GREEN}"=> Fichier blacklist.conf déjà à jour"${RESET}
-#                sleep $sleepquick
-#            else   
-#                echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#                echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#                echo "=> Fichier blacklist.conf mis à jour"
-#                sleep $sleepquick
-#            fi
-#        else
-#            echo "=> Création du fichier blacklist.conf"
-#            echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#            echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#            sleep $sleepquick
-#        fi
-#    else
-#        echo "Etape ignorée. Carte réseau Realtek RTL8821CE non détectée"
-#        sleep $sleepquick
-#    fi
+    echo ""
+    echo ${BLUE}----------------------------------------------------
+    echo Gestion de la carte réseau Realtek RTL8821CE
+    echo ----------------------------------------------------${RESET}
+    sleep $sleepquick
+    realtek=$(lspci | grep -E -i --color 'network|ethernet|wireless|wi-fi' | grep RTL8821CE)
+    if [[ "$realtek" == *"RTL8821CE"* ]];
+    then
+        echo "=> Carte réseau Realtek RTL8821CE détectée"*
+        sleep $sleepquick
+
+        whereisparu3=$(which paru | cut -f2 -d " ")
+        if [[ "$whereisparu3" -eq 'not' ]]; then
+            echo ${YELLOW}"paru non installé donc le paquet rtl8821ce-dkms-git ne sera pas installé"${RESET}
+            sleep $sleepquick
+        else
+            echo "=> Installation du paquet rtl8821ce-dkms-git"
+            sleep $sleepquick
+            paru -S rtl8821ce-dkms-git
+        fi
+
+        if [[ -f /etc/modprobe.d/blacklist.conf ]]
+        then
+            blacklistrealtek=$(grep "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf)
+            if [[ "$blacklistrealtek" == *"rtw88_8821ce"* ]];
+            then
+                echo ${GREEN}"=> Fichier blacklist.conf déjà à jour"${RESET}
+                sleep $sleepquick
+            else   
+                echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                echo "=> Fichier blacklist.conf mis à jour"
+                sleep $sleepquick
+            fi
+        else
+            echo "=> Création du fichier blacklist.conf"
+            echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+            echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+            sleep $sleepquick
+        fi
+    else
+        echo "Etape ignorée. Carte réseau Realtek RTL8821CE non détectée"
+        sleep $sleepquick
+    fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
