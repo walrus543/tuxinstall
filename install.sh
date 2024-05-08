@@ -87,7 +87,8 @@ then
     echo 
     if [[ $REPLY =~ ^[Yy]$ ]]
     then
-        sudo pacman -S --needed dos2unix xclip xsel npm fdupes
+        sudo pacman -S --needed dos2unix xclip xsel fdupes
+        # npm retiré et remplacé par ceci :
 
         #NVM / NodeJS
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
