@@ -73,6 +73,32 @@ then
 
     echo ""
     echo ${BLUE}----------------------------------------------------
+    echo "Config makepkg"
+    echo ----------------------------------------------------${RESET}
+    echo "On ne compresse plus"
+    # le flag w ci-dessous permet d'écrire les modifications dans le fichier changelog.txt
+    sudo sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/w changelog.txt" /etc/makepkg.conf 
+        if [ -s changelog.txt ]; then # -s permet de savoir si le fichier a une taille > 0 Ko
+            echo ${GREEN}"Modification effectuée avec succès"${RESET}
+            sleep $sleepquick
+        else
+            echo ${RED}"Modification NON effectuée !"${RESET}
+            sleep $sleepmid
+        rm changelog.txt
+    
+    echo "Utilisation de tous les coeurs du processeur pour compiler"
+    sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/w changelog.txt' /etc/makepkg.conf
+        if [ -s changelog.txt ]; then # -s permet de savoir si le fichier a une taille > 0 Ko
+            echo ${GREEN}"Modification effectuée avec succès"${RESET}
+            sleep $sleepquick
+        else
+            echo ${RED}"Modification NON effectuée !"${RESET}
+            sleep $sleepmid
+        fi
+        rm changelog.txt
+
+    echo ""
+    echo ${BLUE}----------------------------------------------------
     echo "Actualisation des dépôts et mises à jour"
     echo ----------------------------------------------------${RESET}
     sleep $sleepquick
