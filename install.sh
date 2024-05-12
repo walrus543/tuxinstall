@@ -63,11 +63,29 @@ then
         echo ${GREEN}"ILoveCandy déjà configuré"${RESET}
     else
         sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+        echo ${GREEN}"Modification effectuée avec succès"${RESET}
+        sleep $sleepquick
     fi
     echo "Configuration Téléchargements parallèles"
-    sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+    sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/w changelog.txt' /etc/pacman.conf
+        if [ -s changelog.txt ]; then
+            echo ${GREEN}"Modification effectuée avec succès"${RESET}
+            sleep $sleepquick
+        else
+            echo ${RED}"Modification NON effectuée !"${RESET}
+            sleep $sleepmid
+        rm changelog.txt
+        
     echo "Configuration des couleurs"
-    sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+    sudo sed -i 's/^#Color/Color/w changelog.txt' /etc/pacman.conf
+            if [ -s changelog.txt ]; then
+            echo ${GREEN}"Modification effectuée avec succès"${RESET}
+            sleep $sleepquick
+        else
+            echo ${RED}"Modification NON effectuée !"${RESET}
+            sleep $sleepmid
+        rm changelog.txt
+        
     echo "Configuration pacman terminée"
     sleep $sleepquick
 
@@ -370,7 +388,7 @@ then
     echo Activation du nettoyage du cache des paquets
     echo ----------------------------------------------------${RESET}
     sudo systemctl enable paccache.timer
-    echo Configuration terminée
+    echo ${GREEN}"Configuration terminée"${RESET}
     sleep $sleepquick
     
     echo ""
@@ -381,6 +399,7 @@ then
     if [[ "$OSvm" != "none" ]]
     then
         echo "VM non concernée"
+        sleep $sleepquick
     else
         echo 
         read -p "Besoin des paquets pour NVIDIA ? (y/N) " -n 1 -r
@@ -388,16 +407,17 @@ then
         if [[ $REPLY =~ ^[Yy]$ ]]
         then
             echo "=> Installation de nividia pour kernel Linux et Linux LTS"
+            sleep $sleepquick
             sudo pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings vulkan-icd-loader
         fi
     fi
     
     echo ""
     echo ${BLUE}----------------------------------------------------
-    echo Installation du dépôt officiel Flatpak
+    echo "Installation du dépôt officiel Flatpak"
     echo ----------------------------------------------------${RESET}
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    echo Configuration terminée
+    echo ${GREEN}"Configuration terminée"${RESET}
     sleep $sleepquick
     
     echo ""
@@ -414,18 +434,18 @@ then
     sleep $sleepquick
     [[ -d ~/.oh-my-zsh ]] && echo ${GREEN}=> Oh My ZSH déjà installé${RESET} || sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && echo ${GREEN}"=> Installation de Oh My ZSH terminée"${RESET}
     
-    echo ${BLUE}Installation zsh-autosuggestions${RESET}
+    echo ${BLUE}"Installation zsh-autosuggestions"${RESET}
     [[ -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]] && echo ${GREEN}=> zsh-autosuggestions déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && echo ${GREEN}"=> Installation de zsh-autosuggestions terminée"${RESET}
     sleep $sleepquick
     
-    echo ${BLUE}Installation zsh-syntax-highlighting${RESET}
+    echo ${BLUE}"Installation zsh-syntax-highlighting"${RESET}
     [[ -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]] && echo ${GREEN}=> zsh-syntax-highlighting déjà installé${RESET} || git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && echo ${GREEN}"=> Installation de zsh-syntax-highlighting terminée"${RESET}
     sleep $sleepquick
     
-    echo ${BLUE}Installation du thème powerlevel10k${RESET}
+    echo ${BLUE}"Installation du thème powerlevel10k"${RESET}
     if [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]
     then
-        echo ${GREEN}=> powerlevel10k déjà installé${RESET}
+        echo ${GREEN}"=> powerlevel10k déjà installé"${RESET}
         sleep $sleepquick
     else
         git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -434,11 +454,17 @@ then
         echo ${YELLOW}"=> Voir le dossier sur le Bureau"${RESET}
         sleep $sleeplong
         
-        mkdir -p ~/Bureau/Polices_a_installer
-        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/Bureau/Polices_a_installer
-        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P ~/Bureau/Polices_a_installer
-        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P ~/Bureau/Polices_a_installer
-        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P ~/Bureau/Polices_a_installer
+        if [[ -d ~/Bureau ]]
+        then
+            PathDesktop='~/Bureau'
+        else
+            PathDesktop='~/Desktop'
+        fi
+        mkdir -p $PathDesktop/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P $PathDesktop/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P $PathDesktop/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P $PathDesktop/Polices_a_installer
+        wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P $PathDesktop/Polices_a_installer
         echo ""
         echo ${GREEN}"=> Téléchargement des polices terminé"${RESET}
         sleep $sleepquick
@@ -485,7 +511,8 @@ then
                 sudo sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
             fi
     fi
-    echo Configuration terminée
+    echo ${GREEN}"Configuration terminée"${RESET}
+    sleep $sleepquick
     
     echo ""
     echo ${BLUE}----------------------------------------------------
@@ -508,7 +535,8 @@ then
             sudo systemctl --user enable syncthing.service
             sudo systemctl --user start syncthing.service
         fi
-        echo Configuration terminée
+        echo ${GREEN}"Configuration terminée"${RESET}
+        sleep $sleepquick
     fi
     
     echo ""
@@ -554,7 +582,8 @@ then
     echo "Thème powerlevel10k et plugins activés"
     sleep $sleepquick
 
-    echo Configuration terminée
+    echo ${GREEN}"Configuration terminée"${RESET}
+    sleep $sleepquick
     
     echo ""
     echo ${BLUE}----------------------------------------------------
