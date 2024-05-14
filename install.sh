@@ -74,16 +74,18 @@ then
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
+        fi
         rm changelog.txt
         
     echo "Configuration des couleurs"
     sudo sed -i 's/^#Color/Color/w changelog.txt' /etc/pacman.conf
-            if [ -s changelog.txt ]; then
+        if [ -s changelog.txt ]; then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
+        fi
         rm changelog.txt
         
     echo "Configuration pacman terminée"
@@ -102,10 +104,11 @@ then
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
+        fi
         rm changelog.txt
     
     echo "Utilisation de tous les coeurs du processeur pour compiler"
-    sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/w changelog.txt' /etc/makepkg.conf
+    sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/w .txt' /etc/makepkg.conf
         if [ -s changelog.txt ]; then # -s permet de savoir si le fichier a une taille > 0 Ko
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
