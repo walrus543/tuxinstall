@@ -205,13 +205,13 @@ then
     
     if [[ "$OSvm" != "none" ]]
     then
-        sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot kio-admin meld ncdu pdfarranger tailspin
+        sudo pacman -S --needed bat btop duf eza fastfetch firefox firefox-i18n-fr flameshot spectacle kio-admin meld ncdu pdfarranger tailspin
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed systemdgenie
         fi
     else
-        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot meld tailspin ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
+        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot spectacle meld tailspin ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed kdeconnect kio-admin systemdgenie partitionmanager
