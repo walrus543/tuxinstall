@@ -170,6 +170,11 @@ then
             ln -s /home/arnaud/Thèmes/Black_Army_Sapphire/app/src/main/ /AndroidAll/Thèmes_Shorts/BlackArmySapphire
             ln -s /home/arnaud/Thèmes/Caya/app/src/main/ /AndroidAll/Thèmes_Shorts/Caya
             ln -s /home/arnaud/Thèmes/Ciclo/app/src/main/ /AndroidAll/Thèmes_Shorts/Ciclo
+            ln -s /home/arnaud/Thèmes/DarkArmyDiamond/app/src/main/ /AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+            ln -s /home/arnaud/Thèmes/DarkArmyEmerald/app/src/main/ /AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+            ln -s /home/arnaud/Thèmes/DarkArmyOmni/app/src/main/ /AndroidAll/Thèmes_Shorts/DarkArmyOmni
+            ln -s /home/arnaud/Thèmes/DarkArmyRuby/app/src/main/ /AndroidAll/Thèmes_Shorts/DarkArmyRuby
+            ln -s /home/arnaud/Thèmes/DarkArmySapphire/app/src/main/ /AndroidAll/Thèmes_Shorts/DarkArmySapphire
             ln -s /home/arnaud/Thèmes/Darky/app/src/main/ /AndroidAll/Thèmes_Shorts/Darky
             ln -s /home/arnaud/Thèmes/Darly/app/src/main/ /AndroidAll/Thèmes_Shorts/Darly
             ln -s /home/arnaud/Thèmes/Distraction_Free/app/src/main/ /AndroidAll/Thèmes_Shorts/Distraction
