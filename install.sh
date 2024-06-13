@@ -216,7 +216,7 @@ then
             sudo pacman -S --needed systemdgenie
         fi
     else
-        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot spectacle meld tailspin ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
+        sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot spectacle meld tailspin ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar protonmail-bridge thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed kdeconnect kio-admin systemdgenie partitionmanager
@@ -295,7 +295,7 @@ then
         then
             paru -S --needed brave-bin downgrade reflector-simple uniutils onlyoffice-bin
         else
-            paru -S --needed brave-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin protonmail-bridge-bin reflector-simple uniutils proton-vpn-gtk-app onlyoffice-bin
+            paru -S --needed brave-bin mullvad-browser-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin reflector-simple uniutils proton-vpn-gtk-app onlyoffice-bin
 
             read -p "Besoin de pika ? (y/N) " -n 1 -r
             echo 
