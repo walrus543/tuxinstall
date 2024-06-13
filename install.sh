@@ -226,6 +226,22 @@ then
             sudo pacman -S --needed network-manager-applet font-manager gvfs-smb
         fi
     fi
+
+    if [[ $(command -v resh) = resh ]]
+    then
+        echo "Resh déjà installé"
+    else
+        echo "Installation de resh"
+        curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
+        sleep $sleepquick
+        if [[ $(command -v resh) = resh ]]
+        then
+            echo ${GREEN}"Resh installé avec succès"${RESET}
+        else
+            echo ${YELLOW}"Échec de l'installation de resh"${RESET}
+        fi
+    fi
+    sleep $sleepmid
     
     echo ""
     echo ${BLUE}----------------------------------------------------
