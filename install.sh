@@ -228,6 +228,7 @@ then
     fi
 
     if [[ $(command -v resh) = resh ]]
+    # https://github.com/curusarn/resh
     then
         echo "Resh déjà installé"
     else
