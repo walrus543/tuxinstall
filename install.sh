@@ -217,6 +217,16 @@ then
         fi
     else
         sudo pacman -S --needed bat btop duf element-desktop eza syncthing fastfetch firefox firefox-i18n-fr flameshot spectacle meld tailspin ncdu obsidian pdfarranger samba simple-scan smbclient telegram-desktop thunar protonmail-bridge thunderbird thunderbird-i18n-fr timeshift qbittorrent yt-dlp
+        # Systemd pour la planification de Timeshift
+        v_timeshift=$(systemctl status cronie.service | grep "Loaded:" | cut -f2 -d ";" | sed "s/[[:space:]]//")
+        if [[ "$v_timeshift" = "enabled" ]]
+        then
+            echo "cronie.service déjà actif pour Timeshift"
+        else
+            systemctl enable cronie.service
+            echo "cronie.service activé pour Timeshift"
+        fi
+        
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed kdeconnect kio-admin systemdgenie partitionmanager
