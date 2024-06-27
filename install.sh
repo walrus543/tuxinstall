@@ -57,8 +57,7 @@ then
     echo "Config pacman"
     echo ----------------------------------------------------${RESET}
     echo "Configuration ILoveCandy"
-    ILC=$(grep "ILoveCandy" /etc/pacman.conf)
-    if [[ "$ILC" = 'ILoveCandy' ]]
+    if [[ $(grep -c "ILoveCandy" /etc/pacman.conf) -eq 1 ]]
     then
         echo ${GREEN}"ILoveCandy déjà configuré"${RESET}
     else
@@ -533,7 +532,7 @@ then
     sleep $sleepquick
     if [[ "$dekde" = 'plasma' ]]
         then
-            if grep -q "Numlock=on" /etc/sddm.conf;
+            if [[ $(grep -c "Numlock=on" /etc/sddm.conf) -eq 1 ]]
             then
                 echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
             else
@@ -541,7 +540,7 @@ then
             fi
     elif [[ "$dekde" = 'xfce' ]]
         then
-            if grep -q "numlockx" /etc/lightdm/lightdm.conf;
+            if [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -eq 1 ]]
             then
                 echo ${GREEN}"=> Pavé numérique déjà configuré"${RESET}
             else
