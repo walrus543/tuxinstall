@@ -48,7 +48,7 @@ then
     fi
 fi
 
-read -p "Prêt à faire la post install de Arch sur KDE Plasma? (y/N) " -n 1 -r
+read -p "Prêt à faire la post install de Arch ? (y/N) " -n 1 -r
 echo 
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -230,10 +230,11 @@ then
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed kdeconnect kio-admin systemdgenie partitionmanager
-        fi
-        if [[ "$dekde" = 'xfce' ]]
+        elif [[ "$dekde" = 'xfce' ]]
         then
             sudo pacman -S --needed network-manager-applet font-manager gvfs-smb
+        else
+            echo ${YELLOW}"DE non supporté. Aucun utilitaire général ne sera installé"${RESET}
         fi
     fi
 
@@ -265,12 +266,16 @@ then
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed gwenview kimageformats kwallet okular qt5-imageformats
+        else
+            echo ${YELLOW}"DE non supporté. Aucun paquet propre à Arch ne sera installé"${RESET}
         fi   
     else
         sudo pacman -S --needed adobe-source-han-sans-cn-fonts adobe-source-han-sans-jp-fonts adobe-source-han-sans-kr-fonts android-tools cups dkms dosfstools flatpak jre-openjdk-headless linux-lts-headers man-db man-pages ntfs-3g p7zip pacman-contrib perl-rename pkgfile print-manager xdg-desktop-portal-gtk
         if [[ "$dekde" = 'plasma' ]]
         then
             sudo pacman -S --needed gwenview kcalc kimageformats kwallet okular qt5-imageformats
+        else
+            echo ${YELLOW}"DE non supporté. Aucun paquet propre à Arch ne sera installé"${RESET}
         fi  
     fi
     
@@ -534,8 +539,7 @@ then
             else
                 echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
             fi
-    fi
-    if [[ "$dekde" = 'xfce' ]]
+    elif [[ "$dekde" = 'xfce' ]]
         then
             if grep -q "numlockx" /etc/lightdm/lightdm.conf;
             then
@@ -545,6 +549,8 @@ then
                 sudo pacman -S --needed numlockx
                 sudo sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
             fi
+    else
+        echo ${YELLOW}"DE non supporté. Le pavé numérique ne sera pas configuré."${RESET}
     fi
     echo ${GREEN}"Configuration terminée"${RESET}
     sleep $sleepquick
