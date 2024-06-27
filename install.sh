@@ -23,11 +23,38 @@ if [[ $(whoami) == 'root' ]]; then
     exit 1
 fi
 
-echo ""
-echo ${BLUE}----------------------------------------------------
-echo "Assistant pour configurer ARCH Plasma après un formatage"
-echo ----------------------------------------------------${RESET}
-echo ""
+# Seulement pour Arch
+if [[ $(grep -c "ID=arch" /etc/os-release) -lt 1 ]]
+then
+    echo "Ce script n'est fait que pour Arch Linux"
+    exit 1
+fi
+
+# Afficher le logo Arch Linux
+cat << "EOF"
+                   -`
+                  .o+`
+                 `ooo/
+                `+oooo:
+               `+oooooo:
+               -+oooooo+:
+             `/:-:++oooo+:
+            `/++++/+++++++:
+           `/++++++++++++++:
+          `/+++ooooooooooooo/`
+         ./ooosssso++osssssso+`
+        .oossssso-````/ossssss+`
+       -osssssso.      :ssssssso.
+      :osssssss/        osssso+++.
+     /ossssssss/        +ssssooo/-
+   `/ossssso+/:-        -:/+osssso+-
+  `+sso+:-`                 `.-/+oso:
+ `++:.                           `-/+/
+ .`                                 `/
+EOF
+
+echo "Bienvenue sur ${BLUE}${bold}Arch Linux!${normal}"${RESET}
+sleep $sleepmid
 
 OSvm=$(systemd-detect-virt)
 #Autre commande : sudo dmidecode -s system-product-name
