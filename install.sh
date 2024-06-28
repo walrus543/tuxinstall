@@ -522,9 +522,9 @@ then
         
         if [[ -d ~/Bureau ]]
         then
-            PathDesktop='~/Bureau'
+            PathDesktop=$HOME'/Bureau'
         else
-            PathDesktop='~/Desktop'
+            PathDesktop=$HOME'/Desktop'
         fi
         mkdir -p $PathDesktop/Polices_a_installer
         wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P $PathDesktop/Polices_a_installer
