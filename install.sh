@@ -294,7 +294,7 @@ fi
         echo "Resh déjà installé"
     else
         echo "Installation de resh"
-        curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh |
+        curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
     fi
     sleep $sleepmid
     
