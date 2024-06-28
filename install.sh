@@ -75,10 +75,6 @@ then
     fi
 fi
 
-read -p "Prêt à faire la post install de Arch ? (y/N) " -n 1 -r
-echo 
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
     echo ""
     echo ${BLUE}----------------------------------------------------
     echo "Config pacman"
@@ -264,7 +260,7 @@ then
         fi
     fi
 
-    if [[ $(command -v resh) = resh ]]
+    if [[ $(command -v resh) = 'resh' ]]
     # https://github.com/curusarn/resh
     then
         echo "Resh déjà installé"
@@ -272,7 +268,7 @@ then
         echo "Installation de resh"
         curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         sleep $sleepquick
-        if [[ $(command -v resh) = resh ]]
+        if [[ $(command -v resh) = 'resh' ]]
         then
             echo ${GREEN}"Resh installé avec succès"${RESET}
         else
@@ -665,8 +661,3 @@ then
     echo "Fin du process. Merci et bonne journée."
     echo "Pour rappel : installer les polices et redémarrer."
     echo ----------------------------------------------------${RESET}
-else
-    echo ${YELLOW}"Pas de soucis, on s'arrête là :-)"${RESET}
-    cd ~
-    rm -rf ~/tuxinstall && echo "Dossier tuxinstall supprimé"
-fi
