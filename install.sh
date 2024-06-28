@@ -88,28 +88,43 @@ fi
         echo ${GREEN}"Modification effectuée avec succès"${RESET}
         sleep $sleepquick
     fi
+    echo ""
     echo "Configuration Téléchargements parallèles"
-    sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/w changelog.txt' /etc/pacman.conf
-        if [ -s changelog.txt ]; then
+    if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -eq 1 ]]
+    then
+        echo ${GREEN}"Déjà en place"${RESET}
+        sleep $sleepquick
+    else
+        sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+        if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -eq 1 ]]
+        then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
         fi
-        rm changelog.txt
-        
+    fi
+
+    echo ""
     echo "Configuration des couleurs"
-    sudo sed -i 's/^#Color/Color/w changelog.txt' /etc/pacman.conf
-        if [ -s changelog.txt ]; then
+    if [[ $(grep -c "^Color" /etc/pacman.conf) -eq 1 ]]
+    then
+        echo ${GREEN}"Déjà en place"${RESET}
+        sleep $sleepquick
+    else
+        sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
+        if [[ $(grep -c "^Color" /etc/pacman.conf) -eq 1 ]]
+        then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
         fi
-        rm changelog.txt
-        
+    fi
+
+    echo ""
     echo "Configuration pacman terminée"
     sleep $sleepquick
 
@@ -118,27 +133,40 @@ fi
     echo "Config makepkg"
     echo ----------------------------------------------------${RESET}
     echo "On ne compresse plus"
-    # le flag w ci-dessous permet d'écrire les modifications dans le fichier changelog.txt
-    sudo sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/w changelog.txt" /etc/makepkg.conf 
-        if [ -s changelog.txt ]; then # -s permet de savoir si le fichier a une taille > 0 Ko
+    if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -eq 1 ]]
+    then
+        echo ${GREEN}"Déjà en place"${RESET}
+        sleep $sleepquick
+    else
+        sudo sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
+        if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -eq 1 ]]
+        then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
         fi
-        rm changelog.txt
+    fi
+
+
     
     echo "Utilisation de tous les coeurs du processeur pour compiler"
-    sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/w .txt' /etc/makepkg.conf
-        if [ -s changelog.txt ]; then # -s permet de savoir si le fichier a une taille > 0 Ko
+    if [[ $(grep -c "^MAKEFLAGS=\"-j$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
+    then
+        echo ${GREEN}"Déjà en place"${RESET}
+        sleep $sleepquick
+    else
+        sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
+        if [[ $(grep -c "^MAKEFLAGS=\"-j$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
+        then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
         else
             echo ${RED}"Modification NON effectuée !"${RESET}
             sleep $sleepmid
         fi
-        rm changelog.txt
+    fi
 
     echo ""
     echo ${BLUE}----------------------------------------------------
