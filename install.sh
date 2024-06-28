@@ -8,8 +8,8 @@ export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
 
 sleepquick=2
-sleepmid=6
-sleeplong=10
+sleepmid=4
+sleeplong=6
 
 # On quitte tout de suite si le script est exécuté en tant que root
 if [[ $(whoami) == 'root' ]]; then
