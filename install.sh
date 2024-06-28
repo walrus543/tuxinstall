@@ -7,9 +7,9 @@ export GREEN=$(tput setaf 2)
 export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
 
-sleepquick=1
-sleepmid=3
-sleeplong=6
+sleepquick=2
+sleepmid=6
+sleeplong=10
 
 # On quitte tout de suite si le script est exécuté en tant que root
 if [[ $(whoami) == 'root' ]]; then
@@ -152,13 +152,13 @@ fi
 
     
     echo "Utilisation de tous les coeurs du processeur pour compiler"
-    if [[ $(grep -c "^MAKEFLAGS=\"-j$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
+    if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
     then
         echo ${GREEN}"Déjà en place"${RESET}
         sleep $sleepquick
     else
         sudo sed -i 's/^MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
-        if [[ $(grep -c "^MAKEFLAGS=\"-j$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
+        if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -eq 1 ]]
         then
             echo ${GREEN}"Modification effectuée avec succès"${RESET}
             sleep $sleepquick
@@ -294,14 +294,7 @@ fi
         echo "Resh déjà installé"
     else
         echo "Installation de resh"
-        curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
-        sleep $sleepquick
-        if [[ $(command -v resh) = 'resh' ]]
-        then
-            echo ${GREEN}"Resh installé avec succès"${RESET}
-        else
-            echo ${YELLOW}"Échec de l'installation de resh"${RESET}
-        fi
+        curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh |
     fi
     sleep $sleepmid
     
@@ -646,7 +639,7 @@ fi
 
     if [[ "$OSvm" != "none" ]]
     then
-        echo "VM non concernée"
+        echo "VM non concernée par les aliases"
     else
         if grep -q "bash_aliases" ~/.zshrc;
         then
