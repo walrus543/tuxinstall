@@ -370,7 +370,7 @@ fi
         then
             paru -S --needed brave-bin downgrade reflector-simple uniutils onlyoffice-bin
         else
-            paru -S --needed brave-bin mullvad-browser-bin cnijfilter2-mg7500 downgrade payload-dumper-go-bin reflector-simple uniutils proton-vpn-gtk-app onlyoffice-bin
+            paru -S --needed brave-bin mullvad-browser-bin downgrade payload-dumper-go-bin reflector-simple uniutils proton-vpn-gtk-app onlyoffice-bin
 
             read -p "Besoin de pika ? (y/N) " -n 1 -r
             echo 
