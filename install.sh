@@ -39,7 +39,12 @@ check_pkg()
 }
 add_pkg_pacman()
 {
-	pacman -S --needed --noconfirm "$1" >> "$log_root" 2>&1
+    if pacman -Qi "$1" 2>/dev/null
+    then
+        pacman -S --needed --noconfirm "$1" >> "$log_root" 2>&1
+    else
+        echo -n ${RED}"*** Inexistant *** "${RESET}
+    fi
 }
 del_pkg_pacman()
 {
