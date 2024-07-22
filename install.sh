@@ -439,7 +439,7 @@ then
 fi
 
 #Si VM alors commencer par le paramètre "vm"
-if [[ "$VM" != "none" ]] && if ! check_pkg virtualbox-guest-utils
+if [[ "$VM" != "none" ]] && ! check_pkg virtualbox-guest-utils
 then
 	echo ${RED}"On est dans une machine virtuelle donc il est préférable de commencer par \"sudo ./install.sh vm\"."${RESET}
 	exit 1;
