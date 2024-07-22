@@ -243,9 +243,9 @@ then
         exit 1;
     fi
 
-    if [[ $(check_systemd cups.socket) != "enabled" ]] # Si désactivé c'est que le script en root n'a jamais été lancé.
+    if [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]] # Si désactivé c'est que le script en root n'a jamais été lancé.
     then
-        echo ${RED}"Tout d'abord, lancer ce script en root et sans paramère."${RESET}
+        echo ${RED}"Tout d'abord, lancer ce script en root et sans paramètre."${RESET}
         exit 1;
     else
         # Infos fichier log
@@ -294,7 +294,7 @@ then
         fi
 
         echo "3/ Activation de syncthing.service"
-        if check_pkg syncthing && [[ $(check_systemd_user syncthing.service) != "enabled" ]]
+        if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]
         then
             echo -n "Activation du service syncthing.service : "
             systemctl --user enable syncthing.service >> "$log_noroot" 2>&1
@@ -723,7 +723,7 @@ fi
 
 ### Systemd
 echo "8/ Paramètrage systemd"
-if check_pkg timeshift && [[ $(check_systemd cronie.service) != "enabled" ]]
+if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service Timeshift : "
     systemctl enable cronie.service >> "$log_root" 2>&1
@@ -735,21 +735,21 @@ then
     echo -n "- - - Installation du paquet cups : "
     add_pkg_pacman cups
     check_cmd
-elif [[ $(check_systemd cups.socket) != "enabled" ]]
+elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service cups.socket : "
     systemctl enable --now cups.socket >> "$log_root" 2>&1
     check_cmd
 fi
 
-if [[ $(check_systemd cups.service) != "enabled" ]]
+if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service cups.service : "
     systemctl enable --now cups.service >> "$log_root" 2>&1
     check_cmd
 fi
 
-if [[ $(check_systemd bluetooth.service) != "enabled" ]]
+if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service bluetooth.service : "
     systemctl enable --now bluetooth.service >> "$log_root" 2>&1
@@ -762,7 +762,7 @@ then
     add_pkg_pacman pacman-contrib
     check_cmd
 fi
-if [[ $(check_systemd paccache.timer) != "enabled" ]]
+if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service paccache.timer : "
     systemctl enable paccache.timer >> "$log_root" 2>&1
