@@ -183,11 +183,11 @@ then
             check_cmd
 
             echo -n "- - - Activation de vboxservice.service : "
-            systemctl enable --now vboxservice.service >> "$log_root"
+            systemctl enable --now vboxservice.service >> "$log_root" 2>&1
             check_cmd
         fi
-
-        if [[ $(grep vboxsf /etc/group | grep -c $USER) -lt 1 ]]
+	sleep $sleepquick
+        if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]
         then
             echo -n "- - - Ajout du user au groupe vboxsf : "
             usermod -a -G vboxsf $SUDO_USER
@@ -198,9 +198,9 @@ then
             check_cmd
         fi
 
-        if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
+        echo "2/ Chaotic aur"
+	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
         then
-            echo "2/ Chaotic aur"
             #https://aur.chaotic.cx/docs
             pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
             pacman-key --lsign-key 3056513887B78AEB >> "$log_root" 2>&1
