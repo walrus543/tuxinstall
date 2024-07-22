@@ -7,5 +7,8 @@ sudo pacman -S --needed --noconfirm git base-devel \
   && git clone https://github.com/walrus543/tuxinstall.git ~/tuxinstall \
   && cd ~/tuxinstall \
   && chmod +x ./install.sh \
-  && ./install.sh
 ````
+## Parameter
+* Run `sudo ./install.sh vm` to configure virtualbox
+* Run `sudo ./install.sh` to set main settings and install packages
+* Run `./install.sh user` for user specific commands
