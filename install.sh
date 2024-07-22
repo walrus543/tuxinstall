@@ -245,7 +245,7 @@ then
 
     if [[ $(check_systemd cups.socket) != "enabled" ]] # Si désactivé c'est que le script en root n'a jamais été lancé.
     then
-        "Tout d'abord, lancer ce script en root et sans paramère."
+        echo ${RED}"Tout d'abord, lancer ce script en root et sans paramère."${RESET}
         exit 1;
     else
         # Infos fichier log
