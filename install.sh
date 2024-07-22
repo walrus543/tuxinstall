@@ -168,6 +168,7 @@ then
     # Infos fichier log
     echo ${YELLOW}"Pour suivre la progression :"${RESET}
     echo ${bold}"tail -f $log_root"${normal}
+    echo
 
     # Date dans le log
     echo '-------------------' >> "$log_root"
@@ -217,6 +218,7 @@ then
             pacman -Syu --needed --noconfirm >> "$log_root"
             check_cmd
         fi
+	echo ${YELLOW}"Pensez à redémarrer."${RESET}
         exit 0;
     else
         echo "Nous ne sommes pas dans une machine virtuelle."
@@ -436,6 +438,13 @@ if ! check_pkg pacman #pacman installé ?
 then
 	echo ${RED}"Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("${RESET}
 	exit 2;
+fi
+
+#Si VM alors commencer par le paramètre "vm"
+if [[ "$VM" != "none" ]] && if ! check_pkg virtualbox-guest-utils
+then
+	echo ${RED}"On est dans une machine virtuelle donc il est préférable de commencer par \"sudo ./install.sh vm\"."${RESET}
+	exit 1;
 fi
 
 # Infos fichier log
