@@ -264,9 +264,7 @@ then
         elif [[ ! -d ~/.resh/bin/ ]]
         # https://github.com/curusarn/resh
         then
-            echo -n "- - - Statut de l'installation : "
-            curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash >> $log_noroot 2>&1
-            check_cmd
+            curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         fi
 
         echo "2/ Installation de paru"
