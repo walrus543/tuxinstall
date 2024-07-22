@@ -1,0 +1,12 @@
+#add:packagename
+#del:packagename
+
+add:systemdgenie
+add:kdeconnect
+add:kio-admin
+add:partitionmanager
+add:gwenview
+add:kimageformats
+add:kwallet
+add:okular
+add:qt5-imageformats
