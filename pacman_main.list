@@ -41,6 +41,7 @@ add:pdfgrep
 #add:protonmail-bridge
 #add:qbittorrent
 #add:samba
+add:shellcheck
 #add:simple-scan
 #add:smbclient
 #add:spectacle
