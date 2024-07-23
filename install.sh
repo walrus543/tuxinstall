@@ -261,6 +261,7 @@ then
         # Infos fichier log
         echo ${YELLOW}"Pour suivre la progression :"${RESET}
         echo ${bold}"tail -f $log_noroot"${normal}
+        echo
 
         # Date dans le log
         echo '-------------------' >> "$log_noroot"
@@ -458,7 +459,7 @@ fi
 # Infos fichier log
 echo ${YELLOW}"Pour suivre la progression :"${RESET}
 echo ${bold}"tail -f $log_root"${normal}
-echo ""
+echo
 
 if [[ -f $log_root ]]
 then
