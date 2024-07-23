@@ -39,11 +39,12 @@ check_pkg()
 }
 add_pkg_pacman()
 {
-    if pacman -Qi "$1" 2>/dev/null
+    if pacman -Si "$1" > /dev/null 2>&1
     then
         pacman -S --needed --noconfirm "$1" >> "$log_root" 2>&1
     else
-        echo -n ${RED}"*** Inexistant *** "${RESET}
+        echo ${RED}"*** Inexistant *** "${RESET}
+        pacman_status='false'
     fi
 }
 del_pkg_pacman()
@@ -75,12 +76,16 @@ del_flatpak()
 
 check_cmd()
 {
-if [[ $? -eq 0 ]]
+if [[ "$pacman_status" != 'false' ]]
 then
-    echo ${GREEN}"OK"${RESET}
-else
-    echo ${RED}"ERREUR"${RESET}
+    if [[ $? -eq 0 ]]
+    then
+        echo ${GREEN}"OK"${RESET}
+    else
+        echo ${RED}"ERREUR"${RESET}
+    fi
 fi
+pacman_status=''
 }
 
 check_systemd()
@@ -846,5 +851,3 @@ then
     pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
     check_cmd
 fi
-
-
