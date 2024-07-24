@@ -1,7 +1,0 @@
-#add:packagename
-#del:packagename
-
-add:dos2unix
-add:xclip
-add:xsel
-add:fdupes
