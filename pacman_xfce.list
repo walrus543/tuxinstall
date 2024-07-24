@@ -1,0 +1,7 @@
+#add:packagename
+#del:packagename
+
+add:network-manager-applet
+add:font-manager
+add:gvfs-smb
+add:numlockx
