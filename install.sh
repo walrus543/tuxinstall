@@ -184,7 +184,7 @@ then
     echo '-------------------' >> "$log_root"
     date >> "$log_root"
 
-    echo ${BLUE}${bold}"1/ Paramètrage Virtualisation"${normal}${RESET}
+    echo ${BLUE}${bold}"➜ Paramètrage Virtualisation"${normal}${RESET}
     if [[ "$VM" != "none" ]]
     then
         if ! check_pkg virtualbox-guest-utils
@@ -209,7 +209,7 @@ then
             check_cmd
         fi
 
-        echo ${BLUE}${bold}"2/ Chaotic aur"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Chaotic aur"${normal}${RESET}
 	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
         then
             #https://aur.chaotic.cx/docs
@@ -268,7 +268,7 @@ then
         date >> "$log_noroot"
 
         #Resh
-        echo ${BLUE}${bold}"1/ Installation de resh"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Installation de resh"${normal}${RESET}
         if ! pacman -Q zsh tar curl > /dev/null 2>&1
         then
             echo ${YELLOW}"Installer zsh, curl et tar avant RESH."${RESET}
@@ -278,7 +278,7 @@ then
             curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         fi
 
-        echo ${BLUE}${bold}"2/ Installation de paru"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Installation de paru"${normal}${RESET}
         if ! check_pkg paru && check_pkg git && check_pkg base-devel
         then
             echo "Installation de PARU"
@@ -302,7 +302,7 @@ then
             fi
         fi
 
-        echo ${BLUE}${bold}"3/ Activation de syncthing.service"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Activation de syncthing.service"${normal}${RESET}
         if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]
         then
             echo -n "Activation du service syncthing.service : "
@@ -311,7 +311,7 @@ then
         fi
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
-        echo ${BLUE}${bold}"4/ Paquets PARU"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Paquets paru"${normal}${RESET}
         if check_pkg paru
         then
             while read -r line
@@ -340,7 +340,7 @@ then
             done < "$paru_list"
         fi
 
-        echo ${BLUE}${bold}"5/ Gestion de NVM"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Gestion nvm"${normal}${RESET}
         if [[ $(which nvm 2>/dev/null | grep -c nvm) -lt 1 ]]
         then
             echo -n "- - - Installation de NVM : "
@@ -353,7 +353,7 @@ then
             check_cmd
         fi
 
-        echo ${BLUE}${bold}"6/ Configuration shell"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Configuration shell"${normal}${RESET}
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]
         then
             echo "- - - Installation Oh My ZSH"
@@ -473,7 +473,7 @@ echo '-------------------' >> "$log_root"
 date >> "$log_root"
 
 ### CONF PACMAN
-echo ${BLUE}${bold}"1/ Vérification configuration PACMAN"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration PACMAN"${normal}${RESET}
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction ILoveCandy : "
@@ -494,7 +494,7 @@ then
 fi
 
 ### CONF MAKEPKG
-echo ${BLUE}${bold}"2/ Vérification configuration MAKEPKG"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration MAKEPKG"${normal}${RESET}
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction de la compression : "
@@ -509,13 +509,17 @@ then
 	check_cmd
 fi
 
+
+sed 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' journald.conf
+revoir questions à la fin du script
+
 ### MAJ Système avec Pacman
-echo -n ${BLUE}${bold}"3/ Mise à jour du système Pacman : "
+echo -n ${BLUE}${bold}"➜ Mise à jour du système Pacman : "
 pacman -Syu --noconfirm >> "$log_root" 2>&1
 check_cmd
 
 ### PAQUETS PACMAN
-echo ${BLUE}${bold}"4/ Gestion des paquets principaux PACMAN"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Gestion des paquets principaux PACMAN"${normal}${RESET}
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -543,7 +547,7 @@ done < "$pacman_list"
 
 if [[ "$DE" = 'KDE' ]]
 then
-    echo ${BLUE}"4.1/ Gestion des paquets Plasma"${RESET}
+    echo ${BLUE}"➜➜ Gestion des paquets Plasma"${RESET}
     while read -r line
     do
         if [[ "$line" == add:* ]]
@@ -572,7 +576,7 @@ fi
 
 if [[ "$DE" = 'XFCE' ]]
 then
-    echo ${BLUE}"4.1/ Gestion des paquets XFCE"${RESET}
+    echo ${BLUE}"➜➜ Gestion des paquets XFCE"${RESET}
     while read -r line
     do
         if [[ "$line" == add:* ]]
@@ -599,7 +603,7 @@ then
     done < "$ICI/pacman_xfce.list"
 fi
 
-echo ${BLUE}${bold}"5/ Configuration Flatpak"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration Flatpak"${normal}${RESET}
 ## FLATHUB
 if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]
 then
@@ -629,7 +633,7 @@ fi
 #fi
 
 ### PAQUETS FLATPAK
-echo ${BLUE}${bold}"6/ Gestion des paquets FLATPAK (long si première installation)"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Gestion des paquets FLATPAK (long si première installation)"${normal}${RESET}
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -657,11 +661,11 @@ done < "$ICI/flatpak.list"
 
 
 ### OSheden
-read -p ${BLUE}${bold}"7/ Besoin des spécificités pour OSheden ? (y/N) "${normal}${RESET} -n 1 -r
+read -p ${BLUE}${bold}"➜ Besoin des spécificités pour OSheden ? (y/N) "${normal}${RESET} -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo
-    echo ${BLUE}"7.1/ Gestion des paquets"${RESET}
+    echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
     while read -r line
     do
         if [[ "$line" == add:* ]]
@@ -689,7 +693,7 @@ then
 
     if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]
     then
-        echo -n "7.2/ Création des liens symboliques : "
+        echo -n "➜➜ Création des liens symboliques : "
         ln -s /home/$SUDO_USER/Thèmes/Alta/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta
         ln -s /home/$SUDO_USER/Thèmes/Altess/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Altess
         ln -s /home/$SUDO_USER/Thèmes/Azulox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Azulox
@@ -734,7 +738,7 @@ then
 fi
 
 ### Systemd
-echo ${BLUE}${bold}"8/ Paramètrage systemd"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Paramètrage systemd"${normal}${RESET}
 if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service Timeshift : "
@@ -781,7 +785,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${bold}"9/ Suppression du bruit lors de recherches"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Suppression du bruit lors de recherches"${normal}${RESET}
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
     touch /etc/modprobe.d/nobeep.conf
@@ -800,7 +804,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${bold}"10/ Pavé numérique"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Pavé numérique"${normal}${RESET}
 # On crée les fichiers si besoin
 if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]
 then
@@ -824,7 +828,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${bold}"11/ Carte réseau Realtek"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Carte réseau Realtek"${normal}${RESET}
 #Gestion de la carte réseau Realtek RTL8821CE
 if [[ "$VM" = "none" ]]
 then
@@ -847,7 +851,7 @@ then
 fi
 
 #NVIDIA
-read -p ${BLUE}${bold}"12/ Besoin des paquets NVIDIA ? (y/N) "${normal}${RESET} -n 1 -r
+read -p ${BLUE}${bold}"➜ Besoin des paquets NVIDIA ? (y/N) "${normal}${RESET} -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]
 then
