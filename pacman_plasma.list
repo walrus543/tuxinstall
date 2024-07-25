@@ -9,4 +9,6 @@ add:gwenview
 add:kimageformats
 add:kwallet
 add:okular
-add:qt5-imageformats
+
+#Pour les fichiers webp
+add:qt6-imageformats
