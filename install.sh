@@ -790,7 +790,6 @@ fi
 
 #NVIDIA
 read -p ${BLUE}${bold}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
-echo
 if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]
 then
     echo -n "- - - Installation des paquets NVIDIA : "
@@ -879,9 +878,9 @@ fi
 if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]
 then
     echo
-    echo ${bold}"*******************"
+    echo ${YELLOW}${bold}"*******************"
     echo "Actions manuelles"
     echo "*******************"${RESET}
-    echo "Installer le thème ${bold}Colorful-Dark-Global-6${RESET}"
+    echo "➜ Installer le thème ${bold}Colorful-Dark-Global-6${RESET}"
     echo "Avec une opacité du tableau de bord : **translucide**"
 fi
