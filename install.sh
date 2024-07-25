@@ -659,84 +659,6 @@ do
 	fi
 done < "$ICI/flatpak.list"
 
-
-### OSheden
-read -p ${BLUE}${bold}"➜ Besoin des spécificités pour OSheden ? (y/N) "${normal}${RESET} -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-    echo
-    echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
-    while read -r line
-    do
-        if [[ "$line" == add:* ]]
-        then
-            p=${line#add:}
-            if ! check_pkg "$p"
-            then
-                echo -n "- - - Installation paquet $p : "
-                add_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-
-        if [[ "$line" == del:* ]]
-        then
-            p=${line#del:}
-            if check_pkg "$p"
-            then
-                echo -n "- - - Suppression paquet $p : "
-                del_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-    done < "$ICI/pacman_osheden.list"
-
-    if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]
-    then
-        echo -n "➜➜ Création des liens symboliques : "
-        ln -s /home/$SUDO_USER/Thèmes/Alta/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta
-        ln -s /home/$SUDO_USER/Thèmes/Altess/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Altess
-        ln -s /home/$SUDO_USER/Thèmes/Azulox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Azulox
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Diamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Emerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Omni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyOmni
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Ruby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyRuby
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Sapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmySapphire
-        ln -s /home/$SUDO_USER/Thèmes/Caya/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Caya
-        ln -s /home/$SUDO_USER/Thèmes/Ciclo/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ciclo
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyDiamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyEmerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyOmni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyOmni
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyRuby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyRuby
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmySapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmySapphire
-        ln -s /home/$SUDO_USER/Thèmes/Darky/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darky
-        ln -s /home/$SUDO_USER/Thèmes/Darly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darly
-        ln -s /home/$SUDO_USER/Thèmes/Distraction_Free/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Distraction
-        ln -s /home/$SUDO_USER/Thèmes/Ecliptic/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ecliptic
-        ln -s /home/$SUDO_USER/Thèmes/Friendly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Friendly
-        ln -s /home/$SUDO_USER/Thèmes/GIN/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GIN
-        ln -s /home/$SUDO_USER/Thèmes/GoldOx/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GoldOx
-        ln -s /home/$SUDO_USER/Thèmes/Goody/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Goody
-        ln -s /home/$SUDO_USER/Thèmes/Lox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Lox
-        ln -s /home/$SUDO_USER/Thèmes/Luzicon/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Luzicon
-        ln -s /home/$SUDO_USER/Thèmes/NubeReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/NubeReloaded
-        ln -s /home/$SUDO_USER/Thèmes/Oscuro/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Oscuro
-        ln -s /home/$SUDO_USER/Thèmes/Raya_Black/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaBlack
-        ln -s /home/$SUDO_USER/Thèmes/RayaReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaReloaded
-        ln -s /home/$SUDO_USER/Thèmes/Shapy/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Shapy
-        ln -s /home/$SUDO_USER/Thèmes/Sinfonia/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Sinfonia
-        ln -s /home/$SUDO_USER/Thèmes/Spark/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Spark
-        ln -s /home/$SUDO_USER/Thèmes/Stony/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Stony
-        ln -s /home/$SUDO_USER/Thèmes/Supernova/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Supernova
-        ln -s /home/$SUDO_USER/Thèmes/Whirl/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirl
-        ln -s /home/$SUDO_USER/Thèmes/WhirlBlack/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhirlBlack
-        ln -s /home/$SUDO_USER/Thèmes/Whirless/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirless
-        ln -s /home/$SUDO_USER/Thèmes/WhitArt/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhitArt
-        ln -s /home/$SUDO_USER/Thèmes/Whity/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whity
-        check_cmd
-    fi
-fi
-
 ### Systemd
 echo ${BLUE}${bold}"➜ Paramètrage systemd"${normal}${RESET}
 if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
@@ -858,6 +780,83 @@ then
     echo -n "- - - Installation des paquets NVIDIA : "
     pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
     check_cmd
+fi
+
+### OSheden
+read -p ${BLUE}${bold}"➜ Besoin des spécificités pour OSheden ? (y/N) "${normal}${RESET} -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo
+    echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
+    while read -r line
+    do
+        if [[ "$line" == add:* ]]
+        then
+            p=${line#add:}
+            if ! check_pkg "$p"
+            then
+                echo -n "- - - Installation paquet $p : "
+                add_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+
+        if [[ "$line" == del:* ]]
+        then
+            p=${line#del:}
+            if check_pkg "$p"
+            then
+                echo -n "- - - Suppression paquet $p : "
+                del_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+    done < "$ICI/pacman_osheden.list"
+
+    if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]
+    then
+        echo -n "➜➜ Création des liens symboliques : "
+        ln -s /home/$SUDO_USER/Thèmes/Alta/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta
+        ln -s /home/$SUDO_USER/Thèmes/Altess/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Altess
+        ln -s /home/$SUDO_USER/Thèmes/Azulox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Azulox
+        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Diamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
+        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Emerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
+        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Omni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyOmni
+        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Ruby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyRuby
+        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Sapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmySapphire
+        ln -s /home/$SUDO_USER/Thèmes/Caya/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Caya
+        ln -s /home/$SUDO_USER/Thèmes/Ciclo/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ciclo
+        ln -s /home/$SUDO_USER/Thèmes/DarkArmyDiamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+        ln -s /home/$SUDO_USER/Thèmes/DarkArmyEmerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+        ln -s /home/$SUDO_USER/Thèmes/DarkArmyOmni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyOmni
+        ln -s /home/$SUDO_USER/Thèmes/DarkArmyRuby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyRuby
+        ln -s /home/$SUDO_USER/Thèmes/DarkArmySapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmySapphire
+        ln -s /home/$SUDO_USER/Thèmes/Darky/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darky
+        ln -s /home/$SUDO_USER/Thèmes/Darly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darly
+        ln -s /home/$SUDO_USER/Thèmes/Distraction_Free/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Distraction
+        ln -s /home/$SUDO_USER/Thèmes/Ecliptic/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ecliptic
+        ln -s /home/$SUDO_USER/Thèmes/Friendly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Friendly
+        ln -s /home/$SUDO_USER/Thèmes/GIN/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GIN
+        ln -s /home/$SUDO_USER/Thèmes/GoldOx/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GoldOx
+        ln -s /home/$SUDO_USER/Thèmes/Goody/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Goody
+        ln -s /home/$SUDO_USER/Thèmes/Lox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Lox
+        ln -s /home/$SUDO_USER/Thèmes/Luzicon/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Luzicon
+        ln -s /home/$SUDO_USER/Thèmes/NubeReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/NubeReloaded
+        ln -s /home/$SUDO_USER/Thèmes/Oscuro/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Oscuro
+        ln -s /home/$SUDO_USER/Thèmes/Raya_Black/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaBlack
+        ln -s /home/$SUDO_USER/Thèmes/RayaReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaReloaded
+        ln -s /home/$SUDO_USER/Thèmes/Shapy/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Shapy
+        ln -s /home/$SUDO_USER/Thèmes/Sinfonia/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Sinfonia
+        ln -s /home/$SUDO_USER/Thèmes/Spark/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Spark
+        ln -s /home/$SUDO_USER/Thèmes/Stony/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Stony
+        ln -s /home/$SUDO_USER/Thèmes/Supernova/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Supernova
+        ln -s /home/$SUDO_USER/Thèmes/Whirl/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirl
+        ln -s /home/$SUDO_USER/Thèmes/WhirlBlack/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhirlBlack
+        ln -s /home/$SUDO_USER/Thèmes/Whirless/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirless
+        ln -s /home/$SUDO_USER/Thèmes/WhitArt/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhitArt
+        ln -s /home/$SUDO_USER/Thèmes/Whity/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whity
+        check_cmd
+    fi
 fi
 
 #Actions manuelles
