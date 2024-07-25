@@ -54,6 +54,5 @@ add:trash-cli
 add:virtualbox
 add:virtualbox-guest-iso
 add:virtualbox-host-dkms
-add:xdg-desktop-portal-gtk
 add:yt-dlp
 add:zsh
