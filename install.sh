@@ -24,6 +24,7 @@ export RED=$(tput setaf 1)
 export GREEN=$(tput setaf 2)
 export YELLOW=$(tput setaf 3)
 export BLUE=$(tput setaf 4)
+export BOLD=$(tput bold)
 
 #Pauses
 sleepquick=2
@@ -151,7 +152,7 @@ cat << "EOF"
     .`                                 `/
 EOF
 
-    echo "I use ${BLUE}${bold}Arch Linux${normal} btw..."${RESET}
+    echo "I use ${BLUE}${bold}Arch Linux${RESET} btw..."
 
 	exit 0;
 fi
@@ -177,14 +178,14 @@ then
 
     # Infos fichier log
     echo ${YELLOW}"Pour suivre la progression :"${RESET}
-    echo ${bold}"tail -f $log_root"${normal}
+    echo ${bold}"tail -f $log_root"${RESET}
     echo
 
     # Date dans le log
     echo '-------------------' >> "$log_root"
     date >> "$log_root"
 
-    echo ${BLUE}${bold}"➜ Paramètrage Virtualisation"${normal}${RESET}
+    echo ${BLUE}${bold}"➜ Paramètrage Virtualisation"${RESET}
     if [[ "$VM" != "none" ]]
     then
         if ! check_pkg virtualbox-guest-utils
@@ -209,7 +210,7 @@ then
             check_cmd
         fi
 
-        echo ${BLUE}${bold}"➜ Chaotic aur"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Chaotic aur"${RESET}
 	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
         then
             #https://aur.chaotic.cx/docs
@@ -260,7 +261,7 @@ then
     else
         # Infos fichier log
         echo ${YELLOW}"Pour suivre la progression :"${RESET}
-        echo ${bold}"tail -f $log_noroot"${normal}
+        echo ${bold}"tail -f $log_noroot"${RESET}
         echo
 
         # Date dans le log
@@ -268,7 +269,7 @@ then
         date >> "$log_noroot"
 
         #Resh
-        echo ${BLUE}${bold}"➜ Installation de resh"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Installation de resh"${RESET}
         if ! pacman -Q zsh tar curl > /dev/null 2>&1
         then
             echo ${YELLOW}"Installer zsh, curl et tar avant RESH."${RESET}
@@ -278,7 +279,7 @@ then
             curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         fi
 
-        echo ${BLUE}${bold}"➜ Installation de paru"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Installation de paru"${RESET}
         if ! check_pkg paru && check_pkg git && check_pkg base-devel
         then
             echo "Installation de PARU"
@@ -302,7 +303,7 @@ then
             fi
         fi
 
-        echo ${BLUE}${bold}"➜ Activation de syncthing.service"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Activation de syncthing.service"${RESET}
         if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]
         then
             echo -n "Activation du service syncthing.service : "
@@ -311,7 +312,7 @@ then
         fi
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
-        echo ${BLUE}${bold}"➜ Paquets paru"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Paquets paru"${RESET}
         if check_pkg paru
         then
             while read -r line
@@ -340,7 +341,7 @@ then
             done < "$paru_list"
         fi
 
-        echo ${BLUE}${bold}"➜ Gestion nvm"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Gestion nvm"${RESET}
         if [[ $(which nvm 2>/dev/null | grep -c nvm) -lt 1 ]]
         then
             echo -n "- - - Installation de NVM : "
@@ -353,7 +354,7 @@ then
             check_cmd
         fi
 
-        echo ${BLUE}${bold}"➜ Configuration shell"${normal}${RESET}
+        echo ${BLUE}${bold}"➜ Configuration shell"${RESET}
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]
         then
             echo "- - - Installation Oh My ZSH"
@@ -458,7 +459,7 @@ fi
 
 # Infos fichier log
 echo ${YELLOW}"Pour suivre la progression :"${RESET}
-echo ${bold}"tail -f $log_root"${normal}
+echo ${bold}"tail -f $log_root"${RESET}
 echo
 
 if [[ -f $log_root ]]
@@ -473,7 +474,7 @@ echo '-------------------' >> "$log_root"
 date >> "$log_root"
 
 ### CONF PACMAN
-echo ${BLUE}${bold}"➜ Configuration pacman"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration pacman"${RESET}
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction ILoveCandy : "
@@ -494,7 +495,7 @@ then
 fi
 
 ### CONF MAKEPKG
-echo ${BLUE}${bold}"➜ Configuration makepkg"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration makepkg"${RESET}
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction de la compression : "
@@ -510,7 +511,7 @@ then
 fi
 
 ### CONF JOURNALD
-echo ${BLUE}${bold}"➜ Configuration journald.conf"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration journald.conf"${RESET}
 if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction de la taille maximale autorisée : "
@@ -524,7 +525,7 @@ pacman -Syu --noconfirm >> "$log_root" 2>&1
 check_cmd
 
 ### PAQUETS PACMAN
-echo ${BLUE}${bold}"➜ Gestion des paquets principaux pacman"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Gestion des paquets principaux pacman"${RESET}
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -608,7 +609,7 @@ then
     done < "$ICI/pacman_xfce.list"
 fi
 
-echo ${BLUE}${bold}"➜ Configuration Flatpak"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration Flatpak"${RESET}
 ## FLATHUB
 if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]
 then
@@ -638,7 +639,7 @@ fi
 #fi
 
 ### PAQUETS FLATPAK
-echo ${BLUE}${bold}"➜ Gestion des paquets FLATPAK (long si première installation)"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Gestion des paquets FLATPAK (long si première installation)"${RESET}
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -665,7 +666,7 @@ do
 done < "$ICI/flatpak.list"
 
 ### Systemd
-echo ${BLUE}${bold}"➜ Paramètrage systemd"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Paramètrage systemd"${RESET}
 if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service Timeshift : "
@@ -712,7 +713,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${bold}"➜ Suppression du bruit lors de recherches"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Suppression du bruit lors de recherches"${RESET}
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
     touch /etc/modprobe.d/nobeep.conf
@@ -732,7 +733,7 @@ then
 fi
 
 # Rétention cache des paquets avec paccache
-echo ${BLUE}${bold}"➜ Paccache : cache des paquets"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Paccache : cache des paquets"${RESET}
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]
 #Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne 
 then
@@ -741,7 +742,7 @@ then
 	check_cmd
 fi
 
-echo ${BLUE}${bold}"➜ Pavé numérique"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Pavé numérique"${RESET}
 # On crée les fichiers si besoin
 if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]
 then
@@ -765,7 +766,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${bold}"➜ Carte réseau Realtek"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Carte réseau Realtek"${RESET}
 #Gestion de la carte réseau Realtek RTL8821CE
 if [[ "$VM" = "none" ]]
 then
@@ -788,7 +789,7 @@ then
 fi
 
 #NVIDIA
-read -p ${BLUE}${bold}"➜ Besoin des paquets NVIDIA ? (y/N) "${normal}${RESET} -n 1 -r
+read -p ${BLUE}${bold}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]
 then
@@ -798,7 +799,7 @@ then
 fi
 
 ### OSheden
-read -p ${BLUE}${bold}"➜ Besoin des spécificités pour OSheden ? (y/N) "${normal}${RESET} -n 1 -r
+read -p ${BLUE}${bold}"➜ Besoin des spécificités pour OSheden ? (y/N) "${RESET} -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo
@@ -880,7 +881,7 @@ then
     echo
     echo ${bold}"*******************"
     echo "Actions manuelles"
-    echo "*******************"${normal}
-    echo "Installer le thème ${bold}Colorful-Dark-Global-6${normal}"
+    echo "*******************"${RESET}
+    echo "Installer le thème ${bold}Colorful-Dark-Global-6${RESET}"
     echo "Avec une opacité du tableau de bord : **translucide**"
 fi
