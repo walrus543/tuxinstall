@@ -22,7 +22,7 @@ alias pdfcompress='sh /home/arnaud/Documents/Linux/compress_pdf.sh'
 #######
 # Suppression des paquets orphelins =>  paru -Qtdq | paru -Rns - => équivalent apt autoremove
 ## Après (paru -Qtdq | paru -Rns -) / Avant (paru -Rns $(paru -Qtdq)) || paru -c fait la même chose je pense
-alias carch='cd ~ && paru -c && rm -rf ~/.cache ; flatpak remove --unused; bash /home/arnaud/Documents/Linux/thunderbird.sh ; reshctl update ; cp ~/.bash_aliases .bashrc .zshrc /home/arnaud/Documents/'
+alias carch='cd ~ && paru -c && rm -rf ~/.cache ; flatpak remove --unused; bash /home/arnaud/Documents/Linux/thunderbird.sh ; reshctl update ; cp ~/.bash_aliases .bashrc .zshrc /home/arnaud/Documents/; systemctl --failed'
 # Traiter les fichiers .pacnew avec pacdiff
 alias uarch='paru ; sudo pacdiff' # ; flatpak update'
 alias umirrors='sudo pacman -Syy'
