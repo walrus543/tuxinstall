@@ -473,7 +473,7 @@ echo '-------------------' >> "$log_root"
 date >> "$log_root"
 
 ### CONF PACMAN
-echo ${BLUE}${bold}"➜ Configuration PACMAN"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration pacman"${normal}${RESET}
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction ILoveCandy : "
@@ -494,7 +494,7 @@ then
 fi
 
 ### CONF MAKEPKG
-echo ${BLUE}${bold}"➜ Configuration MAKEPKG"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Configuration makepkg"${normal}${RESET}
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
 then
 	echo -n "- - - Correction de la compression : "
@@ -509,9 +509,14 @@ then
 	check_cmd
 fi
 
-
-sed 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' journald.conf
-revoir questions à la fin du script
+### CONF JOURNALD
+echo ${BLUE}${bold}"➜ Configuration journald.conf"${normal}${RESET}
+if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]
+then
+	echo -n "- - - Correction de la taille maximale autorisée : "
+	sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
+	check_cmd
+fi
 
 ### MAJ Système avec Pacman
 echo -n ${BLUE}${bold}"➜ Mise à jour du système Pacman : "
@@ -519,7 +524,7 @@ pacman -Syu --noconfirm >> "$log_root" 2>&1
 check_cmd
 
 ### PAQUETS PACMAN
-echo ${BLUE}${bold}"➜ Gestion des paquets principaux PACMAN"${normal}${RESET}
+echo ${BLUE}${bold}"➜ Gestion des paquets principaux pacman"${normal}${RESET}
 while read -r line
 do
 	if [[ "$line" == add:* ]]
