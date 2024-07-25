@@ -855,3 +855,14 @@ then
     pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
     check_cmd
 fi
+
+#Actions manuelles
+if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]
+then
+    echo
+    echo ${bold}"*******************"
+    echo "Actions manuelles"
+    echo "*******************"${normal}
+    echo "Installer le thème ${bold}Colorful-Dark-Global-6${normal}"
+    echo "Avec une opacité du tableau de bord : **translucide**"
+fi
