@@ -26,7 +26,8 @@ add:man-db
 add:man-pages
 add:meld
 add:ncdu
-add:ntfs-3g #Détection disque dur externe
+#Détection disque dur externe
+add:ntfs-3g
 add:obsidian
 add:p7zip
 add:pacman-contrib
