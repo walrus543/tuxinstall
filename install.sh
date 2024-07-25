@@ -731,6 +731,16 @@ then
     check_cmd
 fi
 
+# Rétention cache des paquets avec paccache
+echo ${BLUE}${bold}"➜ Paccache : cache des paquets"${normal}${RESET}
+if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]
+#Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne 
+then
+	echo -n "- - - Ajustement de paccache à 1 version : "
+	paccache -rk1
+	check_cmd
+fi
+
 echo ${BLUE}${bold}"➜ Pavé numérique"${normal}${RESET}
 # On crée les fichiers si besoin
 if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]
