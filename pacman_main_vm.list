@@ -10,6 +10,7 @@ add:eza
 add:fastfetch
 add:firefox
 add:firefox-i18n-fr
+add:firefox-ublock-origin
 add:git
 add:linux-lts-headers
 add:man-db
