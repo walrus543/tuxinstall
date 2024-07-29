@@ -342,16 +342,32 @@ then
         fi
 
         echo ${BLUE}${BOLD}"➜ Gestion nvm"${RESET}
-        if [[ $(command -v nvm 2>&1 | grep -c nvm) -lt 1 ]]
+        if [[ ! -f ~/.nvm/nvm.sh ]]
         then
             echo -n "- - - Installation de NVM : "
             wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
             # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
             check_cmd
 
-            echo -n "- - - Installation de la dernière version LTS : "
-            nvm install --lts
+            echo -n "- - - Nettoyage .zshrc : "
+            sed -i '/NVM_DIR/d' ~/.zshrc
             check_cmd
+
+            echo -n "- - - Paramètrage .zshrc : "
+            echo "" >> ~/.zshrc
+            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
+            check_cmd
+
+            echo ${YELLOW}{BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
+            echo "déjà dans le presse-papier"
+            sleep $sleepmid
+            echo "nvm install --lts \
+            && nvm use --lts \
+            && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
+
+            echo "- - - - - Penser à exécuter : ${YELLOW}nvm install --lts${RESET}"
+            sleep $sleepmid
         fi
 
         echo ${BLUE}${BOLD}"➜ Configuration shell"${RESET}
