@@ -14,5 +14,5 @@ sudo pacman -S --needed --noconfirm git base-devel \
 * Run `./install.sh user` for user specific commands
 
 # Credits
-Inspired by Adrien D. from Linuxtricks.fr
+Inspired from Adrien D.'s script of Linuxtricks.fr  
 https://github.com/aaaaadrien/fedora-config
