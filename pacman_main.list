@@ -15,6 +15,7 @@ add:eza
 add:fastfetch
 add:firefox
 add:firefox-i18n-fr
+add:firefox-ublock-origin
 add:flameshot
 add:flatpak
 add:git
@@ -49,6 +50,7 @@ add:telegram-desktop
 add:thunar
 add:thunderbird
 add:thunderbird-i18n-fr
+add:thunderbird-ublock-origin
 add:timeshift
 add:tldr
 add:trash-cli
