@@ -342,7 +342,7 @@ then
         fi
 
         echo ${BLUE}${BOLD}"➜ Gestion nvm"${RESET}
-        if [[ $(which nvm 2>/dev/null | grep -c nvm) -lt 1 ]]
+        if [[ $(command -v nvm 2>&1 | grep -c nvm) -lt 1 ]]
         then
             echo -n "- - - Installation de NVM : "
             wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
@@ -408,7 +408,7 @@ then
 
         if check_pkg zsh # && [[ $(grep -c "ALIAS - GENERAL" ~/.zshrc) -lt 1 ]]
         then
-            echo -n "- - - Ajustement des alias : "
+            echo -n "- - - Ajustement des alias par comparatif : "
             if [ ! -f "$ICI/alias_listing" ]
             then
                 echo "Le fichier source des alias n'existe pas."
@@ -425,6 +425,7 @@ then
                 done < "$ICI/alias_listing"
             fi
             check_cmd
+	    
             echo "On bascule sur ZSH !"
             zsh
         fi
