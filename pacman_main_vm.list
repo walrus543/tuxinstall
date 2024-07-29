@@ -16,4 +16,5 @@ add:man-db
 add:man-pages
 add:pacman-contrib
 add:shellcheck
+add:xclip
 add:zsh
