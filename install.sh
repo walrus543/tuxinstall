@@ -359,7 +359,7 @@ then
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
             check_cmd
 
-            echo ${YELLOW}{BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
+            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
             echo "déjà dans le presse-papier"
             sleep $sleepmid
             echo "nvm install --lts \
