@@ -806,6 +806,15 @@ then
             echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
             check_cmd
         fi
+
+        #if [[ $(grep -c "pci=noaer" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]
+	###if [[ $(ls /boot/loader/entries/*linuxxxx.conf 2> /dev/null) ]]; then echo 1; else echo 2; fi
+        #then
+            #echo -n "- - - Ajout paramètre au kernel linux et linux-lts  : "
+            #sudo find /boot/loader/entries -type f -regextype posix-extended -regex ".*/[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}_linux(-lts)?\.conf" -exec sed -i '/^options root=/s/$/ pci=noaer/' {} \;
+            #check_cmd
+        #fi
+	
     else
         echo ${YELLOW}"- - - Carte réseau Realtek RTL8821CE non détectée."${RESET}
     fi
