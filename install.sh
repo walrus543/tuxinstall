@@ -179,6 +179,9 @@ then
     # Infos fichier log
     echo ${YELLOW}"Pour suivre la progression :"${RESET}
     echo ${BOLD}"tail -f $log_root"${RESET}
+    if ! check_pkg xclip; then pacman -S --noconfirm xclip; fi
+    echo "tail -f $log_root"  | xclip -selection clipboard
+    echo "(commande copiée dans le presse-papier)"
     echo
 
     # Date dans le log
@@ -461,7 +464,7 @@ then
 fi
 
 # Tester si bien une base Arch
-if ! check_pkg pacman #pacman installé ?
+if ! check_pkg pacman
 then
 	echo ${RED}"Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("${RESET}
 	exit 2;
@@ -477,6 +480,9 @@ fi
 # Infos fichier log
 echo ${YELLOW}"Pour suivre la progression :"${RESET}
 echo ${BOLD}"tail -f $log_root"${RESET}
+if ! check_pkg xclip; then pacman -S --noconfirm xclip; fi
+echo "tail -f $log_root"  | xclip -selection clipboard
+echo "(commande copiée dans le presse-papier)"
 echo
 
 if [[ -f $log_root ]]
