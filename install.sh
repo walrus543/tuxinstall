@@ -111,7 +111,7 @@ check_systemd_user()
 if [[ -z "$1" ]] # le premier argument est vide (./install.sh sans rien derrière)
     then
 	echo "OK" > /dev/null
-elif [[ "$1" == "arch" ]] || [[ "$1" == "user" ]] || [[ "$1" == "vm" ]] # exemple : ./install.sh arch
+elif [[ "$1" == "arch" ]] || [[ "$1" == "user" ]] # exemple : ./install.sh arch
     then
 	echo "OK" > /dev/null
 else
@@ -119,7 +119,6 @@ else
 	echo "- $(basename $0)       : Lance la config"
     echo "- $(basename $0) arch  : Une surprise vous attend..."
 	echo "- $(basename $0) user  : Autres actions à lancer sans accès root"
-	echo "- $(basename $0) vm    : Spécifique à virtualbox"
 	exit 1;
 fi
 
@@ -163,81 +162,6 @@ then
     echo ${RED}"Ce script n'est fait que pour Arch Linux"${RESET}
     echo "\"ID=arch\" non trouvé dans /etc/os-release."
     exit 1;
-fi
-
-###################
-######  VM  ######
-###################
-if [[ "$1" = "vm" ]]
-then
-    if [[ $(id -u) -ne "0" ]]
-    then
-        echo ${RED}"Lancer le script avec les droits root (sudo)"${RESET}
-        exit 1;
-    fi
-
-    # Infos fichier log
-    echo ${YELLOW}"Pour suivre la progression :"${RESET}
-    echo ${BOLD}"tail -f $log_root"${RESET}
-    if ! check_pkg xclip; then pacman -S --noconfirm xclip; fi
-    echo "tail -f $log_root"  | xclip -selection clipboard
-    echo "(commande copiée dans le presse-papier)"
-    echo
-
-    # Date dans le log
-    echo '-------------------' >> "$log_root"
-    date >> "$log_root"
-
-    echo ${BLUE}${BOLD}"➜ Paramètrage Virtualisation"${RESET}
-    if [[ "$VM" != "none" ]]
-    then
-        if ! check_pkg virtualbox-guest-utils
-        then
-            echo -n "- - - Installation du paquet des guests : "
-            pacman -S --needed --noconfirm virtualbox-guest-utils >> "$log_root"
-            check_cmd
-
-            echo -n "- - - Activation de vboxservice.service : "
-            systemctl enable --now vboxservice.service >> "$log_root" 2>&1
-            check_cmd
-        fi
-	sleep $sleepquick
-        if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]
-        then
-            echo -n "- - - Ajout du user au groupe vboxsf : "
-            usermod -a -G vboxsf $SUDO_USER
-            check_cmd
-
-            echo -n "- - - Droits du dossier PartageVM : "
-            chown -R $SUDO_USER:users /media/sf_PartageVM/
-            check_cmd
-        fi
-
-        echo ${BLUE}${BOLD}"➜ Chaotic aur"${RESET}
-	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
-        then
-            #https://aur.chaotic.cx/docs
-            pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
-            pacman-key --lsign-key 3056513887B78AEB >> "$log_root" 2>&1
-            pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' >> "$log_root" 2>&1
-            pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' >> "$log_root" 2>&1
-
-            echo -n "- - - Statut de l'installation : "
-            echo ""  | tee -a /etc/pacman.conf > /dev/null
-            echo "[chaotic-aur]" | tee -a /etc/pacman.conf > /dev/null
-            echo "Include = /etc/pacman.d/chaotic-mirrorlist" | tee -a /etc/pacman.conf > /dev/null
-            check_cmd
-
-            echo -n "- - - Mise à jour base de données chaotic-aur : "
-            pacman -Syu --needed --noconfirm >> "$log_root"
-            check_cmd
-        fi
-	echo ${YELLOW}"Pensez à redémarrer."${RESET}
-        exit 0;
-    else
-        echo "Nous ne sommes pas dans une machine virtuelle."
-        exit 2;
-    fi
 fi
 
 ###################
@@ -470,13 +394,6 @@ then
 	exit 2;
 fi
 
-#Si VM alors commencer par le paramètre "vm"
-if [[ "$VM" != "none" ]] && ! check_pkg virtualbox-guest-utils
-then
-	echo ${RED}"On est dans une machine virtuelle donc il est préférable de commencer par \"sudo ./install.sh vm\"."${RESET}
-	exit 1;
-fi
-
 # Infos fichier log
 echo ${YELLOW}"Pour suivre la progression :"${RESET}
 echo ${BOLD}"tail -f $log_root"${RESET}
@@ -495,6 +412,64 @@ fi
 # Date dans le log
 echo '-------------------' >> "$log_root"
 date >> "$log_root"
+
+#Si VM
+if [[ "$VM" != "none" ]]
+then
+    if [[ $(id -u) -ne "0" ]]
+    then
+        echo ${RED}"Lancer le script avec les droits root (sudo)"${RESET}
+        exit 1;
+    fi
+
+    echo ${BLUE}${BOLD}"➜ Paramètrage Virtualisation"${RESET}
+    if [[ "$VM" != "none" ]]
+    then
+        if ! check_pkg virtualbox-guest-utils
+        then
+            echo -n "- - - Installation du paquet des guests : "
+            pacman -S --needed --noconfirm virtualbox-guest-utils >> "$log_root"
+            check_cmd
+
+            echo -n "- - - Activation de vboxservice.service : "
+            systemctl enable --now vboxservice.service >> "$log_root" 2>&1
+            check_cmd
+        fi
+	sleep $sleepquick
+        if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]
+        then
+            echo -n "- - - Ajout du user au groupe vboxsf : "
+            usermod -a -G vboxsf $SUDO_USER
+            check_cmd
+
+            echo -n "- - - Droits du dossier PartageVM : "
+            chown -R $SUDO_USER:users /media/sf_PartageVM/
+            check_cmd
+        fi
+
+    echo ${BLUE}${BOLD}"➜ Chaotic aur"${RESET}
+	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
+    then
+        #https://aur.chaotic.cx/docs
+        pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
+        pacman-key --lsign-key 3056513887B78AEB >> "$log_root" 2>&1
+        pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' >> "$log_root" 2>&1
+        pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' >> "$log_root" 2>&1
+
+        echo -n "- - - Statut de l'installation : "
+        echo ""  | tee -a /etc/pacman.conf > /dev/null
+        echo "[chaotic-aur]" | tee -a /etc/pacman.conf > /dev/null
+        echo "Include = /etc/pacman.d/chaotic-mirrorlist" | tee -a /etc/pacman.conf > /dev/null
+        check_cmd
+
+        echo -n "- - - Mise à jour base de données chaotic-aur : "
+        pacman -Syu --needed --noconfirm >> "$log_root"
+        check_cmd
+    fi
+	echo ${YELLOW}"Pensez à redémarrer."${RESET}
+    sleep $sleepmid
+    fi
+fi
 
 ### CONF PACMAN
 echo ${BLUE}${BOLD}"➜ Configuration pacman"${RESET}
@@ -807,13 +782,48 @@ then
             check_cmd
         fi
 
-        #if [[ $(grep -c "pci=noaer" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]
-	###if [[ $(ls /boot/loader/entries/*linuxxxx.conf 2> /dev/null) ]]; then echo 1; else echo 2; fi
-        #then
-            #echo -n "- - - Ajout paramètre au kernel linux et linux-lts  : "
-            #sudo find /boot/loader/entries -type f -regextype posix-extended -regex ".*/[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}_linux(-lts)?\.conf" -exec sed -i '/^options root=/s/$/ pci=noaer/' {} \;
-            #check_cmd
-        #fi
+        # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
+        # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
+        # Définir le répertoire cible et les patterns des noms de fichiers
+        DIR="/boot/loader/entries"
+        PATTERNS=("linux.conf" "linux-lts.conf")
+
+        # Fonction pour ajouter ou modifier la ligne dans le fichier
+        modify_file() {
+            local file="$1"
+            local tempfile=$(mktemp)
+
+            if [ -f "$file" ]; then
+                # Lire le fichier et ajouter/modifier la ligne
+                while IFS= read -r line; do
+                    if [[ "$line" =~ ^options\ root= ]]; then
+                        if [[ "$line" != *"pci=noaer"* ]]; then
+                            echo "${line} pci=noaer" >> "$tempfile"
+                        else
+                            echo "$line" >> "$tempfile"
+                        fi
+                    else
+                        echo "$line" >> "$tempfile"
+                    fi
+                done < "$file"
+            else
+                # Créer le fichier avec la ligne par défaut
+                echo "options root= pci=noaer" > "$tempfile"
+            fi
+
+            # Remplacer l'ancien fichier par le nouveau
+            mv "$tempfile" "$file"
+        }
+
+        # Parcourir les motifs de fichiers cibles
+        for pattern in "${PATTERNS[@]}"; do
+            # Rechercher les fichiers correspondant au motif
+            for filepath in "$DIR"/*_"$pattern"; do
+                if [ -f "$filepath" ]; then
+                    modify_file "$filepath"
+                fi
+            done
+        done
 	
     else
         echo ${YELLOW}"- - - Carte réseau Realtek RTL8821CE non détectée."${RESET}
