@@ -475,46 +475,59 @@ fi
 echo ${BLUE}${BOLD}"➜ Configuration pacman"${RESET}
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction ILoveCandy : "
-	sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
-	check_cmd
+    echo -n "- - - Correction ILoveCandy : "
+    sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
+    check_cmd
 fi
 if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction téléchargements parallèles : "
-	sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
-	check_cmd
+    echo -n "- - - Correction téléchargements parallèles : "
+    sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+    check_cmd
 fi
 if [[ $(grep -c "^Color" /etc/pacman.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction des couleurs : "
-	sed -i 's/^#Color/Color/' /etc/pacman.conf
-	check_cmd
+    echo -n "- - - Correction des couleurs : "
+    sed -i 's/^#Color/Color/' /etc/pacman.conf
+    check_cmd
 fi
 
 ### CONF MAKEPKG
 echo ${BLUE}${BOLD}"➜ Configuration makepkg"${RESET}
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction de la compression : "
-	sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
-	check_cmd
+    echo -n "- - - Correction de la compression : "
+    sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
+    check_cmd
 fi
 
 if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction de l'utilisation des coeurs : "
-	sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
-	check_cmd
+    echo -n "- - - Correction de l'utilisation des coeurs : "
+    sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
+    check_cmd
 fi
 
 ### CONF JOURNALD
 echo ${BLUE}${BOLD}"➜ Configuration journald.conf"${RESET}
 if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]
 then
-	echo -n "- - - Correction de la taille maximale autorisée : "
-	sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
-	check_cmd
+    echo -n "- - - Correction de la taille maximale autorisée : "
+    sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
+    check_cmd
+fi
+
+### CONF SYSTEMD
+echo ${BLUE}${BOLD}"➜ Configuration menu systemd-boot"${RESET}
+if [[ -f /boot/loader/loader.conf ]]
+then
+    echo -n "- - - Kernel dernier sauvegardé sélectionné : "
+    sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
+    check_cmd
+
+    echo -n "- - - Timeout de 2s : "    
+    sed -i 's/^timeout .*$/timeout 2/' /boot/loader/loader.conf
+    check_cmd
 fi
 
 ### MAJ Système avec Pacman
