@@ -517,16 +517,28 @@ then
     check_cmd
 fi
 
-### CONF SYSTEMD
-echo ${BLUE}${BOLD}"➜ Configuration menu systemd-boot"${RESET}
-if [[ -f /boot/loader/loader.conf ]]
+### CONF SYSTEMD-BOOT ou GRUB
+if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/loader.conf) -lt 1 ]]
 then
+    echo ${BLUE}${BOLD}"➜ Configuration menu systemd-boot"${RESET}
     echo -n "- - - Kernel dernier sauvegardé sélectionné : "
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
     check_cmd
 
     echo -n "- - - Timeout de 2s : "    
     sed -i 's/^timeout .*$/timeout 2/' /boot/loader/loader.conf
+    check_cmd
+fi
+
+if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]
+then
+    echo ${BLUE}${BOLD}"➜ Configuration menu grub"${RESET}
+    echo -n "- - - Timeout de 2s : "    
+    sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=2/' /etc/default/grub
+    check_cmd
+
+    echo -n "- - - Regénérer grub.cfg : "
+    grub-mkconfig -o /boot/grub/grub.cfg
     check_cmd
 fi
 
