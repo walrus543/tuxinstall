@@ -18,11 +18,10 @@ alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
 ######
 # ARCH
 #######
-# Suppression des paquets orphelins =>  paru -Qtdq | paru -Rns - => équivalent apt autoremove
-## Après (paru -Qtdq | paru -Rns -) / Avant (paru -Rns $(paru -Qtdq)) || paru -c fait la même chose je pense
-alias carch='cd ~ && paru -c && rm -rf ~/.cache ; flatpak remove --unused; bash ~/Documents/Linux/thunderbird.sh ; reshctl update ; cp ~/.bash_aliases .bashrc .zshrc ~/Documents/; systemctl --failed'
-# Traiter les fichiers .pacnew avec pacdiff
-alias uarch='paru ; sudo pacdiff' # ; flatpak update'
+# Suppression des paquets orphelins et détection d'échec au démarrage avec systemd
+alias carch='paru -c ; systemctl --failed'
+# MaJ pacman+AUR, traiter les fichiers .pacnew avec pacdiff et mettre à jour les flatpaks si besoin
+alias uarch='paru ; sudo pacdiff; if [[ $(flatpak list | wc -l) -gt 0 ]]; then flatpak update; fi'
 alias umirrors='sudo pacman -Syy'
 alias fix-key='sudo rm /var/lib/pacman/sync/* && sudo rm -rf /etc/pacman.d/gnupg/* && sudo pacman-key --init && sudo pacman-key --populate && sudo pacman -Sy --noconfirm archlinux-keyring && sudo pacman --noconfirm -Su'
 
