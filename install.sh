@@ -739,6 +739,18 @@ then
     check_cmd
 fi
 
+#Nettoyage cache et backup thunderbird
+#if [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]
+#then
+#    if [[ ! $(find /etc/systemd/system -iname "backup_perso.service" ) ]]
+#    then
+#
+#    fi
+#fi
+
+
+
+
 echo ${BLUE}${BOLD}"➜ Suppression du bruit lors de recherches"${RESET}
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
