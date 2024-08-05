@@ -296,11 +296,7 @@ then
             echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
             echo "déjà dans le presse-papier"
             sleep $sleepmid
-            echo "nvm install --lts \
-            && nvm use --lts \
-            && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
-
-            echo "- - - - - Penser à exécuter : ${YELLOW}nvm install --lts${RESET}"
+            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
             sleep $sleepmid
         fi
 
