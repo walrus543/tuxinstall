@@ -4,8 +4,6 @@
 #source $HOME/.bash_aliases
 alias lsl='eza -la --color=always --group-directories-first'
 alias op8p='bash ~/AndroidAll/OP8P/backup_sdcard.sh'
-alias majapt='sudo apt update && sudo apt -y full-upgrade && flatpak update'
-alias majpk='pkcon refresh && pkcon update'
 alias supthumbnail='find ~/.cache/thumbnails/normal/ -type f -delete'
 alias winsave='VBoxManage controlvm "Win11" savestate'
 alias winkill='VBoxManage controlvm "Win11" poweroff'
