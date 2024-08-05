@@ -369,8 +369,8 @@ then
             fi
             check_cmd
 	    
-            echo "On bascule sur ZSH !"
-            zsh
+            #echo "On bascule sur ZSH !"
+            #zsh
         fi
     fi
 
