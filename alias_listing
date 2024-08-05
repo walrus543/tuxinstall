@@ -3,10 +3,10 @@
 ##############################
 #source $HOME/.bash_aliases
 alias lsl='eza -la --color=always --group-directories-first'
-alias op8p='bash /home/arnaud/AndroidAll/OP8P/backup_sdcard.sh'
+alias op8p='bash ~/AndroidAll/OP8P/backup_sdcard.sh'
 alias majapt='sudo apt update && sudo apt -y full-upgrade && flatpak update'
 alias majpk='pkcon refresh && pkcon update'
-alias supthumbnail='find /home/arnaud/.cache/thumbnails/normal/ -type f -delete'
+alias supthumbnail='find ~/.cache/thumbnails/normal/ -type f -delete'
 alias winsave='VBoxManage controlvm "Win11" savestate'
 alias winkill='VBoxManage controlvm "Win11" poweroff'
 alias winlist='VBoxManage list runningvms'
@@ -14,7 +14,7 @@ alias wingo='VBoxManage startvm "Win11"'
 alias doublonsextensions='fdupes .'
 alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\'' {} \; | sort | uniq --repeated'
 alias ls='exa -la --color=always --group-directories-first'
-alias pdfcompress='sh /home/arnaud/Documents/Linux/compress_pdf.sh'
+alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
 
 
 ######
@@ -22,7 +22,7 @@ alias pdfcompress='sh /home/arnaud/Documents/Linux/compress_pdf.sh'
 #######
 # Suppression des paquets orphelins =>  paru -Qtdq | paru -Rns - => équivalent apt autoremove
 ## Après (paru -Qtdq | paru -Rns -) / Avant (paru -Rns $(paru -Qtdq)) || paru -c fait la même chose je pense
-alias carch='cd ~ && paru -c && rm -rf ~/.cache ; flatpak remove --unused; bash /home/arnaud/Documents/Linux/thunderbird.sh ; reshctl update ; cp ~/.bash_aliases .bashrc .zshrc /home/arnaud/Documents/; systemctl --failed'
+alias carch='cd ~ && paru -c && rm -rf ~/.cache ; flatpak remove --unused; bash ~/Documents/Linux/thunderbird.sh ; reshctl update ; cp ~/.bash_aliases .bashrc .zshrc ~/Documents/; systemctl --failed'
 # Traiter les fichiers .pacnew avec pacdiff
 alias uarch='paru ; sudo pacdiff' # ; flatpak update'
 alias umirrors='sudo pacman -Syy'
@@ -31,8 +31,8 @@ alias fix-key='sudo rm /var/lib/pacman/sync/* && sudo rm -rf /etc/pacman.d/gnupg
 ###########
 # VARIABLES
 ############
-PathIR=/home/arnaud/PartageVM/Icon_Packs/IR
-PathPartageons=/home/arnaud/PartageVM/Partageons/W10/To_W10
+PathIR=~/PartageVM/Icon_Packs/IR
+PathPartageons=~/PartageVM/Partageons/W10/To_W10
 
 #############
 # ProtonVPN
@@ -49,7 +49,7 @@ PathPartageons=/home/arnaud/PartageVM/Partageons/W10/To_W10
 #    alias vpnnetads='protonvpn-cli netshield --ads-malware'
 #    alias vpnhelp='protonvpn-cli --help'
 #    alias vpnfast='protonvpn-cli c -f'
-#    alias vpndoc='cat /home/arnaud/Documents/Linux/DocProtonVPN_cli.txt'
+#    alias vpndoc='cat ~/Documents/Linux/DocProtonVPN_cli.txt'
 alias ppvpn='natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 && while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done'
 
 alias irsup='bash $PathIR/___Emails___/Scripts/irsup.sh'
@@ -71,14 +71,14 @@ alias candybarsample='git clone https://github.com/zixpo/candybar-sample.git'
 alias nvmupdate='curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'
 #https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 #https://github.com/nodejs/Release
-alias aalias='kate /home/arnaud/.zshrc'
+alias aalias='kate ~/.zshrc'
 
 ###############
 # ICON PACKS
 ################
 
 ## DIVERS
-alias mapmove='mv /home/arnaud/AndroidAll/Google_Play_Scraper/*.png $PathIR/icons/'
+alias mapmove='mv ~/AndroidAll/Google_Play_Scraper/*.png $PathIR/icons/'
 alias nball='bash $PathIR/___Emails___/Scripts/nball.sh'
 alias refaire='bash $PathIR/___Emails___/Scripts/refaire.sh'
 alias extractappfiltericons='bash $PathIR/___Emails___/Scripts/extract_appfilter_icons.sh'
@@ -86,28 +86,28 @@ alias translations='bash ~/Thèmes/_Translations/recopie.sh'
 alias ipversion='bash $PathIR/___Emails___/Scripts/versions.sh'
 
 ## OUVERTURE DES APPFILTERS
-alias xmlalta='kate /home/arnaud/Thèmes/Alta/app/src/main/res/xml/appfilter.xml'
-alias xmlazulox='kate /home/arnaud/Thèmes/Azulox/app/src/main/res/xml/appfilter.xml'
-alias xmlblackarmy='kate /home/arnaud/Thèmes/Black_Army_Diamond/app/src/main/res/xml/appfilter.xml'
-alias xmlcaya='kate /home/arnaud/Thèmes/Caya/app/src/main/res/xml/appfilter.xml'
-alias xmlciclo='kate /home/arnaud/Thèmes/Ciclo/app/src/main/res/xml/appfilter.xml'
-alias xmldarkarmy='kate /home/arnaud/Thèmes/DarkArmyDiamond/app/src/main/res/xml/appfilter.xml'
-alias xmldistraction='kate /home/arnaud/Thèmes/Distraction_Free/app/src/main/res/xml/appfilter.xml'
-alias xmleclipctic='kate /home/arnaud/Thèmes/Ecliptic/app/src/main/res/xml/appfilter.xml'
-alias xmlfriendly='kate /home/arnaud/Thèmes/Friendly/app/src/main/res/xml/appfilter.xml'
-alias xmlgin='kate /home/arnaud/Thèmes/GIN/app/src/main/res/xml/appfilter.xml'
-alias xmlgoody='kate /home/arnaud/Thèmes/Goody/app/src/main/res/xml/appfilter.xml'
-alias xmlnubereloaded='kate /home/arnaud/Thèmes/NubeReloaded/app/src/main/res/xml/appfilter.xml'
-alias xmloscuro='kate /home/arnaud/Thèmes/Oscuro/app/src/main/res/xml/appfilter.xml'
-alias xmlrayablack='kate /home/arnaud/Thèmes/Raya_Black/app/src/main/res/xml/appfilter.xml'
-alias xmlrayareloaded='kate /home/arnaud/Thèmes/RayaReloaded/app/src/main/res/xml/appfilter.xml'
-alias xmlshapy='kate /home/arnaud/Thèmes/Shapy/app/src/main/res/xml/appfilter.xml'
-alias xmlsinfonia='kate /home/arnaud/Thèmes/Sinfonia/app/src/main/res/xml/appfilter.xml'
-alias xmlspark='kate /home/arnaud/Thèmes/Spark/app/src/main/res/xml/appfilter.xml'
-alias xmlstony='kate /home/arnaud/Thèmes/Stony/app/src/main/res/xml/appfilter.xml'
-alias xmlsupernova='kate /home/arnaud/Thèmes/Supernova/app/src/main/res/xml/appfilter.xml'
-alias xmlwhirl='kate /home/arnaud/Thèmes/Whirl/app/src/main/res/xml/appfilter.xml'
-alias xmlwhitart='kate /home/arnaud/Thèmes/WhitArt/app/src/main/res/xml/appfilter.xml'
+alias xmlalta='kate ~/Thèmes/Alta/app/src/main/res/xml/appfilter.xml'
+alias xmlazulox='kate ~/Thèmes/Azulox/app/src/main/res/xml/appfilter.xml'
+alias xmlblackarmy='kate ~/Thèmes/Black_Army_Diamond/app/src/main/res/xml/appfilter.xml'
+alias xmlcaya='kate ~/Thèmes/Caya/app/src/main/res/xml/appfilter.xml'
+alias xmlciclo='kate ~/Thèmes/Ciclo/app/src/main/res/xml/appfilter.xml'
+alias xmldarkarmy='kate ~/Thèmes/DarkArmyDiamond/app/src/main/res/xml/appfilter.xml'
+alias xmldistraction='kate ~/Thèmes/Distraction_Free/app/src/main/res/xml/appfilter.xml'
+alias xmleclipctic='kate ~/Thèmes/Ecliptic/app/src/main/res/xml/appfilter.xml'
+alias xmlfriendly='kate ~/Thèmes/Friendly/app/src/main/res/xml/appfilter.xml'
+alias xmlgin='kate ~/Thèmes/GIN/app/src/main/res/xml/appfilter.xml'
+alias xmlgoody='kate ~/Thèmes/Goody/app/src/main/res/xml/appfilter.xml'
+alias xmlnubereloaded='kate ~/Thèmes/NubeReloaded/app/src/main/res/xml/appfilter.xml'
+alias xmloscuro='kate ~/Thèmes/Oscuro/app/src/main/res/xml/appfilter.xml'
+alias xmlrayablack='kate ~/Thèmes/Raya_Black/app/src/main/res/xml/appfilter.xml'
+alias xmlrayareloaded='kate ~/Thèmes/RayaReloaded/app/src/main/res/xml/appfilter.xml'
+alias xmlshapy='kate ~/Thèmes/Shapy/app/src/main/res/xml/appfilter.xml'
+alias xmlsinfonia='kate ~/Thèmes/Sinfonia/app/src/main/res/xml/appfilter.xml'
+alias xmlspark='kate ~/Thèmes/Spark/app/src/main/res/xml/appfilter.xml'
+alias xmlstony='kate ~/Thèmes/Stony/app/src/main/res/xml/appfilter.xml'
+alias xmlsupernova='kate ~/Thèmes/Supernova/app/src/main/res/xml/appfilter.xml'
+alias xmlwhirl='kate ~/Thèmes/Whirl/app/src/main/res/xml/appfilter.xml'
+alias xmlwhitart='kate ~/Thèmes/WhitArt/app/src/main/res/xml/appfilter.xml'
 
 ## ANDROID STUDIO
 alias mvandroidstudio='bash $PathIR/___Emails___/Scripts/mvandroidstudio.sh'
