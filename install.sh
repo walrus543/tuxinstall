@@ -404,7 +404,7 @@ fi
 # Infos fichier log
 echo ${YELLOW}"Pour suivre la progression :"${RESET}
 echo ${BOLD}"tail -f $log_root"${RESET}
-if ! check_pkg xclip; then pacman -S --noconfirm xclip; fi
+if ! check_pkg xclip; then pacman -S --noconfirm xclip >> "$log_root" 2>&1; fi
 echo "tail -f $log_root"  | xclip -selection clipboard
 echo "(commande copiée dans le presse-papier)"
 echo
