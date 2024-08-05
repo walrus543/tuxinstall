@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #################
 ### VARIABLES ###
@@ -120,6 +120,13 @@ else
     echo "- $(basename $0) arch  : Une surprise vous attend..."
 	echo "- $(basename $0) user  : Autres actions à lancer sans accès root"
 	exit 1;
+fi
+
+# Tester la connexion Internet
+if ! ping -c 1 google.com &> /dev/null
+then
+    echo "Pas de connexion Internet"
+    exit 2;
 fi
 
 ###################
