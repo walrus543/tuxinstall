@@ -538,7 +538,7 @@ then
     check_cmd
 
     echo -n "- - - Regénérer grub.cfg : "
-    grub-mkconfig -o /boot/grub/grub.cfg
+    grub-mkconfig -o /boot/grub/grub.cfg  >> "$log_root" 2>&1
     check_cmd
 fi
 
