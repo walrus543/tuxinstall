@@ -982,6 +982,9 @@ then
     echo ${YELLOW}${BOLD}"*******************"
     echo "Actions manuelles"
     echo "*******************"${RESET}
-    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
-    echo "Avec une opacité du tableau de bord : **translucide**"
+    if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]
+    then
+	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
+	    echo "Avec une opacité du tableau de bord : **translucide**"
+     fi
 fi
