@@ -91,12 +91,12 @@ pacman_status=''
 
 check_systemd()
 {
-    systemctl status "$1" | grep "Loaded:" | cut -f2 -d ";" | sed "s/[[:space:]]//"
+    systemctl is-enabled "$1"
 }
 
 check_systemd_user()
 {
-    systemctl --user status "$1" | grep "Loaded:" | cut -f2 -d ";" | sed "s/[[:space:]]//"
+    systemctl --user is-enabled "$1"
 }
 
 #####################
