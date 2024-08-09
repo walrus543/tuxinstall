@@ -10,6 +10,7 @@ add:curl
 add:dkms
 add:dosfstools
 add:duf
+add:dust
 add:element-desktop
 add:eza
 add:fastfetch
@@ -38,6 +39,7 @@ add:pkgfile
 add:print-manager
 add:protonmail-bridge
 add:qbittorrent
+add:ripgrep
 add:samba
 add:shellcheck
 add:simple-scan
