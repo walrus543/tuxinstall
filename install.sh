@@ -707,21 +707,21 @@ then
     check_cmd
 elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]
 then
-    echo -n "- - - Activation du service cups.socket : "
+    echo -n "- - - Activation de cups.socket : "
     systemctl enable --now cups.socket >> "$log_root" 2>&1
     check_cmd
 fi
 
 if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]
 then
-    echo -n "- - - Activation du service cups.service : "
+    echo -n "- - - Activation de cups.service : "
     systemctl enable --now cups.service >> "$log_root" 2>&1
     check_cmd
 fi
 
 if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]
 then
-    echo -n "- - - Activation du service bluetooth.service : "
+    echo -n "- - - Activation de bluetooth.service : "
     systemctl enable --now bluetooth.service >> "$log_root" 2>&1
     check_cmd
 fi
@@ -734,8 +734,14 @@ then
 fi
 if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]
 then
-    echo -n "- - - Activation du service paccache.timer : "
+    echo -n "- - - Activation de paccache.timer : "
     systemctl enable paccache.timer >> "$log_root" 2>&1
+    check_cmd
+fi
+if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]
+then
+    echo -n "- - - Activation du service sshd.service : "
+    systemctl enable sshd.service >> "$log_root" 2>&1
     check_cmd
 fi
 
