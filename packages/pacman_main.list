@@ -32,6 +32,7 @@ add:ncdu
 #Détection disque dur externe
 add:ntfs-3g
 add:obsidian
+add:openssh
 add:p7zip
 add:pacman-contrib
 add:pdfarranger
