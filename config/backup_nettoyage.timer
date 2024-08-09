@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer for backup_nettoyage.service
+
+[Timer]
+OnCalendar=Sat *-*-* 10:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+#add:packagename
+#del:packagename
+
+add:adobe-source-han-sans-cn-fonts
+add:adobe-source-han-sans-jp-fonts
+add:adobe-source-han-sans-kr-fonts
+add:dos2unix
+add:fdupes
+add:perl-rename
+add:xclip
+add:xsel

@@ -1,0 +1,8 @@
+[Unit]
+Description=Nettoyage et sauvegarde
+Wants=backup_nettoyage.timer
+ConditionFileIsExecutable=/home/arnaud/Documents/Linux/backup_nettoyage.sh
+
+[Service]
+Type=oneshot
+ExecStart=/home/arnaud/Documents/Linux/backup_nettoyage.sh
