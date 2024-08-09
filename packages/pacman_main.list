@@ -41,6 +41,7 @@ add:print-manager
 add:protonmail-bridge
 add:qbittorrent
 add:ripgrep
+add:rsync
 add:samba
 add:shellcheck
 add:simple-scan
