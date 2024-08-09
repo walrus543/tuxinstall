@@ -1,6 +1,7 @@
 #add:packagename
 #del:packagename
 
+add:alacritty
 add:base-devel
 add:bat
 add:btop
