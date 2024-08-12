@@ -776,6 +776,15 @@ then
     fi
 fi
 
+echo ${BLUE}${BOLD}"➜ Fichiers de configuration"${RESET}
+if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]
+then
+    echo -n "- - - Ajout alacritty.toml : "
+    mkdir -p ~/.config/alacritty
+    cp "$ICI/config/alacritty.toml" ~/.config/alacritty
+    check_cmd
+fi
+
 echo ${BLUE}${BOLD}"➜ Suppression du bruit lors de recherches"${RESET}
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
@@ -816,7 +825,6 @@ then
     touch /etc/lightdm/lightdm.conf
 fi
 
-# On contrôle le contenu
 if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]
 then
     echo -n "- - - Activation pour KDE Plasma : "
@@ -828,6 +836,8 @@ then
     sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
     check_cmd
 fi
+
+
 
 echo ${BLUE}${BOLD}"➜ Carte réseau Realtek"${RESET}
 #Gestion de la carte réseau Realtek RTL8821CE
