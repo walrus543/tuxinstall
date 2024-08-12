@@ -13,6 +13,7 @@ alias wingo='VBoxManage startvm "Win11"'
 alias doublonsextensions='fdupes .'
 alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\'' {} \; | sort | uniq --repeated'
 alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
+alias borgbackup='bash ~/Documents/Linux/borg_menu.sh'
 
 
 ######
