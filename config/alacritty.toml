@@ -1,17 +1,11 @@
 # Doc : https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd
 
 [window]
-###################
-# ESTHETISME
-###################
 opacity = 0.95
 padding.x = 10
 padding.y = 10
 decorations = "None"
 #blur = true
-###################
-# TAILLE
-###################
 #startup_mode = "Maximized"
 dimensions = { columns = 120, lines = 30 }
 
@@ -23,3 +17,6 @@ save_to_clipboard = true
 
 [cursor]
 style = "beam"
+
+[font]
+#size = 10.00
