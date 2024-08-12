@@ -13,7 +13,7 @@ dimensions = { columns = 120, lines = 30 }
 multiplier = 20
 
 [selection]
-save_to_clipboard = true
+#save_to_clipboard = true
 
 [cursor]
 style = "beam"
