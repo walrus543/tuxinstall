@@ -100,11 +100,8 @@ check_systemd_user()
 }
 
 msg_bold_blue() {
-    msg_bold_blue$1${RESET}
+    echo "${BLUE}${BOLD}$1${RESET}"
 }
-
-
-
 
 #####################
 ### FIN FONCTIONS ###
