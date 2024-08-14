@@ -99,6 +99,13 @@ check_systemd_user()
     systemctl --user is-enabled "$1"
 }
 
+msg_bold_blue() {
+    msg_bold_blue$1${RESET}
+}
+
+
+
+
 #####################
 ### FIN FONCTIONS ###
 #####################
@@ -203,7 +210,7 @@ then
         date >> "$log_noroot"
 
         #Resh
-        echo ${BLUE}${BOLD}"➜ Installation de resh"${RESET}
+	msg_bold_blue "➜ Installation de resh"
         if ! pacman -Q zsh tar curl > /dev/null 2>&1
         then
             echo ${YELLOW}"Installer zsh, curl et tar avant RESH."${RESET}
@@ -213,7 +220,7 @@ then
             curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         fi
 
-        echo ${BLUE}${BOLD}"➜ Installation de paru"${RESET}
+        msg_bold_blue"➜ Installation de paru"
         if ! check_pkg paru && check_pkg git && check_pkg base-devel
         then
             echo "Installation de PARU"
@@ -237,7 +244,7 @@ then
             fi
         fi
 
-        echo ${BLUE}${BOLD}"➜ Activation de syncthing.service"${RESET}
+        msg_bold_blue"➜ Activation de syncthing.service"
         if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]
         then
             echo -n "Activation du service syncthing.service : "
@@ -246,7 +253,7 @@ then
         fi
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
-        echo ${BLUE}${BOLD}"➜ Paquets paru"${RESET}
+        msg_bold_blue"➜ Paquets paru"
         if check_pkg paru
         then
             while read -r line
@@ -275,7 +282,7 @@ then
             done < "packages/$paru_list"
         fi
 
-        echo ${BLUE}${BOLD}"➜ Gestion nvm"${RESET}
+        msg_bold_blue"➜ Gestion nvm"
         if [[ ! -f ~/.nvm/nvm.sh ]]
         then
             echo -n "- - - Installation de NVM : "
@@ -300,7 +307,7 @@ then
             sleep $sleepmid
         fi
 
-        echo ${BLUE}${BOLD}"➜ Configuration shell"${RESET}
+        msg_bold_blue"➜ Configuration shell"
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]
         then
             echo "- - - Installation Oh My ZSH"
@@ -425,7 +432,7 @@ then
         exit 1;
     fi
 
-    echo ${BLUE}${BOLD}"➜ Paramètrage Virtualisation"${RESET}
+    msg_bold_blue"➜ Paramètrage Virtualisation"
     if [[ "$VM" != "none" ]]
     then
         if ! check_pkg virtualbox-guest-utils
@@ -450,8 +457,8 @@ then
             check_cmd
         fi
 
-    echo ${BLUE}${BOLD}"➜ Chaotic aur"${RESET}
-	if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
+    msg_bold_blue"➜ Chaotic aur"
+    if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
     then
         #https://aur.chaotic.cx/docs
         pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
@@ -475,7 +482,7 @@ then
 fi
 
 ### CONF PACMAN
-echo ${BLUE}${BOLD}"➜ Configuration pacman"${RESET}
+msg_bold_blue"➜ Configuration pacman"
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
 then
     echo -n "- - - Correction ILoveCandy : "
@@ -496,7 +503,7 @@ then
 fi
 
 ### CONF MAKEPKG
-echo ${BLUE}${BOLD}"➜ Configuration makepkg"${RESET}
+msg_bold_blue"➜ Configuration makepkg"
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
 then
     echo -n "- - - Correction de la compression : "
@@ -512,7 +519,7 @@ then
 fi
 
 ### CONF JOURNALD
-echo ${BLUE}${BOLD}"➜ Configuration journald.conf"${RESET}
+msg_bold_blue"➜ Configuration journald.conf"
 if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]
 then
     echo -n "- - - Correction de la taille maximale autorisée : "
@@ -523,7 +530,7 @@ fi
 ### CONF SYSTEMD-BOOT ou GRUB
 if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/loader.conf) -lt 1 ]]
 then
-    echo ${BLUE}${BOLD}"➜ Configuration menu systemd-boot"${RESET}
+    msg_bold_blue"➜ Configuration menu systemd-boot"
     echo -n "- - - Kernel dernier sauvegardé sélectionné : "
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
     check_cmd
@@ -535,7 +542,7 @@ fi
 
 if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]
 then
-    echo ${BLUE}${BOLD}"➜ Configuration menu grub"${RESET}
+    msg_bold_blue"➜ Configuration menu grub"
     echo -n "- - - Timeout de 2s : "    
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=2/' /etc/default/grub
     check_cmd
@@ -546,12 +553,12 @@ then
 fi
 
 ### MAJ Système avec Pacman
-echo -n ${BLUE}${BOLD}"➜ Mise à jour du système Pacman : "
+echo -n ${BLUE}${BOLD}"➜ Mise à jour du système Pacman : "${RESET}
 pacman -Syu --noconfirm >> "$log_root" 2>&1
 check_cmd
 
 ### PAQUETS PACMAN
-echo ${BLUE}${BOLD}"➜ Gestion des paquets principaux pacman"${RESET}
+msg_bold_blue"➜ Gestion des paquets principaux pacman"
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -635,7 +642,7 @@ then
     done < "$ICI/packages/pacman_xfce.list"
 fi
 
-echo ${BLUE}${BOLD}"➜ Configuration Flatpak"${RESET}
+msg_bold_blue"➜ Configuration Flatpak"
 ## FLATHUB
 if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]
 then
@@ -665,7 +672,7 @@ fi
 #fi
 
 ### PAQUETS FLATPAK
-echo ${BLUE}${BOLD}"➜ Gestion des paquets FLATPAK (long si première installation)"${RESET}
+msg_bold_blue"➜ Gestion des paquets FLATPAK (long si première installation)"
 while read -r line
 do
 	if [[ "$line" == add:* ]]
@@ -692,7 +699,7 @@ do
 done < "$ICI/packages/flatpak.list"
 
 ### Systemd
-echo ${BLUE}${BOLD}"➜ Paramètrage systemd"${RESET}
+msg_bold_blue"➜ Paramètrage systemd"
 if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
 then
     echo -n "- - - Activation du service Timeshift : "
@@ -746,7 +753,7 @@ then
 fi
 
 #Sauvegarde perso
-echo ${BLUE}${BOLD}"➜ Service et timer systemd pour sauvegarde perso"${RESET}
+msg_bold_blue"➜ Service et timer systemd pour sauvegarde perso"
 if [[ "$VM" = "none" ]] # Uniquement si on n'est PAS dans une VM
 then
     if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]]
@@ -776,7 +783,7 @@ then
     fi
 fi
 
-echo ${BLUE}${BOLD}"➜ Fichiers de configuration"${RESET}
+msg_bold_blue"➜ Fichiers de configuration"
 if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]
 then
     echo -n "- - - Ajout alacritty.toml : "
@@ -785,7 +792,7 @@ then
     check_cmd
 fi
 
-echo ${BLUE}${BOLD}"➜ Suppression du bruit lors de recherches"${RESET}
+msg_bold_blue"➜ Suppression du bruit lors de recherches"
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
     touch /etc/modprobe.d/nobeep.conf
@@ -805,7 +812,7 @@ then
 fi
 
 # Rétention cache des paquets avec paccache
-echo ${BLUE}${BOLD}"➜ Paccache : cache des paquets"${RESET}
+msg_bold_blue"➜ Paccache : cache des paquets"
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]
 #Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne 
 then
@@ -814,7 +821,7 @@ then
 	check_cmd
 fi
 
-echo ${BLUE}${BOLD}"➜ Pavé numérique"${RESET}
+msg_bold_blue"➜ Pavé numérique"
 # On crée les fichiers si besoin
 if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]
 then
@@ -839,7 +846,7 @@ fi
 
 
 
-echo ${BLUE}${BOLD}"➜ Carte réseau Realtek"${RESET}
+msg_bold_blue"➜ Carte réseau Realtek"
 #Gestion de la carte réseau Realtek RTL8821CE
 if [[ "$VM" = "none" ]]
 then
