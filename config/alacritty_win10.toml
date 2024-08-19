@@ -1,11 +1,13 @@
-working_directory = "C:\\Users\\xxxxx"
+# https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd
+
+#working_directory = "C:\\Users\\16291"
 
 [shell]
 args = ["--login", "-i"]
 program = "C:\\Program Files\\Git\\bin\\bash.exe"
 
 [cursor]
-style = "beam"
+style = "block"
 
 [scrolling]
 multiplier = 20
@@ -142,9 +144,11 @@ mods = "Shift"
 
 [window]
 dynamic_padding = false
-opacity = 0.9
-#title = "Alacritty"
-dimensions = { columns = 150, lines = 40 }
+opacity = 0.95
+title = "Alacritty"
+startup_mode = "Maximized"
+
+#dimensions = { columns = 150, lines = 40 }
 decorations = "None"
 
 [window.class]
