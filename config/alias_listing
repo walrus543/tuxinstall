@@ -82,6 +82,7 @@ alias refaire='bash $PathIR/___Emails___/Scripts/refaire.sh'
 alias extractappfiltericons='bash $PathIR/___Emails___/Scripts/extract_appfilter_icons.sh'
 alias translations='bash ~/Thèmes/_Translations/recopie.sh'
 alias ipversion='bash $PathIR/___Emails___/Scripts/versions.sh'
+alias gitcheck='bash $PathIR/___Emails___/Scripts/git.sh'
 
 ## OUVERTURE DES APPFILTERS
 alias xmlalta='kate ~/Thèmes/Alta/app/src/main/res/xml/appfilter.xml'
