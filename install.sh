@@ -868,6 +868,7 @@ then
         # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
         # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
         # Définir le répertoire cible et les patterns des noms de fichiers
+	# Ça reste visible avec journalctl -b --priority=3
         DIR="/boot/loader/entries"
         PATTERNS=("linux.conf" "linux-lts.conf")
 
