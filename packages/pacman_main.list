@@ -22,6 +22,7 @@ add:flameshot
 add:flatpak
 add:git
 add:hplip #HP imprimante driver
+add:inxi
 add:jre-openjdk-headless
 add:kio-admin
 add:linux-lts-headers
