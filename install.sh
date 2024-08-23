@@ -279,31 +279,6 @@ then
             done < "packages/$paru_list"
         fi
 
-        msg_bold_blue "➜ Gestion nvm"
-        if [[ ! -f ~/.nvm/nvm.sh ]]
-        then
-            echo -n "- - - Installation de NVM : "
-            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
-            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-            check_cmd
-
-            echo -n "- - - Nettoyage .zshrc : "
-            sed -i '/NVM_DIR/d' ~/.zshrc
-            check_cmd
-
-            echo -n "- - - Paramètrage .zshrc : "
-            echo "" >> ~/.zshrc
-            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
-            check_cmd
-
-            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
-            echo "déjà dans le presse-papier"
-            sleep $sleepmid
-            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
-            sleep $sleepmid
-        fi
-
         msg_bold_blue "➜ Configuration shell"
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]
         then
@@ -378,6 +353,31 @@ then
 	    
             #echo "On bascule sur ZSH !"
             #zsh
+        fi
+
+ 	msg_bold_blue "➜ Gestion nvm"
+        if [[ ! -f ~/.nvm/nvm.sh ]]
+        then
+            echo -n "- - - Installation de NVM : "
+            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
+            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+            check_cmd
+
+            echo -n "- - - Nettoyage .zshrc : "
+            sed -i '/NVM_DIR/d' ~/.zshrc
+            check_cmd
+
+            echo -n "- - - Paramètrage .zshrc : "
+            echo "" >> ~/.zshrc
+            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
+            check_cmd
+
+            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
+            echo "déjà dans le presse-papier"
+            sleep $sleepmid
+            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
+            sleep $sleepmid
         fi
     fi
 
