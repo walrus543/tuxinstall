@@ -787,6 +787,10 @@ then
     mkdir -p ~/.config/alacritty
     cp "$ICI/config/alacritty.toml" ~/.config/alacritty
     check_cmd
+    if [[ "$VM" = "none" ]]
+    then
+        sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
+    fi
 fi
 
 msg_bold_blue "➜ Suppression du bruit lors de recherches"
