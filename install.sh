@@ -532,16 +532,16 @@ then
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
     check_cmd
 
-    echo -n "- - - Timeout de 2s : "    
-    sed -i 's/^timeout .*$/timeout 2/' /boot/loader/loader.conf
+    echo -n "- - - Timeout de 1s : "    
+    sed -i 's/^timeout .*$/timeout 1/' /boot/loader/loader.conf
     check_cmd
 fi
 
 if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]
 then
     msg_bold_blue "➜ Configuration menu grub"
-    echo -n "- - - Timeout de 2s : "    
-    sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=2/' /etc/default/grub
+    echo -n "- - - Timeout de 1s : "    
+    sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' /etc/default/grub
     check_cmd
 
     echo -n "- - - Regénérer grub.cfg : "
