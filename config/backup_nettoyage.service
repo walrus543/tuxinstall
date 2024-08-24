@@ -1,6 +1,7 @@
 [Unit]
 Description=Nettoyage et sauvegarde
-Wants=backup_nettoyage.timer
+After=network-online.target
+Wants=network-online.target
 ConditionFileIsExecutable=/home/arnaud/Documents/Linux/backup_nettoyage.sh
 
 [Service]
