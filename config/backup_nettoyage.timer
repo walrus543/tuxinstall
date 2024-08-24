@@ -3,6 +3,7 @@ Description=Timer for backup_nettoyage.service
 
 [Timer]
 OnCalendar=Sat *-*-* 10:00:00
+OnBootSec=2min
 Persistent=true
 
 [Install]
