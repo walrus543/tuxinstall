@@ -793,6 +793,13 @@ then
     fi
 fi
 
+if check_pkg vim && [[ $(grep -c "syntax" ~/.vimrc) -lt 1 ]]
+then
+    echo -n "- - - .vimrc : "
+    cp "$ICI/config/vimrc" ~/.vimrc
+    check_cmd
+fi
+
 msg_bold_blue "➜ Suppression du bruit lors de recherches"
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
 then
