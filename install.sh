@@ -9,8 +9,7 @@ DE=$(echo $XDG_CURRENT_DESKTOP)
 VM=$(systemd-detect-virt)
 ICI=$(dirname "$0")
 
-if [[ "$VM" != "none" ]]
-then
+if [[ "$VM" != "none" ]]; then
     pacman_list="pacman_main_vm.list"
     paru_list="paru_vm.list"
 else
@@ -77,10 +76,8 @@ del_flatpak()
 
 check_cmd()
 {
-if [[ "$pacman_status" != 'false' ]]
-then
-    if [[ $? -eq 0 ]]
-    then
+if [[ "$pacman_status" != 'false' ]]; then
+    if [[ $? -eq 0 ]]; then
         echo ${GREEN}"OK"${RESET}
     else
         echo ${RED}"ERREUR"${RESET}
@@ -127,8 +124,7 @@ else
 fi
 
 # Tester la connexion Internet
-if ! ping -c 1 google.com &> /dev/null
-then
+if ! ping -c 1 google.com &> /dev/null; then
     echo "Pas de connexion Internet"
     exit 2;
 fi
@@ -137,8 +133,7 @@ fi
 #### PROGRAMME ####
 ###################
 # Easter Egg
-if [[ "$1" = "arch" ]]
-    then
+if [[ "$1" = "arch" ]]; then
     # Afficher le logo Arch Linux
 cat << "EOF"
                     -`
@@ -168,8 +163,7 @@ EOF
 fi
 
 # Seulement pour Arch
-if [[ $(grep -c "ID=arch" /etc/os-release) -lt 1 ]]
-then
+if [[ $(grep -c "ID=arch" /etc/os-release) -lt 1 ]]; then
     echo ${RED}"Ce script n'est fait que pour Arch Linux"${RESET}
     echo "\"ID=arch\" non trouvé dans /etc/os-release."
     exit 1;
@@ -178,10 +172,8 @@ fi
 ###################
 #### USER ####
 ###################
-if [[ "$1" = "user" ]]
-then
-    if [[ $(id -u) -eq "0" ]]
-    then
+if [[ "$1" = "user" ]]; then
+    if [[ $(id -u) -eq "0" ]]; then
         echo ${RED}"Lancer le script sans les droits root (su - root ou sudo)"${RESET}
         exit 1;
     fi
@@ -208,18 +200,15 @@ then
 
         #Resh
 	msg_bold_blue "➜ Installation de resh"
-        if ! pacman -Q zsh tar curl > /dev/null 2>&1
-        then
+        if ! pacman -Q zsh tar curl > /dev/null 2>&1; then
             echo ${YELLOW}"Installer zsh, curl et tar avant RESH."${RESET}
-        elif [[ ! -d ~/.resh/bin/ ]]
-        # https://github.com/curusarn/resh
-        then
+        elif [[ ! -d ~/.resh/bin/ ]]; then
+	# https://github.com/curusarn/resh
             curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
         fi
 
         msg_bold_blue "➜ Installation de paru"
-        if ! check_pkg paru && check_pkg git && check_pkg base-devel
-        then
+        if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
             echo "Installation de PARU"
             rustup default stable >> "$log_noroot" 2>&1
             git clone https://aur.archlinux.org/paru.git >> "$log_noroot" 2>&1
@@ -233,8 +222,7 @@ then
             rm -rf paru
             check_cmd
 
-            if check_pkg paru && [[ $(grep -c "^#NewsOnUpgrade" /etc/paru.conf) -lt 1 ]]
-            then
+            if check_pkg paru && [[ $(grep -c "^#NewsOnUpgrade" /etc/paru.conf) -lt 1 ]]; then
                 echo -n "- - - Correction de NewsOnUpgrade : "
                 sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
                 check_cmd
@@ -242,8 +230,7 @@ then
         fi
 
         msg_bold_blue "➜ Activation de syncthing.service"
-        if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]
-        then
+        if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]; then
             echo -n "Activation du service syncthing.service : "
             systemctl --user enable syncthing.service >> "$log_noroot" 2>&1
             check_cmd
@@ -251,26 +238,21 @@ then
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
         msg_bold_blue "➜ Paquets paru"
-        if check_pkg paru
-        then
+        if check_pkg paru; then
             while read -r line
             do
-                if [[ "$line" == add:* ]]
-                then
+                if [[ "$line" == add:* ]]; then
                     p=${line#add:}
-                    if ! check_pkg "$p"
-                    then
+                    if ! check_pkg "$p"; then
                         echo -n "- - - Installation paquet $p : "
                         add_pkg_paru "$p"
                         check_cmd
                     fi
                 fi
 
-                if [[ "$line" == del:* ]]
-                then
+                if [[ "$line" == del:* ]]; then
                     p=${line#del:}
-                    if check_pkg "$p"
-                    then
+                    if check_pkg "$p"; then
                         echo -n "- - - Suppression paquet $p : "
                         del_pkg_paru "$p"
                         check_cmd
@@ -280,28 +262,24 @@ then
         fi
 
         msg_bold_blue "➜ Configuration shell"
-        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]
-        then
+        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]; then
             echo "- - - Installation Oh My ZSH"
             sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # >> "$log_noroot" 2>&1 # pas dans les logs pour le définir comme shell par défaut
             echo -n "- - - Installation Oh My ZSH : "
             check_pkg zsh
             check_cmd
         fi
-        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]
-        then
+        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
             echo -n "- - - Installation zsh-autosuggestions : "
             git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions >> "$log_noroot" 2>&1
             check_cmd
         fi
-        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]
-        then
+        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
             echo -n "- - - Installation zsh-syntax-highlighting : "
             git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting >> "$log_noroot" 2>&1
             check_cmd
         fi
-        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]
-        then
+        if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
             echo -n "- - - Installation powerlevel10k : "
             git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k >> "$log_noroot" 2>&1
             check_cmd
@@ -312,8 +290,7 @@ then
             sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
             check_cmd
         fi
-        if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]
-        then
+        if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]; then
             echo -n "- - - Installation des polices : "
             sudo mkdir -p /usr/share/fonts/TTF
             sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
@@ -323,8 +300,7 @@ then
             check_cmd
             fc-cache -f -v >> "$log_noroot" 2>&1
         fi
-        if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]
-        then
+        if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
             echo -n "- - - ZSH devient le shell par défaut : "
             chsh -s /usr/bin/zsh
             check_cmd
@@ -334,14 +310,12 @@ then
         if check_pkg zsh # && [[ $(grep -c "ALIAS - GENERAL" ~/.zshrc) -lt 1 ]]
         then
             echo -n "- - - Ajustement des alias par comparatif : "
-            if [ ! -f "$ICI/config/alias_listing" ]
-            then
+            if [ ! -f "$ICI/config/alias_listing" ]; then
                 echo "Le fichier source des alias n'existe pas."
             else
                 # Ajoute chaque ligne du fichier source au fichier cible si elle n'existe pas déjà
                 while IFS= read -r ligne; do
-                    if ( ! grep -Fxq "$ligne" ~/.zshrc && [[ "$ligne" == "## "* ]] ) || ( ! grep -Fxq "$ligne" ~/.zshrc && [[ "$ligne" == "### "* ]] )
-                    then
+                    if ( ! grep -Fxq "$ligne" ~/.zshrc && [[ "$ligne" == "## "* ]] ) || ( ! grep -Fxq "$ligne" ~/.zshrc && [[ "$ligne" == "### "* ]] ); then
                         echo "" >> ~/.zshrc  # Ajoute une ligne vide avant d'ajouter la ligne commentée uniquement si la ligne à ajouter n'existe pas déjà
                         echo "$ligne" >> ~/.zshrc
                     elif ! grep -Fxq "$ligne" ~/.zshrc; then
@@ -356,8 +330,7 @@ then
         fi
 
  	msg_bold_blue "➜ Gestion nvm"
-        if [[ ! -f ~/.nvm/nvm.sh ]]
-        then
+        if [[ ! -f ~/.nvm/nvm.sh ]]; then
             echo -n "- - - Installation de NVM : "
             wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
             # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
@@ -388,15 +361,13 @@ fi
 ### MAIN - ROOT ###
 ###################
 # Tester si root
-if [[ $(id -u) -ne "0" ]]
-then
+if [[ $(id -u) -ne "0" ]]; then
     echo ${RED}"Lancer le script avec les droits root (su - root ou sudo)"${RESET}
 	exit 1;
 fi
 
 # Tester si bien une base Arch
-if ! check_pkg pacman
-then
+if ! check_pkg pacman; then
 	echo ${RED}"Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("${RESET}
 	exit 2;
 fi
@@ -409,8 +380,7 @@ echo "tail -f $log_root"  | xclip -selection clipboard
 echo "(commande copiée dans le presse-papier)"
 echo
 
-if [[ -f $log_root ]]
-then
+if [[ -f $log_root ]]; then
     echo -n "Suppression du fichier de log existant : "
     rm -f $log_root
     check_cmd
@@ -421,19 +391,15 @@ echo '-------------------' >> "$log_root"
 date >> "$log_root"
 
 #Si VM
-if [[ "$VM" != "none" ]]
-then
-    if [[ $(id -u) -ne "0" ]]
-    then
+if [[ "$VM" != "none" ]]; then
+    if [[ $(id -u) -ne "0" ]]; then
         echo ${RED}"Lancer le script avec les droits root (sudo)"${RESET}
         exit 1;
     fi
 
     msg_bold_blue "➜ Paramètrage Virtualisation"
-    if [[ "$VM" != "none" ]]
-    then
-        if ! check_pkg virtualbox-guest-utils
-        then
+    if [[ "$VM" != "none" ]]; then
+        if ! check_pkg virtualbox-guest-utils; then
             echo -n "- - - Installation du paquet des guests : "
             pacman -S --needed --noconfirm virtualbox-guest-utils >> "$log_root"
             check_cmd
@@ -443,8 +409,7 @@ then
             check_cmd
         fi
 	sleep $sleepquick
-        if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]
-        then
+        if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]; then
             echo -n "- - - Ajout du user au groupe vboxsf : "
             usermod -a -G vboxsf $SUDO_USER
             check_cmd
@@ -455,8 +420,7 @@ then
         fi
 
     msg_bold_blue "➜ Chaotic aur"
-    if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]
-    then
+    if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]; then
         #https://aur.chaotic.cx/docs
         pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
         pacman-key --lsign-key 3056513887B78AEB >> "$log_root" 2>&1
@@ -480,20 +444,17 @@ fi
 
 ### CONF PACMAN
 msg_bold_blue "➜ Configuration pacman"
-if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]
-then
+if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]; then
     echo -n "- - - Correction ILoveCandy : "
     sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
     check_cmd
 fi
-if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]
-then
+if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]; then
     echo -n "- - - Correction téléchargements parallèles : "
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     check_cmd
 fi
-if [[ $(grep -c "^Color" /etc/pacman.conf) -lt 1 ]]
-then
+if [[ $(grep -c "^Color" /etc/pacman.conf) -lt 1 ]]; then
     echo -n "- - - Correction des couleurs : "
     sed -i 's/^#Color/Color/' /etc/pacman.conf
     check_cmd
@@ -501,15 +462,13 @@ fi
 
 ### CONF MAKEPKG
 msg_bold_blue "➜ Configuration makepkg"
-if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]
-then
+if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]; then
     echo -n "- - - Correction de la compression : "
     sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
     check_cmd
 fi
 
-if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]
-then
+if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]; then
     echo -n "- - - Correction de l'utilisation des coeurs : "
     sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
     check_cmd
@@ -517,16 +476,14 @@ fi
 
 ### CONF JOURNALD
 msg_bold_blue "➜ Configuration journald.conf"
-if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]
-then
+if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]; then
     echo -n "- - - Correction de la taille maximale autorisée : "
     sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
     check_cmd
 fi
 
 ### CONF SYSTEMD-BOOT ou GRUB
-if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/loader.conf) -lt 1 ]]
-then
+if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/loader.conf) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu systemd-boot"
     echo -n "- - - Kernel dernier sauvegardé sélectionné : "
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
@@ -537,8 +494,7 @@ then
     check_cmd
 fi
 
-if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]
-then
+if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu grub"
     echo -n "- - - Timeout de 1s : "    
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' /etc/default/grub
@@ -558,22 +514,18 @@ check_cmd
 msg_bold_blue "➜ Gestion des paquets principaux pacman"
 while read -r line
 do
-	if [[ "$line" == add:* ]]
-	then
+	if [[ "$line" == add:* ]]; then
 		p=${line#add:}
-		if ! check_pkg "$p"
-		then
+		if ! check_pkg "$p"; then
 			echo -n "- - - Installation paquet $p : "
 			add_pkg_pacman "$p"
 			check_cmd
 		fi
 	fi
 
-	if [[ "$line" == del:* ]]
-	then
+	if [[ "$line" == del:* ]]; then
 		p=${line#del:}
-		if check_pkg "$p"
-		then
+		if check_pkg "$p"; then
 			echo -n "- - - Suppression paquet $p : "
 			del_pkg_pacman "$p"
 			check_cmd
@@ -581,27 +533,22 @@ do
 	fi
 done < "packages/$pacman_list"
 
-if [[ "$DE" = 'KDE' ]]
-then
+if [[ "$DE" = 'KDE' ]]; then
     echo ${BLUE}"➜➜ Gestion des paquets Plasma"${RESET}
     while read -r line
     do
-        if [[ "$line" == add:* ]]
-        then
+        if [[ "$line" == add:* ]]; then
             p=${line#add:}
-            if ! check_pkg "$p"
-            then
+            if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
         fi
 
-        if [[ "$line" == del:* ]]
-        then
+        if [[ "$line" == del:* ]]; then
             p=${line#del:}
-            if check_pkg "$p"
-            then
+            if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
@@ -610,27 +557,22 @@ then
     done < "$ICI/packages/pacman_plasma.list"
 fi
 
-if [[ "$DE" = 'XFCE' ]]
-then
+if [[ "$DE" = 'XFCE' ]]; then
     echo ${BLUE}"➜➜ Gestion des paquets XFCE"${RESET}
     while read -r line
     do
-        if [[ "$line" == add:* ]]
-        then
+        if [[ "$line" == add:* ]]; then
             p=${line#add:}
-            if ! check_pkg "$p"
-            then
+            if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
         fi
 
-        if [[ "$line" == del:* ]]
-        then
+        if [[ "$line" == del:* ]]; then
             p=${line#del:}
-            if check_pkg "$p"
-            then
+            if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
@@ -641,14 +583,12 @@ fi
 
 msg_bold_blue "➜ Configuration Flatpak"
 ## FLATHUB
-if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]
-then
+if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]; then
 	echo -n "- - - Installation Flathub : "
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo > /dev/null
 	check_cmd
 
-elif ! check_pkg flatpak
-then
+elif ! check_pkg flatpak; then
     echo -n "- - - Installation de Flatkpak : "
     add_pkg_pacman flatpak
     check_cmd
@@ -672,22 +612,18 @@ fi
 msg_bold_blue "➜ Gestion des paquets FLATPAK (long si première installation)"
 while read -r line
 do
-	if [[ "$line" == add:* ]]
-	then
+	if [[ "$line" == add:* ]]; then
 		p=${line#add:}
-		if ! check_flatpak "$p"
-		then
+		if ! check_flatpak "$p"; then
 			echo -n "- - - Installation flatpak $p : "
 			add_flatpak "$p"
 			check_cmd
 		fi
 	fi
 
-	if [[ "$line" == del:* ]]
-	then
+	if [[ "$line" == del:* ]]; then
 		p=${line#del:}
-		if check_flatpak "$p"
-		then
+		if check_flatpak "$p"; then
 			echo -n "- - - Suppression flatpak $p : "
 			del_flatpak "$p"
 			check_cmd
@@ -695,55 +631,55 @@ do
 	fi
 done < "$ICI/packages/flatpak.list"
 
+### NPM
+msg_bold_blue "➜ Paquets Node.js via npm"
+if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
+    echo -n "- - - Installation de clipboard-cli : "
+     npm install --global clipboard-cli >> "$log_root" 2>&1
+      check_cmd
+fi
+
 ### Systemd
 msg_bold_blue "➜ Paramètrage systemd"
-if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]
-then
+if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation du service Timeshift : "
     systemctl enable cronie.service >> "$log_root" 2>&1
     check_cmd
 fi
 
-if ! check_pkg cups
-then
+if ! check_pkg cups; then
     echo -n "- - - Installation du paquet cups : "
     add_pkg_pacman cups
     check_cmd
-elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]
-then
+elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation de cups.socket : "
     systemctl enable --now cups.socket >> "$log_root" 2>&1
     check_cmd
 fi
 
-if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]
-then
+if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation de cups.service : "
     systemctl enable --now cups.service >> "$log_root" 2>&1
     check_cmd
 fi
 
-if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]
-then
+if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation de bluetooth.service : "
     systemctl enable --now bluetooth.service >> "$log_root" 2>&1
     check_cmd
 fi
 
-if ! check_pkg pacman-contrib
-then
+if ! check_pkg pacman-contrib; then
     echo -n "- - - Installation du paquet pacman-contrib : "
     add_pkg_pacman pacman-contrib
     check_cmd
 fi
-if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]
-then
+if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation de paccache.timer : "
     systemctl enable paccache.timer >> "$log_root" 2>&1
     check_cmd
 fi
-if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]
-then
+if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation du service sshd.service : "
     systemctl enable sshd.service >> "$log_root" 2>&1
     check_cmd
@@ -751,28 +687,22 @@ fi
 
 #Sauvegarde perso
 msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
-if [[ "$VM" = "none" ]] # Uniquement si on n'est PAS dans une VM
-then
-    if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]]
-    then
+if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
+    if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
         echo ${YELLOW}"/!\ ~/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
         sleep $sleepmid
-    elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]
-    then
-        if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]
-        then
+    elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
+        if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
             echo -n "- - - Copie backup_nettoyage.service : "
             mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
             check_cmd
         fi
-        if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]
-        then
+        if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
             echo -n "- - - Copie backup_nettoyage.timer : "
             mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
             check_cmd
         fi
-        if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]
-        then
+        if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
             echo -n "- - - Activation du service backup_nettoyage.timer : "
             systemctl enable backup_nettoyage.timer >> "$log_root" 2>&1
             check_cmd
@@ -781,39 +711,33 @@ then
 fi
 
 msg_bold_blue "➜ Fichiers de configuration"
-if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]
-then
+if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]; then
     echo -n "- - - Ajout alacritty.toml : "
     mkdir -p ~/.config/alacritty
     cp "$ICI/config/alacritty.toml" ~/.config/alacritty
     check_cmd
-    if [[ "$VM" = "none" ]]
-    then
+    if [[ "$VM" = "none" ]]; then
         sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
     fi
 fi
 
-if check_pkg vim && [[ $(grep -c "syntax" ~/.vimrc) -lt 1 ]]
-then
+if check_pkg vim && [[ $(grep -c "syntax" ~/.vimrc) -lt 1 ]]; then
     echo -n "- - - .vimrc : "
     cp "$ICI/config/vimrc" ~/.vimrc
     check_cmd
 fi
 
 msg_bold_blue "➜ Suppression du bruit lors de recherches"
-if [[ ! -f /etc/modprobe.d/nobeep.conf ]]
-then
+if [[ ! -f /etc/modprobe.d/nobeep.conf ]]; then
     touch /etc/modprobe.d/nobeep.conf
 fi
 
-if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]
-then
+if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
     echo -n "- - - Blacklist pcspkr : "
     echo "blacklist pcspkr" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     check_cmd
 fi
-if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]
-then
+if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
     echo -n "- - - Blacklist snd_pcsp : "
     echo "blacklist snd_pcsp" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
     check_cmd
@@ -831,41 +755,32 @@ fi
 
 msg_bold_blue "➜ Pavé numérique"
 # On crée les fichiers si besoin
-if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]
-then
+if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]; then
     touch /etc/sddm.conf
 fi
-if [ "$DE" = 'XFCE' ] && [[ ! -f /etc/lightdm/lightdm.conf ]]
-then
+if [ "$DE" = 'XFCE' ] && [[ ! -f /etc/lightdm/lightdm.conf ]]; then
     touch /etc/lightdm/lightdm.conf
 fi
 
-if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]
-then
+if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
     echo -n "- - - Activation pour KDE Plasma : "
     echo "[General]" | tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | tee -a /etc/sddm.conf > /dev/null
     check_cmd
-elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]
-then
+elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
     echo -n "- - - Activation pour XFCE : "
     sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
     check_cmd
 fi
 
-
-
 msg_bold_blue "➜ Carte réseau Realtek"
 #Gestion de la carte réseau Realtek RTL8821CE
-if [[ "$VM" = "none" ]]
-then
-    if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git # Carte détectée mais paquet manquant
-    then
+if [[ "$VM" = "none" ]]; then
+    if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
         echo -n "- - - Installation du paquet AUR  : "
         add_pkg_paru rtl8821ce-dkms-git
         check_cmd
 
-        if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]
-        then
+        if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
             echo -n "- - - Configuration blacklist.conf  : "
             echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
             echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
@@ -923,8 +838,7 @@ fi
 
 #NVIDIA
 read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]
-then
+if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
     echo -n "- - - Installation des paquets NVIDIA : "
     pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
     check_cmd
@@ -932,28 +846,23 @@ fi
 
 ### OSheden
 read -p ${BLUE}${BOLD}"➜ Besoin des spécificités pour OSheden ? (y/N) "${RESET} -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
+if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo
     echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
     while read -r line
     do
-        if [[ "$line" == add:* ]]
-        then
+        if [[ "$line" == add:* ]]; then
             p=${line#add:}
-            if ! check_pkg "$p"
-            then
+            if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
         fi
 
-        if [[ "$line" == del:* ]]
-        then
+        if [[ "$line" == del:* ]]; then
             p=${line#del:}
-            if check_pkg "$p"
-            then
+            if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
@@ -961,8 +870,7 @@ then
         fi
     done < "$ICI/packages/pacman_osheden.list"
 
-    if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]
-    then
+    if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]; then
         echo -n "➜➜ Création des liens symboliques : "
         ln -s /home/$SUDO_USER/Thèmes/Alta/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta
         ln -s /home/$SUDO_USER/Thèmes/Altess/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Altess
@@ -1008,14 +916,12 @@ then
 fi
 
 #Actions manuelles
-if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]
-then
+if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
     echo
     echo ${YELLOW}${BOLD}"*******************"
     echo "Actions manuelles"
     echo "*******************"${RESET}
-    if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]
-    then
+    if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
 	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
 	    echo "Avec une opacité du tableau de bord : **translucide**"
      fi
