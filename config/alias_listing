@@ -69,6 +69,7 @@ alias candybarsample='git clone https://github.com/zixpo/candybar-sample.git'
 alias nvmupdate='curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'
 #https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 #https://github.com/nodejs/Release
+alias cb=clipboard
 alias aalias='kate ~/.zshrc'
 
 ###############
