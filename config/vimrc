@@ -1,0 +1,6 @@
+set nu
+syntax on
+colorscheme slate
+set tabstop=4		" Nombre de colonnes pour la tabulation
+set shiftwidth=4	" Nombre de colonnes pour l'indentation
+" set expandtab		" Convertir les tabulations en espaces
