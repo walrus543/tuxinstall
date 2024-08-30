@@ -950,34 +950,34 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             # Télécharger le fichier
             echo -n "- - - Téléchargement... : "
             wget -P /tmp -q --show-progress "$download_url"
-        fi
 
-        filename=$(basename $(ls -1 /tmp/android-studio*))
-        filesize=$(du /tmp/$filename)
-        path_install='/usr/local/android-studio'
+            filename=$(basename $(ls -1 /tmp/android-studio*))
+            filesize=$(du /tmp/$filename)
+            path_install='/usr/local/android-studio'
 
-        if [[ "$filesize" -lt 1000000 ]]; then
-            echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
-        else
-            printf "\nInstallation lancée...\n"
-            echo -n "- - - Création du dossier final : "
-            mkdir -p $path_install
-            check_cmd
+            if [[ "$filesize" -lt 1000000 ]]; then
+                echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
+            else
+                printf "\nInstallation lancée...\n"
+                echo -n "- - - Création du dossier final : "
+                mkdir -p $path_install
+                check_cmd
 
-            echo -n "- - - Décompresssion $filename : "
-            tar -xzf /tmp/$filename -C $path_install
-            check_cmd
+                echo -n "- - - Décompresssion $filename : "
+                tar -xzf /tmp/$filename -C $path_install
+                check_cmd
 
-            echo -n "- - - Rendre studio.sh exécutable : "
-            chmod +x $path_install/bin/studio.sh
-            check_cmd
+                echo -n "- - - Rendre studio.sh exécutable : "
+                chmod +x $path_install/bin/studio.sh
+                check_cmd
 
-            echo -n "- - - Suppression du fichier original $filename : "
-            rm -f /tmp/$filename
-            check_cmd
+                echo -n "- - - Suppression du fichier original $filename : "
+                rm -f /tmp/$filename
+                check_cmd
 
-            echo "Installation terminée."
-            echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+                echo "Installation terminée."
+                echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+            fi
         fi
     fi
 fi
