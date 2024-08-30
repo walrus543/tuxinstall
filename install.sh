@@ -915,6 +915,73 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
 fi
 
+######################
+# Android Studio
+######################
+read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    printf "\n- - - Test de la connexion au site...\n"
+
+    url="https://developer.android.com/studio?hl=fr"
+
+    # Effectuer la requête HTTPS avec curl
+    response=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
+    # -s pour mode silencieux
+    # -S pour afficher les erreurs
+    # -o /dev/null pour rediriger la sortie vers null
+    # -w "%{http_code}" pour récupérer uniquement le code de statut HTTP
+
+    #Contrôler la disponibilité du site
+    if [[ $response -ne 200 ]]; then
+        echo "${RED}- - - Impossible de se connecter au site $url${RESET}"
+    else
+        # Récupérer le contenu de la page
+        page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
+
+        # Extraire l'URL de téléchargement pour Linux
+        download_url=$(echo "$page_content" | grep -oP 'https://.*?android-studio-.*?-linux.tar.gz' | head -n 1)
+
+        # Vérifier si l'URL a été trouvée
+        if [[ -z "$download_url" ]]; then
+            echo "${RED}- - - Impossible de trouver l'URL de téléchargement.${RESET}"
+        else
+            # Télécharger le fichier
+            echo -n "- - - Téléchargement... : "
+            wget -P /tmp -q --show-progress "$download_url"
+            check_cmd
+        fi
+
+        filename=$(basename $(ls -1 /tmp/android-studio*))
+        filesize=$(du /tmp/$filename)
+        path_install='/usr/local/android-studio'
+
+        if [[ "$filesize" -lt 1000000 ]]; then
+            echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
+        else
+            printf "\nInstallation lancée...\n"
+            echo -n "- - - Création du dossier final : "
+            mkdir -p $path_install
+            check_cmd
+
+            echo -n "- - - Décompresssion $filename : "
+            tar -xzf /tmp/$filename -C $path_install
+            check_cmd
+
+            echo -n "- - - Rendre studio.sh exécutable : "
+            chmod +x $path_install/bin/studio.sh
+            check_cmd
+
+            echo -n "- - - Suppression du fichier original $filename : "
+            rm -f /tmp/$filename
+            check_cmd
+
+            echo "Installation terminée."
+            echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+        fi
+    fi
+fi
+
 #Actions manuelles
 if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
     echo
