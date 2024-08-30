@@ -950,7 +950,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             # Télécharger le fichier
             echo -n "- - - Téléchargement... : "
             wget -P /tmp -q --show-progress "$download_url"
-            check_cmd
         fi
 
         filename=$(basename $(ls -1 /tmp/android-studio*))
