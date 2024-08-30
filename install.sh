@@ -722,9 +722,9 @@ if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]; then
     fi
 fi
 
-if check_pkg vim && [[ $(grep -c "syntax" ~/.vimrc) -lt 1 ]]; then
+if check_pkg vim && [[ $(grep -c "syntax" /home/$SUDO_USER/.vimrc) -lt 1 ]]; then
     echo -n "- - - .vimrc : "
-    cp "$ICI/config/vimrc" ~/.vimrc
+    cp "$ICI/config/vimrc" /home/$SUDO_USER/.vimrc
     check_cmd
 fi
 
