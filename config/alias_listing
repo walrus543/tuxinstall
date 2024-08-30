@@ -3,7 +3,7 @@
 ##############################
 #source $HOME/.bash_aliases
 alias lsa='eza -la --color=always --group-directories-first'
-alias ls='exa -l --color=always --group-directories-first'
+alias ls='eza -l --color=always --group-directories-first'
 alias op8p='bash ~/AndroidAll/OP8P/backup_sdcard.sh'
 alias supthumbnail='find ~/.cache/thumbnails/normal/ -type f -delete'
 alias winsave='VBoxManage controlvm "Win11" savestate'
