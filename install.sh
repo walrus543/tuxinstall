@@ -964,7 +964,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
                 check_cmd
 
                 echo -n "- - - Décompresssion $filename : "
-                tar -xzf /tmp/$filename -C $path_install
+                tar -xzf /tmp/$filename -C $path_install --strip-components=1
                 check_cmd
 
                 echo -n "- - - Rendre studio.sh exécutable : "
