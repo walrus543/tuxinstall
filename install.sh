@@ -922,7 +922,7 @@ fi
 read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    printf "\n- - - Test de la connexion au site...\n"
+    printf "\n- - - Test de la connexion au site\n"
 
     url="https://developer.android.com/studio?hl=fr"
 
@@ -948,12 +948,12 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "${RED}- - - Impossible de trouver l'URL de téléchargement.${RESET}"
         else
             # Télécharger le fichier
-            echo -n "- - - Téléchargement... : "
+            echo "- - - Téléchargement : "
             wget -P /tmp -q --show-progress "$download_url"
 
             filename=$(basename $(ls -1 /tmp/android-studio*))
-            filesize=$(du /tmp/$filename)
-            path_install='/usr/local/android-studio'
+            filesize=$(du /tmp/$filename | awk '{print $1}')
+            path_install="/usr/local/android-studio"
 
             if [[ "$filesize" -lt 1000000 ]]; then
                 echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
@@ -974,9 +974,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -n "- - - Suppression du fichier original $filename : "
                 rm -f /tmp/$filename
                 check_cmd
+		echo -n "- - - Changement du propriétaire et du groupe : "
+  		chown -R $SUDO_USER:$SUDO_USER $path_install
+    		check_cmd
 
-                echo "Installation terminée."
+                echo "${GREEN}${BOLD}Installation terminée.${RESET}"
                 echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+		sleep $sleepquick
             fi
         fi
     fi
