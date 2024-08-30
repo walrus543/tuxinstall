@@ -407,6 +407,9 @@ if [[ "$VM" != "none" ]]; then
             echo -n "- - - Activation de vboxservice.service : "
             systemctl enable --now vboxservice.service >> "$log_root" 2>&1
             check_cmd
+
+            echo ${YELLOW}"Pensez à redémarrer."${RESET}
+            sleep $sleepmid
         fi
 	sleep $sleepquick
         if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]; then
@@ -437,8 +440,6 @@ if [[ "$VM" != "none" ]]; then
         pacman -Syu --needed --noconfirm >> "$log_root"
         check_cmd
     fi
-	echo ${YELLOW}"Pensez à redémarrer."${RESET}
-    sleep $sleepmid
     fi
 fi
 
