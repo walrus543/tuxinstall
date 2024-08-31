@@ -484,7 +484,7 @@ if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]; then
 fi
 
 ### CONF SYSTEMD-BOOT ou GRUB
-if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/loader.conf) -lt 1 ]]; then
+if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 1" /boot/loader/loader.conf) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu systemd-boot"
     echo -n "- - - Kernel dernier sauvegardé sélectionné : "
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
@@ -495,7 +495,7 @@ if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 2" /boot/loader/lo
     check_cmd
 fi
 
-if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=2" /etc/default/grub) -lt 1 ]]; then
+if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu grub"
     echo -n "- - - Timeout de 1s : "    
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' /etc/default/grub
