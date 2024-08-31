@@ -64,6 +64,7 @@ add:thunderbird-ublock-origin
 add:timeshift
 add:tldr
 add:trash-cli
+add:vim
 add:virtualbox
 add:virtualbox-guest-iso
 add:virtualbox-host-dkms
