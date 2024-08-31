@@ -328,30 +328,32 @@ if [[ "$1" = "user" ]]; then
             #echo "On bascule sur ZSH !"
             #zsh
         fi
-
- 	msg_bold_blue "➜ Gestion nvm"
-        if [[ ! -f ~/.nvm/nvm.sh ]]; then
-            echo -n "- - - Installation de NVM : "
-            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
-            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-            check_cmd
-
-            echo -n "- - - Nettoyage .zshrc : "
-            sed -i '/NVM_DIR/d' ~/.zshrc
-            check_cmd
-
-            echo -n "- - - Paramètrage .zshrc : "
-            echo "" >> ~/.zshrc
-            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
-            check_cmd
-
-            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un nouveau terminal : "${RESET}
-            echo "déjà dans le presse-papier"
-            sleep $sleepmid
-            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
-            sleep $sleepmid
-        fi
+	
+	if [[ "$VM" != "none" ]]; then
+	 	msg_bold_blue "➜ Gestion nvm"
+	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
+	            echo -n "- - - Installation de NVM : "
+	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
+	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+	            check_cmd
+	
+	            echo -n "- - - Nettoyage .zshrc : "
+	            sed -i '/NVM_DIR/d' ~/.zshrc
+	            check_cmd
+	
+	            echo -n "- - - Paramètrage .zshrc : "
+	            echo "" >> ~/.zshrc
+	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
+	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
+	            check_cmd
+	
+	            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un NOUVEAU terminal : "${RESET}
+	            echo "déjà dans le presse-papier"
+	            sleep $sleepmid
+	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
+	            sleep $sleepmid
+	        fi
+	 fi
     fi
 
 exit 0;
@@ -633,11 +635,13 @@ do
 done < "$ICI/packages/flatpak.list"
 
 ### NPM
-msg_bold_blue "➜ Paquets Node.js via npm"
-if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
-    echo -n "- - - Installation de clipboard-cli : "
-     npm install --global clipboard-cli >> "$log_root" 2>&1
-      check_cmd
+if [[ "$VM" != "none" ]]; then
+	msg_bold_blue "➜ Paquets Node.js via npm"
+	if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
+	    echo -n "- - - Installation de clipboard-cli : "
+	    npm install --global clipboard-cli >> "$log_root" 2>&1
+	    check_cmd
+	fi
 fi
 
 ### Systemd
