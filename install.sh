@@ -716,14 +716,17 @@ if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
 fi
 
 msg_bold_blue "➜ Fichiers de configuration"
-if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]; then
+if check_pkg alacritty && [[ ! -f /home/$SUDO_USER/.config/alacritty/alacritty.toml ]]; then
     echo -n "- - - Ajout alacritty.toml : "
-    mkdir -p ~/.config/alacritty
-    cp "$ICI/config/alacritty.toml" ~/.config/alacritty
+    mkdir -p /home/$SUDO_USER/.config/alacritty
+    cp "$ICI/config/alacritty.toml" /home/$SUDO_USER/.config/alacritty
     check_cmd
-    if [[ "$VM" = "none" ]]; then
+    if [[ "$VM" != "none" ]]; then
         sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
     fi
+    echo -n "- - - Propriétaire du dossier alacritty : "
+    chown -R $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/alacritty
+    check_cmd
 fi
 
 if check_pkg vim && [[ $(grep -c "syntax" /home/$SUDO_USER/.vimrc 2>/dev/null) -lt 1 ]]; then
