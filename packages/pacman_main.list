@@ -23,7 +23,10 @@ add:flatpak
 add:git
 add:hplip #HP imprimante driver
 add:inxi
-add:jre-openjdk-headless
+#JRE requis pour exécution appli Java
+#add:jre-openjdk-headless
+#JDK requis pour compilation Android
+add:jdk-openjdk
 add:kio-admin
 add:linux-lts-headers
 add:man-db
