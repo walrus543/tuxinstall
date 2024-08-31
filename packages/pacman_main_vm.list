@@ -16,6 +16,7 @@ add:git
 add:linux-lts-headers
 add:man-db
 add:man-pages
+add:npm
 add:pacman-contrib
 add:shellcheck
 add:xclip
