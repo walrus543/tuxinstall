@@ -26,7 +26,7 @@ add:inxi
 #JRE requis pour exécution appli Java
 #add:jre-openjdk-headless
 #JDK requis pour compilation Android
-add:jdk-openjdk
+add:jdk21-openjdk
 add:kio-admin
 add:linux-lts-headers
 add:man-db
