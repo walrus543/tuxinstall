@@ -30,6 +30,7 @@ add:man-db
 add:man-pages
 add:meld
 add:ncdu
+add:npm
 #Détection disque dur externe
 add:ntfs-3g
 add:obsidian
