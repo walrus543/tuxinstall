@@ -987,6 +987,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
                 echo "${GREEN}${BOLD}Installation terminée.${RESET}"
                 echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+		echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk"
 		sleep $sleepquick
             fi
         fi
