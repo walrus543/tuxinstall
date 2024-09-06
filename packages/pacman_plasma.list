@@ -7,6 +7,7 @@ add:kio-admin
 add:partitionmanager
 add:gwenview
 add:kimageformats
+add:kio-admin
 add:kwallet
 add:okular
 add:qalculate-qt
