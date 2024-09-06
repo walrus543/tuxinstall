@@ -1,7 +1,6 @@
 #add:packagename
 #del:packagename
 
-add:systemdgenie
 add:kdeconnect
 add:kio-admin
 add:partitionmanager
@@ -11,6 +10,7 @@ add:kio-admin
 add:kwallet
 add:okular
 add:qalculate-qt
+add:systemdgenie
 
 #Pour les fichiers webp
 add:qt6-imageformats
