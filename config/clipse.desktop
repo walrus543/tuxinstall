@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=clipse -listen
+Icon=
+Name=clipse
+Path=
+Terminal=False
+Type=Application
