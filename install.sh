@@ -733,6 +733,22 @@ if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
     fi
 fi
 
+msg_bold_blue "➜ Presse-papier Clipse"
+#clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
+if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f /home/$SUDO_USER/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
+    echo -n "- - - Ajout clipse.desktop : "
+    cp "$ICI/config/clipse.desktop" /home/$SUDO_USER/.config/autostart/clipse.desktop
+    chmod +r /home/$SUDO_USER/.config/autostart/clipse.desktop
+    check_cmd
+    echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
+    
+    if [[ $(cat /home/$SUDO_USER/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
+    	echo -n "- - - Nombre max d'entrées dans l'historique : "
+     	sed -i 's/"maxHistory":.*/"maxHistory": 500,/' /home/$SUDO_USER/.config/clipse/config.json
+     	check_cmd
+    fi
+fi
+
 msg_bold_blue "➜ Fichiers de configuration"
 if check_pkg alacritty && [[ ! -f /home/$SUDO_USER/.config/alacritty/alacritty.toml ]]; then
     echo -n "- - - Ajout alacritty.toml : "
