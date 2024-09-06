@@ -13,6 +13,7 @@ add:firefox
 add:firefox-i18n-fr
 add:firefox-ublock-origin
 add:git
+add:libappimage
 add:linux-lts-headers
 add:man-db
 add:man-pages
