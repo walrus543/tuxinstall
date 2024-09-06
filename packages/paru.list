@@ -2,6 +2,7 @@
 #del:packagename
 
 add:brave-bin
+add:clipse
 add:downgrade
 add:mullvad-browser-bin
 add:onlyoffice-bin
