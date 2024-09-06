@@ -676,6 +676,7 @@ fi
 
 #fstrim pour SSD
 #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
+#Activé par défaut avec archinstall
 device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
 disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
 disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
