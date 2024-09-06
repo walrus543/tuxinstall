@@ -1,13 +1,5 @@
 #add:packagename
 #del:packagename
 
-#add:brave-bin
+add:clipse
 add:downgrade
-#add:mullvad-browser-bin
-#add:onlyoffice-bin
-#add:payload-dumper-go-bin
-#add:pika-backup
-#add:proton-vpn-gtk-app
-#add:reflector-simple
-#add:uniutils
-#add:ventoy-bin
