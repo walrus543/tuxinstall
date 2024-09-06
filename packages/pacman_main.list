@@ -27,7 +27,7 @@ add:inxi
 #add:jre-openjdk-headless
 #JDK requis pour compilation Android
 add:jdk21-openjdk
-add:kio-admin
+add:libappimage
 add:linux-lts-headers
 add:man-db
 add:man-pages
