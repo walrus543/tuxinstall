@@ -68,6 +68,7 @@ add:vim
 add:virtualbox
 add:virtualbox-guest-iso
 add:virtualbox-host-dkms
+add:wl-clipboard
 add:xclip
 add:yt-dlp
 add:zsh
