@@ -674,6 +674,23 @@ if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]; then
     check_cmd
 fi
 
+#fstrim pour SSD
+#DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
+device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
+disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
+disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
+
+if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
+    add_pkg_pacman util-linux
+    if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - - Activation du timer fstrim pour $device_name : "
+        systemctl enable fstrim.timer >> "$log_root" 2>&1
+        check_cmd
+else
+    echo "- - - Activation du timer fstrim : "
+    echo "$device_name ne semble pas supporter fstrim."
+fi
+
 if ! check_pkg pacman-contrib; then
     echo -n "- - - Installation du paquet pacman-contrib : "
     add_pkg_pacman pacman-contrib
