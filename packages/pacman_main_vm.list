@@ -21,5 +21,6 @@ add:npm
 add:pacman-contrib
 add:shellcheck
 add:vim
+add:wl-clipboard
 add:xclip
 add:zsh
