@@ -10,7 +10,7 @@ decorations = "None"
 dimensions = { columns = 120, lines = 30 }
 
 [scrolling]
-multiplier = 20
+multiplier = 15
 
 [selection]
 #save_to_clipboard = true
