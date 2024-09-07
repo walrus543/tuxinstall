@@ -878,6 +878,39 @@ if [[ "$VM" = "none" ]]; then
     fi
 fi
 
+#########################
+# Uncomplicated FireWall
+#########################
+msg_bold_blue "➜ Pare-Feu UFW"
+if check_pkg ufw && $(ufw status | grep -c active) -lt 1; then
+    echo " - - - Paramétrage des règles par défaut"
+    ufw reset
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw allow ssh
+    ufw allow qBittorrent
+    ufw allow syncthing
+    ufw allow SMTP
+    ufw allow to 192.168.1.0/24
+    ufw allow from 192.168.1.0/24
+    ufw enable
+    systemctl enable ufw.service >> "$log_root" 2>&1
+    ufw logging off
+    check_cmd
+
+    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
+        echo -n "- - - Désactivation IPV6 : "
+        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
+        check_cmd
+    fi
+
+    if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
+        echo -n "- - - Autoriser la police de transfert (VPN...) : "
+        sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
+        check_cmd
+    fi
+fi
+
 #NVIDIA
 read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
@@ -1015,9 +1048,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
                 echo -n "- - - Suppression du fichier original $filename : "
                 rm -f /tmp/$filename
                 check_cmd
-		echo -n "- - - Changement du propriétaire et du groupe : "
-  		chown -R $SUDO_USER:$SUDO_USER $path_install
-    		check_cmd
+                echo -n "- - - Changement du propriétaire et du groupe : "
+                chown -R $SUDO_USER:$SUDO_USER $path_install
+                check_cmd
 
                 echo "${GREEN}${BOLD}Installation terminée.${RESET}"
                 echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
