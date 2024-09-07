@@ -16,7 +16,7 @@ multiplier = 20
 #save_to_clipboard = true
 
 [cursor]
-style = "beam"
+style = "block"
 
 [font]
 #size = 10.00
