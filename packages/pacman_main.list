@@ -18,7 +18,6 @@ add:fastfetch
 add:firefox
 add:firefox-i18n-fr
 add:firefox-ublock-origin
-add:flameshot
 add:flatpak
 add:git
 add:hplip #HP imprimante driver
@@ -52,7 +51,6 @@ add:samba
 add:shellcheck
 add:simple-scan
 add:smbclient
-add:spectacle
 add:syncthing
 add:tailspin
 add:tar
