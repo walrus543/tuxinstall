@@ -32,6 +32,7 @@ alias carch='paru -c ; systemctl --failed; reshctl update'
 alias uarch='paru ; sudo pacdiff; npm outdated && npm update; if [[ $(flatpak list | wc -l) -gt 0 ]]; then flatpak update; fi'
 alias umirrors='sudo pacman -Syy'
 alias fix-key='sudo rm /var/lib/pacman/sync/* && sudo rm -rf /etc/pacman.d/gnupg/* && sudo pacman-key --init && sudo pacman-key --populate && sudo pacman -Sy --noconfirm archlinux-keyring && sudo pacman --noconfirm -Su'
+alias archiso='mkdir -p ~/Tmp && wget https://mirrors.gandi.net/archlinux/iso/latest/archlinux-x86_64.iso ~/Tmp'
 
 ###########
 # VARIABLES
