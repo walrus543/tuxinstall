@@ -887,15 +887,15 @@ if check_pkg ufw && $(ufw status | grep -c active) -lt 1; then
     ufw reset
     ufw default deny incoming
     ufw default allow outgoing
-    ufw allow ssh
-    ufw allow qBittorrent
-    ufw allow syncthing
-    ufw allow SMTP
+    #ufw allow ssh
+    #ufw allow qBittorrent
+    #ufw allow syncthing
+    #ufw allow SMTP
     ufw allow to 192.168.1.0/24
     ufw allow from 192.168.1.0/24
     ufw enable
     systemctl enable ufw.service >> "$log_root" 2>&1
-    ufw logging off
+    #ufw logging off
     check_cmd
 
     if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
