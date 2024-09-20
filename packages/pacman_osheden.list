@@ -7,5 +7,5 @@ add:adobe-source-han-sans-kr-fonts
 add:dos2unix
 add:fdupes
 add:perl-rename
-add:xclip
-add:xsel
+add:python-beautifulsoup4
+add:python-requests
