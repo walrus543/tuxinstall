@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=clipse -listen
+Exec=/usr/bin/clipse -listen %f
 Icon=
 Name=clipse
 Path=
