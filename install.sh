@@ -354,6 +354,17 @@ if [[ "$1" = "user" ]]; then
 	            sleep $sleepmid
 	        fi
 	 fi
+
+	msg_bold_blue "➜ KDE Dolphin services menu"
+	if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]] || ! -f ~/.local/share/servicemenu-download/compare-using-meld.desktop ]]; then
+ 		echo -n "- - - Comparer avec Meld : "
+		if [ ! -f "$ICI/config/compare-using-meld.desktop" ]; then
+  			mkdir -p ~/.local/share/kio/servicemenus
+     			mkdir -p ~/.local/share/servicemenu-download
+			cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/kio/servicemenus
+   			cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/servicemenu-download
+      			check_cmd
+		fi
     fi
 
 exit 0;
