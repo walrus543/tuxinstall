@@ -777,6 +777,12 @@ if check_pkg vim && [[ $(grep -c "syntax" /home/$SUDO_USER/.vimrc 2>/dev/null) -
     check_cmd
 fi
 
+if [[ ! -f /home/$SUDO_USER/.hidden ]]; then
+    echo -n "- - - Ajout .hidden pour masquer des dossiers du \$HOME : "
+    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > /home/$SUDO_USER/.hidden
+    check_cmd
+fi
+
 msg_bold_blue "➜ Suppression du bruit lors de recherches"
 if [[ ! -f /etc/modprobe.d/nobeep.conf ]]; then
     touch /etc/modprobe.d/nobeep.conf
