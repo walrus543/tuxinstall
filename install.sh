@@ -324,37 +324,33 @@ if [[ "$1" = "user" ]]; then
                 done < "$ICI/config/alias_listing"
             fi
             check_cmd
-	    
-            #echo "On bascule sur ZSH !"
-            #zsh
         fi
 
-# Plus requis grâce script python ddl
-#	if [[ "$VM" != "none" ]]; then
-#	 	msg_bold_blue "➜ Gestion nvm"
-#	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
-#	            echo -n "- - - Installation de NVM : "
-#	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
-#	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-#	            check_cmd
-#	
-#	            echo -n "- - - Nettoyage .zshrc : "
-#	            sed -i '/NVM_DIR/d' ~/.zshrc
-#	            check_cmd
-#	
-#	            echo -n "- - - Paramètrage .zshrc : "
-#	            echo "" >> ~/.zshrc
-#	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
-#	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
-#	            check_cmd
-#	
-#	            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un NOUVEAU terminal : "${RESET}
-#	            echo "déjà dans le presse-papier"
-#	            sleep $sleepmid
-#	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
-#	            sleep $sleepmid
-#	        fi
-#	 fi
+	if [[ "$VM" != "none" ]]; then
+	 	msg_bold_blue "➜ Gestion nvm"
+	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
+	            echo -n "- - - Installation de NVM : "
+	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
+	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+	            check_cmd
+	
+	            echo -n "- - - Nettoyage .zshrc : "
+	            sed -i '/NVM_DIR/d' ~/.zshrc
+	            check_cmd
+	
+	            echo -n "- - - Paramètrage .zshrc : "
+	            echo "" >> ~/.zshrc
+	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
+	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
+	            check_cmd
+	
+	            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un NOUVEAU terminal : "${RESET}
+	            echo "déjà dans le presse-papier"
+	            sleep $sleepmid
+	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
+	            sleep $sleepmid
+	        fi
+	 fi
 
 	msg_bold_blue "➜ KDE Dolphin services menu"
 	if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]] || ! -f ~/.local/share/servicemenu-download/compare-using-meld.desktop ]]; then
@@ -899,15 +895,10 @@ if check_pkg ufw && $(ufw status | grep -c active) -lt 1; then
     ufw reset
     ufw default deny incoming
     ufw default allow outgoing
-    #ufw allow ssh
-    #ufw allow qBittorrent
-    #ufw allow syncthing
-    #ufw allow SMTP
     ufw allow to 192.168.1.0/24
     ufw allow from 192.168.1.0/24
     ufw enable
     systemctl enable ufw.service >> "$log_root" 2>&1
-    #ufw logging off
     check_cmd
 
     if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
