@@ -63,7 +63,6 @@ alias ir='bash $PathIR/___Emails___/Scripts/ir.sh && cd $PathIR/icons/'
 alias ircount='for dir in $(find . -type d); do     echo "${dir}: $(find ${dir} -maxdepth 1 -type f | wc -l)"; done'
 alias irmap='while read -r old new; do     mv "$old.png" "$new.png"; done < map.txt' # ; rm map.txt'
 alias irrm='rm -v $(<1.txt) && rm 1.txt'
-alias irrenom='bash $PathIR/___Emails___/Scripts/irrenom.sh'
 alias ircopyall='bash $PathIR/___Emails___/Scripts/ircopyall.sh'
 alias irfirst='bash $PathIR/___Emails___/Scripts/ir_first_todo.sh'
 alias irfullddl="python $HOME/AndroidAll/ddl_icons/full_ddl.py && cp -r $HOME/PartageVM/Partageons/ENVOI/* $PathIR/___Emails___"
