@@ -50,7 +50,6 @@ add:samba
 add:shellcheck
 add:simple-scan
 add:smbclient
-add:syncthing
 add:tailspin
 add:tar
 add:thunar
