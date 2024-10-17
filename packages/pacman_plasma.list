@@ -21,6 +21,7 @@ add:element-desktop
 add:jdk21-openjdk
 add:obsidian
 add:protonmail-bridge
+add:syncthing
 add:telegram-desktop
 add:thunderbird
 add:thunderbird-i18n-fr
