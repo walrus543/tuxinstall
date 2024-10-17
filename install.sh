@@ -713,6 +713,17 @@ if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled
     echo -n "- - - Activation du service sshd.service : "
     systemctl enable sshd.service >> "$log_root" 2>&1
     check_cmd
+    if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]]; then
+        echo -n "- - - Limiter SSH au réseau local : "
+        local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
+	check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
+	if [[ "$check_local_ip" -eq 192 ]]; then
+            sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
+            check_cmd
+	else
+            echo ${RED}"ERREUR"${RESET}
+ 	fi
+    fi
 fi
 
 #Sauvegarde perso
@@ -902,6 +913,7 @@ if check_pkg ufw && $(ufw status | grep -c active) -lt 1; then
     ufw default allow outgoing
     ufw allow to 192.168.1.0/24
     ufw allow from 192.168.1.0/24
+    ufw deny 22 # SSH - uniquement local autorisé
     ufw enable
     systemctl enable ufw.service >> "$log_root" 2>&1
     check_cmd
