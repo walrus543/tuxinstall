@@ -9,8 +9,8 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 # ALIAS - GENERAL
 ##############################
 #source $HOME/.bash_aliases
-alias lsa='eza -la --color=always --group-directories-first'
-alias ls='eza -l --color=always --group-directories-first'
+#alias lsa='eza -la --color=always --group-directories-first' #remplacé par eza zsh plugin
+#alias ls='eza -l --color=always --group-directories-first' #remplacé par eza zsh plugin
 alias op8p='bash ~/AndroidAll/OP8P/backup_sdcard.sh'
 alias supthumbnail='find ~/.cache/thumbnails/normal/ -type f -delete'
 alias winsave='VBoxManage controlvm "Win11" savestate'
