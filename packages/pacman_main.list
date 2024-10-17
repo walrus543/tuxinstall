@@ -16,9 +16,9 @@ add:element-desktop
 add:eza
 add:fastfetch
 add:fdupes
-add:firefox
-add:firefox-i18n-fr
-add:firefox-ublock-origin
+#add:firefox
+#add:firefox-i18n-fr
+#add:firefox-ublock-origin
 add:flatpak
 add:git
 add:hplip #HP imprimante driver
@@ -72,4 +72,5 @@ add:virtualbox-host-dkms
 add:vivaldi
 add:wl-clipboard
 add:yt-dlp
+add:zellij
 add:zsh
