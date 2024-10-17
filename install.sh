@@ -197,6 +197,7 @@ if [[ "$1" = "user" ]]; then
         # Date dans le log
         echo '-------------------' >> "$log_noroot"
         date >> "$log_noroot"
+    fi
 
         #Resh
 	msg_bold_blue "➜ Installation de resh"
@@ -286,8 +287,8 @@ if [[ "$1" = "user" ]]; then
             echo -n "- - - Définir powerlevel10k par défaut : "
             sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
             check_cmd
-	fi
- 	if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' ~/.zshrc) -lt 1 ]]; then
+        fi
+        if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' ~/.zshrc) -lt 1 ]]; then
             echo -n "- - - Activation des plugins : "
             sed -i '/^plugins=(/,/)$/c\plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)' ~/.zshrc
             check_cmd
@@ -694,6 +695,7 @@ if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
         echo -n "- - - Activation du timer fstrim pour $device_name : "
         systemctl enable fstrim.timer >> "$log_root" 2>&1
         check_cmd
+    fi
 else
     echo "- - - Activation du timer fstrim : "
     echo "$device_name ne semble pas supporter fstrim."
@@ -1066,7 +1068,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
                 check_cmd
 
                 echo -n "- - - Suppression du fichier original $filename : "
-                rm -f /tmp/$filename
+                rm -f "/tmp/$filename"
                 check_cmd
                 echo -n "- - - Changement du propriétaire et du groupe : "
                 chown -R $SUDO_USER:$SUDO_USER $path_install
@@ -1082,15 +1084,15 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 #Actions manuelles
+echo
+echo "${YELLOW}${BOLD}*******************"
+echo "Actions manuelles"
+echo "*******************${RESET}"
 if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
-    echo
-    echo ${YELLOW}${BOLD}"*******************"
-    echo "Actions manuelles"
-    echo "*******************"${RESET}
     if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
 	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
 	    echo "Avec une opacité du tableau de bord : **translucide**"
      fi
 fi
 
-echo "Configurer TIMESHIFT"
+printf "\nConfigurer TIMESHIFT\n"
