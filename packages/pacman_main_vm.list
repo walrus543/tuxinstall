@@ -9,9 +9,9 @@ add:curl
 add:dkms
 add:eza
 add:fastfetch
-add:firefox
-add:firefox-i18n-fr
-add:firefox-ublock-origin
+#add:firefox
+#add:firefox-i18n-fr
+#add:firefox-ublock-origin
 add:git
 add:libappimage
 add:linux-lts-headers
@@ -22,4 +22,5 @@ add:pacman-contrib
 add:shellcheck
 add:vim
 add:wl-clipboard
+add:zellij
 add:zsh
