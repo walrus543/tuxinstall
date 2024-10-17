@@ -15,3 +15,16 @@ add:systemdgenie
 
 #Pour les fichiers webp
 add:qt6-imageformats
+
+#Car lié PC principal
+add:element-desktop
+add:jdk21-openjdk
+add:obsidian
+add:protonmail-bridge
+add:telegram-desktop
+add:thunderbird
+add:thunderbird-i18n-fr
+add:thunderbird-ublock-origin
+add:virtualbox
+add:virtualbox-guest-iso
+add:virtualbox-host-dkms
