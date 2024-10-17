@@ -286,8 +286,10 @@ if [[ "$1" = "user" ]]; then
             echo -n "- - - Définir powerlevel10k par défaut : "
             sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
             check_cmd
-            echo -n "- - - Activer les plugins : "
-            sed -i 's/^plugins=(git).*$/plugins=(\ngit\nzsh-autosuggestions\nzsh-syntax-highlighting\n)/' ~/.zshrc
+	fi
+ 	if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' ~/.zshrc) -lt 1 ]]; then
+            echo -n "- - - Activation des plugins : "
+            sed -i '/^plugins=(/,/)$/c\plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)' ~/.zshrc
             check_cmd
         fi
         if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]; then
