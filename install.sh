@@ -1080,3 +1080,5 @@ if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Glob
 	    echo "Avec une opacité du tableau de bord : **translucide**"
      fi
 fi
+
+echo "Configurer TIMESHIFT"
