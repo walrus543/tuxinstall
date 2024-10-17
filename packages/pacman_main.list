@@ -12,7 +12,6 @@ add:dkms
 add:dosfstools
 add:duf
 add:dust
-add:element-desktop
 add:eza
 add:fastfetch
 add:fd
@@ -22,12 +21,11 @@ add:fdupes
 #add:firefox-ublock-origin
 add:flatpak
 add:git
-add:hplip #HP imprimante driver
+add:hplip
 add:inxi
 #JRE requis pour exécution appli Java
 #add:jre-openjdk-headless
 #JDK requis pour compilation Android
-add:jdk21-openjdk
 add:jq
 add:libappimage
 add:linux-lts-headers
@@ -38,7 +36,6 @@ add:ncdu
 add:npm
 #Détection disque dur externe
 add:ntfs-3g
-add:obsidian
 add:openssh
 add:p7zip
 add:pacman-contrib
@@ -46,7 +43,6 @@ add:pdfarranger
 add:pdfgrep
 add:pkgfile
 add:print-manager
-add:protonmail-bridge
 add:qbittorrent
 add:ripgrep
 add:rsync
@@ -57,20 +53,12 @@ add:smbclient
 add:syncthing
 add:tailspin
 add:tar
-add:telegram-desktop
 add:thunar
-add:thunderbird
-add:thunderbird-i18n-fr
-add:thunderbird-ublock-origin
 add:timeshift
 add:tldr
 add:trash-cli
 add:ufw
 add:vim
-add:virtualbox
-add:virtualbox-guest-iso
-add:virtualbox-host-dkms
-add:vivaldi
 add:wl-clipboard
 add:yt-dlp
 add:zellij
