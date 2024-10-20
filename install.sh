@@ -836,7 +836,7 @@ if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
     check_cmd
 elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
     echo -n "- - - Activation pour XFCE : "
-    sed -i 's/^#greeter-setup-script=/greeter-setup-script=/usr/bin/numlockx on/' /etc/lightdm/lightdm.conf
+    sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
     check_cmd
 fi
 
@@ -908,7 +908,7 @@ fi
 # Uncomplicated FireWall
 #########################
 msg_bold_blue "➜ Pare-Feu UFW"
-if check_pkg ufw && $(ufw status | grep -c active) -lt 1; then
+if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
     echo " - - - Paramétrage des règles par défaut"
     ufw reset
     ufw default deny incoming
