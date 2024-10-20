@@ -731,7 +731,7 @@ fi
 #Sauvegarde perso
 msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
 if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
-    if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
+    if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]] && [[ "$DE" = 'KDE' ]]; then
         echo ${YELLOW}"/!\ ~/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
         sleep $sleepmid
     elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
@@ -924,12 +924,14 @@ if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
         echo -n "- - - Désactivation IPV6 : "
         sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
         check_cmd
+	ufw reload
     fi
 
     if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
         echo -n "- - - Autoriser la police de transfert (VPN...) : "
         sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
         check_cmd
+	ufw reload
     fi
 fi
 
