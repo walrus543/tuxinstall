@@ -13,6 +13,7 @@ add:fd
 #add:firefox
 #add:firefox-i18n-fr
 #add:firefox-ublock-origin
+add:fzf
 add:git
 add:libappimage
 add:linux-lts-headers
