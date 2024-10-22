@@ -20,7 +20,8 @@ add:qt6-imageformats
 add:element-desktop
 add:jdk21-openjdk
 add:obsidian
-add:protonmail-bridge
+add:protonmail-bridge-core
+#check .config/autostart si présent pour lancement auto
 add:syncthing
 add:telegram-desktop
 add:thunderbird
