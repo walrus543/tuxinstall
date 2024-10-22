@@ -679,12 +679,6 @@ if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
     check_cmd
 fi
 
-if [[ $(check_systemd bluetooth.service 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation de bluetooth.service : "
-    systemctl enable --now bluetooth.service >> "$log_root" 2>&1
-    check_cmd
-fi
-
 #fstrim pour SSD
 #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
 #Activé par défaut avec archinstall
