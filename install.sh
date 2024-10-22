@@ -766,6 +766,14 @@ if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f /home/$SUDO_USER/.confi
     fi
 fi
 
+msg_bold_blue "➜ ProtonMail Bridge Core"
+if check_pkg protonmail-bridge-core && [[ ! -f /home/$SUDO_USER/.config/autostart/protonmail.desktop ]]; then
+    echo -n "- - - Démarrage auto : "
+    cp "$ICI/config/protonmail.desktop" /home/$SUDO_USER/.config/autostart/protonmail.desktop
+    chmod +r /home/$SUDO_USER/.config/autostart/protonmail.desktop
+    check_cmd
+fi
+
 msg_bold_blue "➜ Fichiers de configuration"
 if check_pkg alacritty && [[ ! -f /home/$SUDO_USER/.config/alacritty/alacritty.toml ]]; then
     echo -n "- - - Ajout alacritty.toml : "
