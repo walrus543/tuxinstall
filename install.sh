@@ -355,14 +355,17 @@ if [[ "$1" = "user" ]]; then
 	        fi
 	 fi
 
-	msg_bold_blue "➜ KDE Dolphin services menu"
-	if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]]; then
- 		echo -n "- - - Comparer avec Meld : "
-		if [ ! -f "$ICI/config/compare-using-meld.desktop" ]; then
-  			mkdir -p ~/.local/share/kio/servicemenus
-			cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/kio/servicemenus
-      			check_cmd
-		fi
+	
+    if [[ "$DE" = 'KDE' ]]; then
+        msg_bold_blue "➜ KDE Dolphin services menu"
+        if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]]; then
+        echo -n "- - - Comparer avec Meld : "
+            if [ ! -f "$ICI/config/compare-using-meld.desktop" ]; then
+            mkdir -p ~/.local/share/kio/servicemenus
+            cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/kio/servicemenus
+            check_cmd
+            fi
+        fi
     fi
 exit 0
 fi
