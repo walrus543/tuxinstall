@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=/usr/bin/protonmail-bridge-core -n &
+Icon=
+Name=protonmail-bridge-core
+Path=
+Terminal=False
+Type=Application
