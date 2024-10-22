@@ -290,7 +290,7 @@ if [[ "$1" = "user" ]]; then
         fi
         if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' ~/.zshrc) -lt 1 ]]; then
             echo -n "- - - Activation des plugins : "
-            sed -i '/^plugins=(/,/)$/c\plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)' ~/.zshrc
+            sed -E -i 's/plugins=\((.*?)\)/plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
             check_cmd
         fi
         if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]; then
