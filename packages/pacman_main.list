@@ -20,6 +20,7 @@ add:fdupes
 #add:firefox-i18n-fr
 #add:firefox-ublock-origin
 add:flatpak
+add:fzf
 add:git
 add:hplip
 add:inxi
