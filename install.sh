@@ -367,6 +367,16 @@ if [[ "$1" = "user" ]]; then
             fi
         fi
     fi
+    
+    if ! check_pkg xdg-user-dirs || [[ ! -d $HOME/Documents ]]; then
+        msg_bold_blue "➜ Dossiers utilisateur dans $HOME"
+        echo -n "- - - Installation de xdg-user-dirs : "
+        add_pkg_pacman xdg-user-dirs
+	check_cmd
+	echo -n "- - - Génération des dossiers : "
+        xdg-user-dirs-update
+        check_cmd
+    fi
 exit 0
 fi
 
