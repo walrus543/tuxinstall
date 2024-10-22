@@ -1,9 +1,12 @@
 #############################
-# VARIABLES ENV
+# VARIABLES / SHELL
 ##############################
 export EDITOR='vim'
 export ANDROID_HOME=~/Android/Sdk/
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
 
 #############################
 # ALIAS - GENERAL
