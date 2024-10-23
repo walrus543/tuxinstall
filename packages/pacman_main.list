@@ -22,6 +22,7 @@ add:fdupes
 add:flatpak
 add:fzf
 add:git
+add:gvim
 add:hplip
 add:inxi
 #JRE requis pour exécution appli Java
@@ -58,7 +59,6 @@ add:timeshift
 add:tldr
 add:trash-cli
 add:ufw
-add:vim
 add:wl-clipboard
 add:yt-dlp
 add:zellij
