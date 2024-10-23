@@ -15,6 +15,7 @@ add:fd
 #add:firefox-ublock-origin
 add:fzf
 add:git
+add:gvim
 add:libappimage
 add:linux-lts-headers
 add:man-db
@@ -22,7 +23,6 @@ add:man-pages
 add:npm
 add:pacman-contrib
 add:shellcheck
-add:vim
 add:wl-clipboard
 add:zellij
 add:zsh
