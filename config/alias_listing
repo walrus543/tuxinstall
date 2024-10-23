@@ -1,16 +1,9 @@
 #############################
-# VARIABLES / SHELL
+# VARIABLES
 ##############################
 export EDITOR='vim'
 export ANDROID_HOME=~/Android/Sdk/
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-
-# Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
-alias fzfbat='fzf --preview="bat {}"'
-
-# fzf utilise fd au lieu de find par défaut
-export FZF_DEFAULT_COMMAND="fd --type f"
 
 #############################
 # ALIAS - GENERAL
@@ -163,3 +156,29 @@ alias pjstony='bash $PathIR/___Emails___/Scripts/pj/stony.sh'
 alias pjsupernova='bash $PathIR/___Emails___/Scripts/pj/supernova.sh'
 alias pjwhirl='bash $PathIR/___Emails___/Scripts/pj/whirl.sh'
 alias pjwhitart='bash $PathIR/___Emails___/Scripts/pj/whitart.sh'
+
+##################################
+# FZF
+##################################
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
+alias fzfbat='fzf --preview="bat {}"'
+export FZF_DEFAULT_COMMAND="fd --type f"
+
+# Enable fzf key bindings and auto-completion
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Use fzf for command history search
+bindkey '^R' fzf-history-widget
+
+# Use fzf for directory navigation
+function cd() {
+  if [[ $# -gt 0 ]]; then
+    builtin cd "$@"
+  else
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) && builtin cd "$dir"
+  fi
+}
+
+
