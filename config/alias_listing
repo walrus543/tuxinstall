@@ -22,6 +22,8 @@ alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\
 alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
 alias borgbackup='bash ~/Documents/Linux/borg_menu.sh'
 alias od='dolphin . &'
+alias ls='ls -1 --color=always --group-directories-first'
+alias ll='eza -l --group-directories-first'
 
 ######
 # ARCH
