@@ -100,6 +100,10 @@ msg_bold_blue() {
     echo "${BLUE}${BOLD}$1${RESET}"
 }
 
+msg_bold_red() {
+    echo "${RED}${BOLD}$1${RESET}"
+}
+
 #####################
 ### FIN FONCTIONS ###
 #####################
@@ -762,51 +766,51 @@ fi
 
 msg_bold_blue "➜ Presse-papier Clipse"
 #clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
-if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f /home/$SUDO_USER/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
+if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f $SUDO_HOME/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
     echo -n "- - - Ajout clipse.desktop : "
-    cp "$ICI/config/clipse.desktop" /home/$SUDO_USER/.config/autostart/clipse.desktop
-    chmod +r /home/$SUDO_USER/.config/autostart/clipse.desktop
+    cp "$ICI/config/clipse.desktop" $SUDO_HOME/.config/autostart/clipse.desktop
+    chmod +r $SUDO_HOME/.config/autostart/clipse.desktop
     check_cmd
     echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
     
-    if [[ $(cat /home/$SUDO_USER/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
+    if [[ $(cat $SUDO_HOME/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
     	echo -n "- - - Nombre max d'entrées dans l'historique : "
-     	sed -i 's/"maxHistory":.*/"maxHistory": 500,/' /home/$SUDO_USER/.config/clipse/config.json
+     	sed -i 's/"maxHistory":.*/"maxHistory": 500,/' $SUDO_HOME/.config/clipse/config.json
      	check_cmd
     fi
 fi
 
 msg_bold_blue "➜ ProtonMail Bridge Core"
-if check_pkg protonmail-bridge-core && [[ ! -f /home/$SUDO_USER/.config/autostart/protonmail.desktop ]]; then
+if check_pkg protonmail-bridge-core && [[ ! -f $SUDO_HOME/.config/autostart/protonmail.desktop ]]; then
     echo -n "- - - Démarrage auto : "
-    cp "$ICI/config/protonmail.desktop" /home/$SUDO_USER/.config/autostart/protonmail.desktop
-    chmod +r /home/$SUDO_USER/.config/autostart/protonmail.desktop
+    cp "$ICI/config/protonmail.desktop" $SUDO_HOME/.config/autostart/protonmail.desktop
+    chmod +r $SUDO_HOME/.config/autostart/protonmail.desktop
     check_cmd
 fi
 
 msg_bold_blue "➜ Fichiers de configuration"
-if check_pkg alacritty && [[ ! -f /home/$SUDO_USER/.config/alacritty/alacritty.toml ]]; then
+if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]; then
     echo -n "- - - Ajout alacritty.toml : "
-    mkdir -p /home/$SUDO_USER/.config/alacritty
-    cp "$ICI/config/alacritty.toml" /home/$SUDO_USER/.config/alacritty
+    mkdir -p $SUDO_HOME/.config/alacritty
+    cp "$ICI/config/alacritty.toml" $SUDO_HOME/.config/alacritty
     check_cmd
     if [[ "$VM" != "none" ]]; then
         sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
     fi
     echo -n "- - - Propriétaire du dossier alacritty : "
-    chown -R $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/alacritty
+    chown -R $SUDO_USER:$SUDO_USER $SUDO_HOME/.config/alacritty
     check_cmd
 fi
 
-if check_pkg vim && [[ $(grep -c "syntax" /home/$SUDO_USER/.vimrc 2>/dev/null) -lt 1 ]]; then
+if check_pkg vim && [[ $(grep -c "syntax" $SUDO_HOME/.vimrc 2>/dev/null) -lt 1 ]]; then
     echo -n "- - - .vimrc : "
-    cp "$ICI/config/vimrc" /home/$SUDO_USER/.vimrc
+    cp "$ICI/config/vimrc" $SUDO_HOME/.vimrc
     check_cmd
 fi
 
-if [[ ! -f /home/$SUDO_USER/.hidden ]]; then
+if [[ ! -f $SUDO_HOME/.hidden ]]; then
     echo -n "- - - Ajout .hidden pour masquer des dossiers du \$HOME : "
-    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > /home/$SUDO_USER/.hidden
+    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > $SUDO_HOME/.hidden
     check_cmd
 fi
 
@@ -853,6 +857,15 @@ elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -l
     echo -n "- - - Activation pour XFCE : "
     sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
     check_cmd
+fi
+
+msg_bold_blue "➜ Sudoers"
+if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && check_pkg plocate ; then
+    echo -n "- - - Commande updatedb sans mot de passe : "
+    echo "$SUDO_USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$SUDO_USER
+    check_cmd
+else
+    msg_bold_red "Fichier 00_$SUDO_USER Inexistant ou plocate non trouvé"
 fi
 
 msg_bold_blue "➜ Carte réseau Realtek"
@@ -984,47 +997,47 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         fi
     done < "$ICI/packages/pacman_osheden.list"
 
-    if [[ ! -d /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d /home/$SUDO_USER/Thèmes/Alta/app/src/main/ ]]; then
+    if [[ ! -d $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $SUDO_HOME/Thèmes/Alta/app/src/main/ ]]; then
         echo -n "➜➜ Création des liens symboliques : "
-        ln -s /home/$SUDO_USER/Thèmes/Alta/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Alta
-        ln -s /home/$SUDO_USER/Thèmes/Altess/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Altess
-        ln -s /home/$SUDO_USER/Thèmes/Azulox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Azulox
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Diamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Emerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Omni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyOmni
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Ruby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmyRuby
-        ln -s /home/$SUDO_USER/Thèmes/Black_Army_Sapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/BlackArmySapphire
-        ln -s /home/$SUDO_USER/Thèmes/Caya/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Caya
-        ln -s /home/$SUDO_USER/Thèmes/Ciclo/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ciclo
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyDiamond/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyEmerald/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyOmni/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyOmni
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmyRuby/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmyRuby
-        ln -s /home/$SUDO_USER/Thèmes/DarkArmySapphire/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/DarkArmySapphire
-        ln -s /home/$SUDO_USER/Thèmes/Darky/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darky
-        ln -s /home/$SUDO_USER/Thèmes/Darly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Darly
-        ln -s /home/$SUDO_USER/Thèmes/Distraction_Free/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Distraction
-        ln -s /home/$SUDO_USER/Thèmes/Ecliptic/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Ecliptic
-        ln -s /home/$SUDO_USER/Thèmes/Friendly/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Friendly
-        ln -s /home/$SUDO_USER/Thèmes/GIN/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GIN
-        ln -s /home/$SUDO_USER/Thèmes/GoldOx/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/GoldOx
-        ln -s /home/$SUDO_USER/Thèmes/Goody/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Goody
-        ln -s /home/$SUDO_USER/Thèmes/Lox/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Lox
-        ln -s /home/$SUDO_USER/Thèmes/Luzicon/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Luzicon
-        ln -s /home/$SUDO_USER/Thèmes/NubeReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/NubeReloaded
-        ln -s /home/$SUDO_USER/Thèmes/Oscuro/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Oscuro
-        ln -s /home/$SUDO_USER/Thèmes/Raya_Black/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaBlack
-        ln -s /home/$SUDO_USER/Thèmes/RayaReloaded/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/RayaReloaded
-        ln -s /home/$SUDO_USER/Thèmes/Shapy/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Shapy
-        ln -s /home/$SUDO_USER/Thèmes/Sinfonia/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Sinfonia
-        ln -s /home/$SUDO_USER/Thèmes/Spark/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Spark
-        ln -s /home/$SUDO_USER/Thèmes/Stony/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Stony
-        ln -s /home/$SUDO_USER/Thèmes/Supernova/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Supernova
-        ln -s /home/$SUDO_USER/Thèmes/Whirl/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirl
-        ln -s /home/$SUDO_USER/Thèmes/WhirlBlack/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhirlBlack
-        ln -s /home/$SUDO_USER/Thèmes/Whirless/app/src/main /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whirless
-        ln -s /home/$SUDO_USER/Thèmes/WhitArt/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/WhitArt
-        ln -s /home/$SUDO_USER/Thèmes/Whity/app/src/main/ /home/$SUDO_USER/AndroidAll/Thèmes_Shorts/Whity
+        ln -s $SUDO_HOME/Thèmes/Alta/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta
+        ln -s $SUDO_HOME/Thèmes/Altess/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Altess
+        ln -s $SUDO_HOME/Thèmes/Azulox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Azulox
+        ln -s $SUDO_HOME/Thèmes/Black_Army_Diamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
+        ln -s $SUDO_HOME/Thèmes/Black_Army_Emerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
+        ln -s $SUDO_HOME/Thèmes/Black_Army_Omni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
+        ln -s $SUDO_HOME/Thèmes/Black_Army_Ruby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
+        ln -s $SUDO_HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
+        ln -s $SUDO_HOME/Thèmes/Caya/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Caya
+        ln -s $SUDO_HOME/Thèmes/Ciclo/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ciclo
+        ln -s $SUDO_HOME/Thèmes/DarkArmyDiamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+        ln -s $SUDO_HOME/Thèmes/DarkArmyEmerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+        ln -s $SUDO_HOME/Thèmes/DarkArmyOmni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
+        ln -s $SUDO_HOME/Thèmes/DarkArmyRuby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
+        ln -s $SUDO_HOME/Thèmes/DarkArmySapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
+        ln -s $SUDO_HOME/Thèmes/Darky/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darky
+        ln -s $SUDO_HOME/Thèmes/Darly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darly
+        ln -s $SUDO_HOME/Thèmes/Distraction_Free/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Distraction
+        ln -s $SUDO_HOME/Thèmes/Ecliptic/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ecliptic
+        ln -s $SUDO_HOME/Thèmes/Friendly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Friendly
+        ln -s $SUDO_HOME/Thèmes/GIN/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GIN
+        ln -s $SUDO_HOME/Thèmes/GoldOx/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GoldOx
+        ln -s $SUDO_HOME/Thèmes/Goody/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Goody
+        ln -s $SUDO_HOME/Thèmes/Lox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Lox
+        ln -s $SUDO_HOME/Thèmes/Luzicon/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Luzicon
+        ln -s $SUDO_HOME/Thèmes/NubeReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
+        ln -s $SUDO_HOME/Thèmes/Oscuro/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Oscuro
+        ln -s $SUDO_HOME/Thèmes/Raya_Black/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaBlack
+        ln -s $SUDO_HOME/Thèmes/RayaReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
+        ln -s $SUDO_HOME/Thèmes/Shapy/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Shapy
+        ln -s $SUDO_HOME/Thèmes/Sinfonia/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Sinfonia
+        ln -s $SUDO_HOME/Thèmes/Spark/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Spark
+        ln -s $SUDO_HOME/Thèmes/Stony/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Stony
+        ln -s $SUDO_HOME/Thèmes/Supernova/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Supernova
+        ln -s $SUDO_HOME/Thèmes/Whirl/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirl
+        ln -s $SUDO_HOME/Thèmes/WhirlBlack/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
+        ln -s $SUDO_HOME/Thèmes/Whirless/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirless
+        ln -s $SUDO_HOME/Thèmes/WhitArt/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhitArt
+        ln -s $SUDO_HOME/Thèmes/Whity/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whity
         check_cmd
     fi
 fi
@@ -1105,7 +1118,7 @@ echo
 echo "${YELLOW}${BOLD}*******************"
 echo "Actions manuelles"
 echo "*******************${RESET}"
-if [[ ! -d /home/$SUDO_USER/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
+if [[ ! -d $SUDO_HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
     if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
 	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
 	    echo "Avec une opacité du tableau de bord : **translucide**"
