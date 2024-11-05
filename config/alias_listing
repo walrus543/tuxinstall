@@ -173,7 +173,7 @@ alias pjwhitart='bash $PathIR/___Emails___/Scripts/pj/whitart.sh'
 ##################################
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
-alias fzfbat='fzf --preview="bat {}"'
+alias fzfbat='fzf --preview="bat --color=always {}"'
 export FZF_DEFAULT_COMMAND="fd --type f"
 
 # Enable fzf key bindings and auto-completion
