@@ -16,6 +16,7 @@ add:fd
 add:fzf
 add:git
 add:gvim
+add:locate
 add:libappimage
 add:linux-lts-headers
 add:man-db
