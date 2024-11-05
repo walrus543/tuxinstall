@@ -21,6 +21,7 @@ alias doublonsextensions='fdupes .'
 alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\'' {} \; | sort | uniq --repeated'
 alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
 alias borgbackup='bash ~/Documents/Linux/borg_menu.sh'
+alias ddboxbackup='bash ~/Documents/Linux/box_dd_backup.sh'
 alias od='dolphin . &'
 alias ls='ls -1 --color=always --group-directories-first'
 alias ll='eza -l --group-directories-first'
@@ -45,7 +46,7 @@ PathPartageons=~/PartageVM/Partageons/W10/To_W10
 #############
 # ProtonVPN
 ##############
-#    alias vpnlogin='protonvpn-cli login arnaudisard@proton.me'
+#    alias vpnlogin='protonvpn-cli login xxxxxx@proton.me'
 #    alias vpnconnect='protonvpn-cli connect'
 #    alias vpnstatus='protonvpn-cli status'
 #    alias vpndisconnect='protonvpn-cli disconnect'
