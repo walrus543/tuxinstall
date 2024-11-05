@@ -31,7 +31,6 @@ add:inxi
 add:jq
 add:libappimage
 add:linux-lts-headers
-add:locate
 add:man-db
 add:man-pages
 add:meld
@@ -45,6 +44,7 @@ add:pacman-contrib
 add:pdfarranger
 add:pdfgrep
 add:pkgfile
+add:plocate
 add:print-manager
 add:qbittorrent
 add:ripgrep
