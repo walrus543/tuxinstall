@@ -30,6 +30,7 @@ add:inxi
 #JDK requis pour compilation Android
 add:jq
 add:libappimage
+add:libnatpmp
 add:linux-lts-headers
 add:man-db
 add:man-pages
@@ -58,9 +59,9 @@ add:tar
 add:thunar
 add:timeshift
 add:tldr
+add:tmux
 add:trash-cli
 add:ufw
 add:wl-clipboard
 add:yt-dlp
-add:zellij
 add:zsh
