@@ -24,6 +24,6 @@ add:npm
 add:pacman-contrib
 add:plocate
 add:shellcheck
+add:tmux
 add:wl-clipboard
-add:zellij
 add:zsh
