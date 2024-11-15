@@ -948,12 +948,12 @@ if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
     systemctl enable ufw.service >> "$log_root" 2>&1
     check_cmd
 
-    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
-        echo -n "- - - Désactivation IPV6 : "
-        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
-        check_cmd
-	ufw reload
-    fi
+#    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
+#        echo -n "- - - Désactivation IPV6 : "
+#        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
+#        check_cmd
+#	ufw reload
+#    fi
 
     if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
         echo -n "- - - Autoriser la police de transfert (VPN...) : "
