@@ -1018,6 +1018,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         ln -s $SUDO_HOME/Thèmes/Darly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darly
         ln -s $SUDO_HOME/Thèmes/Distraction_Free/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Distraction
         ln -s $SUDO_HOME/Thèmes/Ecliptic/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ecliptic
+	ln -s $SUDO_HOME/Thèmes/Focus/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Focus
         ln -s $SUDO_HOME/Thèmes/Friendly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Friendly
         ln -s $SUDO_HOME/Thèmes/GIN/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GIN
         ln -s $SUDO_HOME/Thèmes/GoldOx/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GoldOx
