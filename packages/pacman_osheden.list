@@ -6,6 +6,7 @@ add:adobe-source-han-sans-jp-fonts
 add:adobe-source-han-sans-kr-fonts
 add:dos2unix
 add:fdupes
+add:imagemagick
 add:perl-rename
 add:python-beautifulsoup4
 add:python-requests
