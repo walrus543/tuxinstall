@@ -1,0 +1,21 @@
+#add:packagename
+#del:packagename
+
+#####################
+# BASE
+add:brave-bin
+add:clipse
+add:downgrade
+add:onlyoffice-bin
+add:payload-dumper-go-bin
+add:proton-vpn-gtk-app
+add:reflector-simple
+add:uniutils
+add:ventoy-bin
+add:zen-browser-bin
+
+######################
+# VM
+add_vm:clipse
+add_vm:downgrade
+add_vm:zen-browser-bin
