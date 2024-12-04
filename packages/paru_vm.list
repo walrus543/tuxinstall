@@ -1,6 +1,0 @@
-#add:packagename
-#del:packagename
-
-add:clipse
-add:downgrade
-add:zen-browser-bin
