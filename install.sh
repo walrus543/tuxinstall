@@ -975,152 +975,155 @@ if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
     fi
 fi
 
-#NVIDIA
-read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]] && [[ "$VM" != "none" ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
-    echo -n "- - - Installation des paquets NVIDIA : "
-    pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
-    check_cmd
-fi
-
-### OSheden
-read -p ${BLUE}${BOLD}"➜ Besoin des spécificités pour OSheden ? (y/N) "${RESET} -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo
-    echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
-    while read -r line
-    do
-        if [[ "$line" == add_osheden:* ]]; then
-            p=${line#add_osheden:}
-            if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet $p : "
-                add_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-
-        if [[ "$line" == del_osheden:* ]]; then
-            p=${line#del_osheden:}
-            if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet $p : "
-                del_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-    done < "$ICI/packages/pacman.list"
-
-    if [[ ! -d $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $SUDO_HOME/Thèmes/Alta/app/src/main/ ]]; then
-        echo -n "➜➜ Création des liens symboliques : "
-        ln -s $SUDO_HOME/Thèmes/Alta/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta
-        ln -s $SUDO_HOME/Thèmes/Altess/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Altess
-        ln -s $SUDO_HOME/Thèmes/Azulox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Azulox
-        ln -s $SUDO_HOME/Thèmes/Black_Army_Diamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
-        ln -s $SUDO_HOME/Thèmes/Black_Army_Emerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
-        ln -s $SUDO_HOME/Thèmes/Black_Army_Omni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
-        ln -s $SUDO_HOME/Thèmes/Black_Army_Ruby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
-        ln -s $SUDO_HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
-        ln -s $SUDO_HOME/Thèmes/Caya/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Caya
-        ln -s $SUDO_HOME/Thèmes/Ciclo/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ciclo
-        ln -s $SUDO_HOME/Thèmes/DarkArmyDiamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
-        ln -s $SUDO_HOME/Thèmes/DarkArmyEmerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
-        ln -s $SUDO_HOME/Thèmes/DarkArmyOmni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
-        ln -s $SUDO_HOME/Thèmes/DarkArmyRuby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
-        ln -s $SUDO_HOME/Thèmes/DarkArmySapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
-        ln -s $SUDO_HOME/Thèmes/Darky/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darky
-        ln -s $SUDO_HOME/Thèmes/Darly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darly
-        ln -s $SUDO_HOME/Thèmes/Distraction_Free/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Distraction
-        ln -s $SUDO_HOME/Thèmes/Ecliptic/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ecliptic
-	ln -s $SUDO_HOME/Thèmes/Focus/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Focus
-        ln -s $SUDO_HOME/Thèmes/Friendly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Friendly
-        ln -s $SUDO_HOME/Thèmes/GIN/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GIN
-        ln -s $SUDO_HOME/Thèmes/GoldOx/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GoldOx
-        ln -s $SUDO_HOME/Thèmes/Goody/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Goody
-        ln -s $SUDO_HOME/Thèmes/Lox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Lox
-        ln -s $SUDO_HOME/Thèmes/Luzicon/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Luzicon
-        ln -s $SUDO_HOME/Thèmes/NubeReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
-        ln -s $SUDO_HOME/Thèmes/Oscuro/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Oscuro
-        ln -s $SUDO_HOME/Thèmes/Raya_Black/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaBlack
-        ln -s $SUDO_HOME/Thèmes/RayaReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
-        ln -s $SUDO_HOME/Thèmes/Shapy/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Shapy
-        ln -s $SUDO_HOME/Thèmes/Sinfonia/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Sinfonia
-        ln -s $SUDO_HOME/Thèmes/Spark/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Spark
-        ln -s $SUDO_HOME/Thèmes/Stony/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Stony
-        ln -s $SUDO_HOME/Thèmes/Supernova/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Supernova
-        ln -s $SUDO_HOME/Thèmes/Whirl/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirl
-        ln -s $SUDO_HOME/Thèmes/WhirlBlack/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
-        ln -s $SUDO_HOME/Thèmes/Whirless/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirless
-        ln -s $SUDO_HOME/Thèmes/WhitArt/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhitArt
-        ln -s $SUDO_HOME/Thèmes/Whity/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whity
+# FAUT PAS ETRE DANS UNE VM
+if [[ "$VM" = "none" ]]; then
+    #NVIDIA
+    read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
+        echo -n "- - - Installation des paquets NVIDIA : "
+        pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
         check_cmd
     fi
-fi
 
-######################
-# Android Studio
-######################
-read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
+    ### OSheden
+    read -p ${BLUE}${BOLD}"➜ Besoin des spécificités pour OSheden ? (y/N) "${RESET} -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo
+        echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
+        while read -r line
+        do
+            if [[ "$line" == add_osheden:* ]]; then
+                p=${line#add_osheden:}
+                if ! check_pkg "$p"; then
+                    echo -n "- - - Installation paquet $p : "
+                    add_pkg_pacman "$p"
+                    check_cmd
+                fi
+            fi
 
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    printf "\n- - - Test de la connexion au site\n"
+            if [[ "$line" == del_osheden:* ]]; then
+                p=${line#del_osheden:}
+                if check_pkg "$p"; then
+                    echo -n "- - - Suppression paquet $p : "
+                    del_pkg_pacman "$p"
+                    check_cmd
+                fi
+            fi
+        done < "$ICI/packages/pacman.list"
 
-    url="https://developer.android.com/studio?hl=fr"
+        if [[ ! -d $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $SUDO_HOME/Thèmes/Alta/app/src/main/ ]]; then
+            echo -n "➜➜ Création des liens symboliques : "
+            ln -s $SUDO_HOME/Thèmes/Alta/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta
+            ln -s $SUDO_HOME/Thèmes/Altess/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Altess
+            ln -s $SUDO_HOME/Thèmes/Azulox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Azulox
+            ln -s $SUDO_HOME/Thèmes/Black_Army_Diamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
+            ln -s $SUDO_HOME/Thèmes/Black_Army_Emerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
+            ln -s $SUDO_HOME/Thèmes/Black_Army_Omni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
+            ln -s $SUDO_HOME/Thèmes/Black_Army_Ruby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
+            ln -s $SUDO_HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
+            ln -s $SUDO_HOME/Thèmes/Caya/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Caya
+            ln -s $SUDO_HOME/Thèmes/Ciclo/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ciclo
+            ln -s $SUDO_HOME/Thèmes/DarkArmyDiamond/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+            ln -s $SUDO_HOME/Thèmes/DarkArmyEmerald/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+            ln -s $SUDO_HOME/Thèmes/DarkArmyOmni/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
+            ln -s $SUDO_HOME/Thèmes/DarkArmyRuby/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
+            ln -s $SUDO_HOME/Thèmes/DarkArmySapphire/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
+            ln -s $SUDO_HOME/Thèmes/Darky/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darky
+            ln -s $SUDO_HOME/Thèmes/Darly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Darly
+            ln -s $SUDO_HOME/Thèmes/Distraction_Free/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Distraction
+            ln -s $SUDO_HOME/Thèmes/Ecliptic/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Ecliptic
+            ln -s $SUDO_HOME/Thèmes/Focus/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Focus
+            ln -s $SUDO_HOME/Thèmes/Friendly/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Friendly
+            ln -s $SUDO_HOME/Thèmes/GIN/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GIN
+            ln -s $SUDO_HOME/Thèmes/GoldOx/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/GoldOx
+            ln -s $SUDO_HOME/Thèmes/Goody/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Goody
+            ln -s $SUDO_HOME/Thèmes/Lox/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Lox
+            ln -s $SUDO_HOME/Thèmes/Luzicon/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Luzicon
+            ln -s $SUDO_HOME/Thèmes/NubeReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
+            ln -s $SUDO_HOME/Thèmes/Oscuro/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Oscuro
+            ln -s $SUDO_HOME/Thèmes/Raya_Black/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaBlack
+            ln -s $SUDO_HOME/Thèmes/RayaReloaded/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
+            ln -s $SUDO_HOME/Thèmes/Shapy/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Shapy
+            ln -s $SUDO_HOME/Thèmes/Sinfonia/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Sinfonia
+            ln -s $SUDO_HOME/Thèmes/Spark/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Spark
+            ln -s $SUDO_HOME/Thèmes/Stony/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Stony
+            ln -s $SUDO_HOME/Thèmes/Supernova/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Supernova
+            ln -s $SUDO_HOME/Thèmes/Whirl/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirl
+            ln -s $SUDO_HOME/Thèmes/WhirlBlack/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
+            ln -s $SUDO_HOME/Thèmes/Whirless/app/src/main $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whirless
+            ln -s $SUDO_HOME/Thèmes/WhitArt/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/WhitArt
+            ln -s $SUDO_HOME/Thèmes/Whity/app/src/main/ $SUDO_HOME/AndroidAll/Thèmes_Shorts/Whity
+            check_cmd
+        fi
+    fi
 
-    # Effectuer la requête HTTPS avec curl
-    response=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
-    # -s pour mode silencieux
-    # -S pour afficher les erreurs
-    # -o /dev/null pour rediriger la sortie vers null
-    # -w "%{http_code}" pour récupérer uniquement le code de statut HTTP
+    ######################
+    # Android Studio
+    ######################
+    read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
 
-    #Contrôler la disponibilité du site
-    if [[ $response -ne 200 ]]; then
-        echo "${RED}- - - Impossible de se connecter au site $url${RESET}"
-    else
-        # Récupérer le contenu de la page
-        page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        printf "\n- - - Test de la connexion au site\n"
 
-        # Extraire l'URL de téléchargement pour Linux
-        download_url=$(echo "$page_content" | grep -oP 'https://.*?android-studio-.*?-linux.tar.gz' | head -n 1)
+        url="https://developer.android.com/studio?hl=fr"
 
-        # Vérifier si l'URL a été trouvée
-        if [[ -z "$download_url" ]]; then
-            echo "${RED}- - - Impossible de trouver l'URL de téléchargement.${RESET}"
+        # Effectuer la requête HTTPS avec curl
+        response=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
+        # -s pour mode silencieux
+        # -S pour afficher les erreurs
+        # -o /dev/null pour rediriger la sortie vers null
+        # -w "%{http_code}" pour récupérer uniquement le code de statut HTTP
+
+        #Contrôler la disponibilité du site
+        if [[ $response -ne 200 ]]; then
+            echo "${RED}- - - Impossible de se connecter au site $url${RESET}"
         else
-            # Télécharger le fichier
-            echo "- - - Téléchargement : "
-            wget -P /tmp -q --show-progress "$download_url"
+            # Récupérer le contenu de la page
+            page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
 
-            filename=$(basename $(ls -1 /tmp/android-studio*))
-            filesize=$(du /tmp/$filename | awk '{print $1}')
-            path_install="/usr/local/android-studio"
+            # Extraire l'URL de téléchargement pour Linux
+            download_url=$(echo "$page_content" | grep -oP 'https://.*?android-studio-.*?-linux.tar.gz' | head -n 1)
 
-            if [[ "$filesize" -lt 1000000 ]]; then
-                echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
+            # Vérifier si l'URL a été trouvée
+            if [[ -z "$download_url" ]]; then
+                echo "${RED}- - - Impossible de trouver l'URL de téléchargement.${RESET}"
             else
-                printf "\nInstallation lancée...\n"
-                echo -n "- - - Création du dossier final : "
-                mkdir -p $path_install
-                check_cmd
+                # Télécharger le fichier
+                echo "- - - Téléchargement : "
+                wget -P /tmp -q --show-progress "$download_url"
 
-                echo -n "- - - Décompresssion $filename : "
-                tar -xzf /tmp/$filename -C $path_install --strip-components=1
-                check_cmd
+                filename=$(basename $(ls -1 /tmp/android-studio*))
+                filesize=$(du /tmp/$filename | awk '{print $1}')
+                path_install="/usr/local/android-studio"
 
-                echo -n "- - - Rendre studio.sh exécutable : "
-                chmod +x $path_install/bin/studio.sh
-                check_cmd
+                if [[ "$filesize" -lt 1000000 ]]; then
+                    echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
+                else
+                    printf "\nInstallation lancée...\n"
+                    echo -n "- - - Création du dossier final : "
+                    mkdir -p $path_install
+                    check_cmd
 
-                echo -n "- - - Suppression du fichier original $filename : "
-                rm -f "/tmp/$filename"
-                check_cmd
-                echo -n "- - - Changement du propriétaire et du groupe : "
-                chown -R $SUDO_USER:$SUDO_USER $path_install
-                check_cmd
+                    echo -n "- - - Décompresssion $filename : "
+                    tar -xzf /tmp/$filename -C $path_install --strip-components=1
+                    check_cmd
 
-                echo "${GREEN}${BOLD}Installation terminée.${RESET}"
-                echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
-		echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk"
-		sleep $sleepquick
+                    echo -n "- - - Rendre studio.sh exécutable : "
+                    chmod +x $path_install/bin/studio.sh
+                    check_cmd
+
+                    echo -n "- - - Suppression du fichier original $filename : "
+                    rm -f "/tmp/$filename"
+                    check_cmd
+                    echo -n "- - - Changement du propriétaire et du groupe : "
+                    chown -R $SUDO_USER:$SUDO_USER $path_install
+                    check_cmd
+
+                    echo "${GREEN}${BOLD}Installation terminée.${RESET}"
+                    echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+            echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk"
+            sleep $sleepquick
+                fi
             fi
         fi
     fi
