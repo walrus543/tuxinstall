@@ -225,7 +225,7 @@ if [[ "$1" = "user" ]]; then
         if check_pkg paru; then
             while read -r line
             do
-                if [[ "$VM" != "none" ]]; then
+                if [[ "$VM" = "none" ]]; then
                     if [[ "$line" == add:* ]]; then
                         p=${line#add:}
                         if ! check_pkg "$p"; then
