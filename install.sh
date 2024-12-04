@@ -182,12 +182,6 @@ if [[ "$1" = "user" ]]; then
         exit 1;
     fi
 
-    if [[ "$VM" != "none" ]] && [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]] # VM et Chaotic AUR pas actif
-    then
-        echo "Relancer le script avec le paramètre \"vm\" pour notamment installer Chaotic AUR."
-        exit 1;
-    fi
-
     if [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]] # Si désactivé c'est que le script en root n'a jamais été lancé.
     then
         echo ${RED}"Tout d'abord, lancer ce script en root et sans paramètre."${RESET}
@@ -448,25 +442,6 @@ if [[ "$VM" != "none" ]]; then
             chown -R $SUDO_USER:users /media/sf_PartageVM/
             check_cmd
         fi
-
-    msg_bold_blue "➜ Chaotic aur"
-    if [[ $(grep -c chaotic-mirrorlist /etc/pacman.conf) -lt 1 ]]; then
-        #https://aur.chaotic.cx/docs
-        pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com >> "$log_root" 2>&1
-        pacman-key --lsign-key 3056513887B78AEB >> "$log_root" 2>&1
-        pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' >> "$log_root" 2>&1
-        pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' >> "$log_root" 2>&1
-
-        echo -n "- - - Statut de l'installation : "
-        echo ""  | tee -a /etc/pacman.conf > /dev/null
-        echo "[chaotic-aur]" | tee -a /etc/pacman.conf > /dev/null
-        echo "Include = /etc/pacman.d/chaotic-mirrorlist" | tee -a /etc/pacman.conf > /dev/null
-        check_cmd
-
-        echo -n "- - - Mise à jour base de données chaotic-aur : "
-        pacman -Syu --needed --noconfirm >> "$log_root"
-        check_cmd
-    fi
     fi
 fi
 
