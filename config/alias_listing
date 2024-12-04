@@ -40,7 +40,7 @@ alias ..='cd ..'
 # ARCH
 #######
 # Suppression des paquets orphelins et détection d'échec au démarrage avec systemd
-alias carch='paru -c ; systemctl --failed; reshctl update'
+alias carch='paru -c ; systemctl --failed'
 # MaJ pacman+AUR, traiter les fichiers .pacnew avec pacdiff et mettre à jour les flatpaks si besoin
 alias uarch='paru ; sudo pacdiff; npm outdated && npm update ; nvmupdate ; if [[ $(flatpak list | wc -l) -gt 0 ]]; then flatpak update; fi'
 alias umirrors='sudo pacman -Syy'
