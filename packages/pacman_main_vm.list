@@ -20,6 +20,7 @@ add:libappimage
 add:linux-lts-headers
 add:man-db
 add:man-pages
+add:meld
 add:npm
 add:pacman-contrib
 add:plocate
