@@ -868,6 +868,14 @@ else
     msg_bold_red "Fichier 00_$SUDO_USER Inexistant ou plocate non trouvé"
 fi
 
+msg_bold_blue "➜ Meld en comparateur"
+if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
+    path_meld=$(which meld)
+    echo -n "Meld par défaut pour pacdiff : "
+    echo "DIFFPROG=$path_meld" >> /etc/environment
+    check_cmd
+fi
+
 msg_bold_blue "➜ Carte réseau Realtek"
 #Gestion de la carte réseau Realtek RTL8821CE
 if [[ "$VM" = "none" ]]; then
