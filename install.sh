@@ -9,14 +9,6 @@ DE=$(echo $XDG_CURRENT_DESKTOP)
 VM=$(systemd-detect-virt)
 ICI=$(dirname "$0")
 
-if [[ "$VM" != "none" ]]; then
-    pacman_list="pacman_main_vm.list"
-    paru_list="paru_vm.list"
-else
-    pacman_list="pacman_main.list"
-    paru_list="paru.list"
-fi
-
 #Coloration du texte
 export RESET=$(tput sgr0)
 export RED=$(tput setaf 1)
@@ -236,28 +228,48 @@ if [[ "$1" = "user" ]]; then
         fi
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
-        msg_bold_blue "➜ Paquets paru"
+        msg_bold_blue "➜ Gestion des paquets PARU"
         if check_pkg paru; then
             while read -r line
             do
-                if [[ "$line" == add:* ]]; then
-                    p=${line#add:}
-                    if ! check_pkg "$p"; then
-                        echo -n "- - - Installation paquet $p : "
-                        add_pkg_paru "$p"
-                        check_cmd
+                if [[ "$VM" != "none" ]]; then
+                    if [[ "$line" == add:* ]]; then
+                        p=${line#add:}
+                        if ! check_pkg "$p"; then
+                            echo -n "- - - Installation paquet $p : "
+                            add_pkg_paru "$p"
+                            check_cmd
+                        fi
                     fi
-                fi
 
-                if [[ "$line" == del:* ]]; then
-                    p=${line#del:}
-                    if check_pkg "$p"; then
-                        echo -n "- - - Suppression paquet $p : "
-                        del_pkg_paru "$p"
-                        check_cmd
+                    if [[ "$line" == del:* ]]; then
+                        p=${line#del:}
+                        if check_pkg "$p"; then
+                            echo -n "- - - Suppression paquet $p : "
+                            del_pkg_paru "$p"
+                            check_cmd
+                        fi
+                    fi
+                else
+                    if [[ "$line" == add_vm:* ]]; then
+                        p=${line#add_vm:}
+                        if ! check_pkg "$p"; then
+                            echo -n "- - - Installation paquet $p : "
+                            add_pkg_paru "$p"
+                            check_cmd
+                        fi
+                    fi
+
+                    if [[ "$line" == del_vm:* ]]; then
+                        p=${line#del_vm:}
+                        if check_pkg "$p"; then
+                            echo -n "- - - Suppression paquet $p : "
+                            del_pkg_paru "$p"
+                            check_cmd
+                        fi
                     fi
                 fi
-            done < "packages/$paru_list"
+            done < "packages/paru.list"
         fi
 
         msg_bold_blue "➜ Configuration shell"
@@ -334,17 +346,17 @@ if [[ "$1" = "user" ]]; then
 	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
 	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 	            check_cmd
-	
+
 	            echo -n "- - - Nettoyage .zshrc : "
 	            sed -i '/NVM_DIR/d' ~/.zshrc
 	            check_cmd
-	
+
 	            echo -n "- - - Paramètrage .zshrc : "
 	            echo "" >> ~/.zshrc
 	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
 	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
 	            check_cmd
-	
+
 	            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un NOUVEAU terminal : "${RESET}
 	            echo "déjà dans le presse-papier"
 	            sleep $sleepmid
@@ -353,7 +365,7 @@ if [[ "$1" = "user" ]]; then
 	        fi
 	 fi
 
-	
+
     if [[ "$DE" = 'KDE' ]]; then
         msg_bold_blue "➜ KDE Dolphin services menu"
         if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]]; then
@@ -365,7 +377,7 @@ if [[ "$1" = "user" ]]; then
             fi
         fi
     fi
-    
+
     if ! check_pkg xdg-user-dirs || [[ ! -d $HOME/Documents ]]; then
         msg_bold_blue "➜ Dossiers utilisateur dans $HOME"
         echo -n "- - - Installation de xdg-user-dirs : "
@@ -442,6 +454,7 @@ if [[ "$VM" != "none" ]]; then
             chown -R $SUDO_USER:users /media/sf_PartageVM/
             check_cmd
         fi
+
     fi
 fi
 
@@ -492,14 +505,14 @@ if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 1" /boot/loader/lo
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
     check_cmd
 
-    echo -n "- - - Timeout de 1s : "    
+    echo -n "- - - Timeout de 1s : "
     sed -i 's/^timeout .*$/timeout 1/' /boot/loader/loader.conf
     check_cmd
 fi
 
 if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu grub"
-    echo -n "- - - Timeout de 1s : "    
+    echo -n "- - - Timeout de 1s : "
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' /etc/default/grub
     check_cmd
 
@@ -514,34 +527,13 @@ pacman -Syu --noconfirm >> "$log_root" 2>&1
 check_cmd
 
 ### PAQUETS PACMAN
-msg_bold_blue "➜ Gestion des paquets principaux pacman"
+msg_bold_blue "➜ Gestion des paquets PACMAN"
 while read -r line
 do
-	if [[ "$line" == add:* ]]; then
-		p=${line#add:}
-		if ! check_pkg "$p"; then
-			echo -n "- - - Installation paquet $p : "
-			add_pkg_pacman "$p"
-			check_cmd
-		fi
-	fi
-
-	if [[ "$line" == del:* ]]; then
-		p=${line#del:}
-		if check_pkg "$p"; then
-			echo -n "- - - Suppression paquet $p : "
-			del_pkg_pacman "$p"
-			check_cmd
-		fi
-	fi
-done < "packages/$pacman_list"
-
-if [[ "$DE" = 'KDE' ]]; then
-    echo ${BLUE}"➜➜ Gestion des paquets Plasma"${RESET}
-    while read -r line
-    do
-        if [[ "$line" == add:* ]]; then
-            p=${line#add:}
+    # BASIQUE non VM
+    if [[ "$VM" = "none" ]]; then
+        if [[ "$line" == add_basis:* ]]; then
+            p=${line#add_basis:}
             if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
@@ -549,23 +541,19 @@ if [[ "$DE" = 'KDE' ]]; then
             fi
         fi
 
-        if [[ "$line" == del:* ]]; then
-            p=${line#del:}
+        if [[ "$line" == del_basis:* ]]; then
+            p=${line#del_basis:}
             if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
         fi
-    done < "$ICI/packages/pacman_plasma.list"
-fi
 
-if [[ "$DE" = 'XFCE' ]]; then
-    echo ${BLUE}"➜➜ Gestion des paquets XFCE"${RESET}
-    while read -r line
-    do
-        if [[ "$line" == add:* ]]; then
-            p=${line#add:}
+    # BASIQUE VM
+    else
+        if [[ "$line" == add_basis_vm:* ]]; then
+            p=${line#add_basis_vm:}
             if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
@@ -573,16 +561,57 @@ if [[ "$DE" = 'XFCE' ]]; then
             fi
         fi
 
-        if [[ "$line" == del:* ]]; then
-            p=${line#del:}
+        if [[ "$line" == del_basis_vm:* ]]; then
+            p=${line#del_basis_vm:}
             if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
         fi
-    done < "$ICI/packages/pacman_xfce.list"
-fi
+    fi
+
+    # DE = PLASMA
+    if [[ "$DE" = 'KDE' ]]; then
+        if [[ "$line" == add_plasma:* ]]; then
+            p=${line#add_plasma:}
+            if ! check_pkg "$p"; then
+                echo -n "- - - Installation paquet $p : "
+                add_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+
+        if [[ "$line" == del_plasma:* ]]; then
+            p=${line#del_plasma:}
+            if check_pkg "$p"; then
+                echo -n "- - - Suppression paquet $p : "
+                del_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+
+    # DE = XFCE
+    elif [[ "$DE" = 'XFCE' ]]; then
+        if [[ "$line" == add_xfce:* ]]; then
+            p=${line#add_xfce:}
+            if ! check_pkg "$p"; then
+                echo -n "- - - Installation paquet $p : "
+                add_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+
+        if [[ "$line" == del_xfce:* ]]; then
+            p=${line#del_xfce:}
+            if check_pkg "$p"; then
+                echo -n "- - - Suppression paquet $p : "
+                del_pkg_pacman "$p"
+                check_cmd
+            fi
+        fi
+    fi
+done < "packages/pacman.list"
 
 msg_bold_blue "➜ Configuration Flatpak"
 ## FLATHUB
@@ -747,7 +776,7 @@ if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f $SUDO_HOME/.config/auto
     chmod +r $SUDO_HOME/.config/autostart/clipse.desktop
     check_cmd
     echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
-    
+
     if [[ $(cat $SUDO_HOME/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
     	echo -n "- - - Nombre max d'entrées dans l'historique : "
      	sed -i 's/"maxHistory":.*/"maxHistory": 500,/' $SUDO_HOME/.config/clipse/config.json
@@ -808,7 +837,7 @@ fi
 # Rétention cache des paquets avec paccache
 msg_bold_blue "➜ Paccache : cache des paquets"
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]
-#Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne 
+#Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne
 then
 	echo -n "- - - Ajustement de paccache à 1 version : "
 	paccache -rk1
@@ -909,7 +938,7 @@ if [[ "$VM" = "none" ]]; then
                 fi
             done
         done
-	
+
     else
         echo ${YELLOW}"- - - Carte réseau Realtek RTL8821CE non détectée."${RESET}
     fi
@@ -961,8 +990,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ${BLUE}"➜➜ Gestion des paquets"${RESET}
     while read -r line
     do
-        if [[ "$line" == add:* ]]; then
-            p=${line#add:}
+        if [[ "$line" == add_osheden:* ]]; then
+            p=${line#add_osheden:}
             if ! check_pkg "$p"; then
                 echo -n "- - - Installation paquet $p : "
                 add_pkg_pacman "$p"
@@ -970,15 +999,15 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
             fi
         fi
 
-        if [[ "$line" == del:* ]]; then
-            p=${line#del:}
+        if [[ "$line" == del_osheden:* ]]; then
+            p=${line#del_osheden:}
             if check_pkg "$p"; then
                 echo -n "- - - Suppression paquet $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
         fi
-    done < "$ICI/packages/pacman_osheden.list"
+    done < "$ICI/packages/pacman.list"
 
     if [[ ! -d $SUDO_HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $SUDO_HOME/Thèmes/Alta/app/src/main/ ]]; then
         echo -n "➜➜ Création des liens symboliques : "
