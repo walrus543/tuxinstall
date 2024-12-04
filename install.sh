@@ -211,12 +211,14 @@ if [[ "$1" = "user" ]]; then
             fi
         fi
 
-        msg_bold_blue "➜ Activation de syncthing.service"
-        if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]; then
-            echo -n "Activation du service syncthing.service : "
-            systemctl --user enable syncthing.service >> "$log_noroot" 2>&1
-            check_cmd
-        fi
+        if [[ "$VM" = "none" ]]; then
+		msg_bold_blue "➜ Activation de syncthing.service"
+        	if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]; then
+            	echo -n "Activation du service syncthing.service : "
+            	systemctl --user enable syncthing.service >> "$log_noroot" 2>&1
+            	check_cmd
+        	fi
+	 fi
 
         ### INSTALL/SUPPRESSION PAQUETS SELON LISTE
         msg_bold_blue "➜ Gestion des paquets PARU"
