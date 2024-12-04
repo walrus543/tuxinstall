@@ -189,15 +189,6 @@ if [[ "$1" = "user" ]]; then
         date >> "$log_noroot"
     fi
 
-        #Resh
-	msg_bold_blue "➜ Installation de resh"
-        if ! pacman -Q zsh tar curl > /dev/null 2>&1; then
-            echo ${YELLOW}"Installer zsh, curl et tar avant RESH."${RESET}
-        elif [[ ! -d ~/.resh/bin/ ]]; then
-	# https://github.com/curusarn/resh
-            curl -fsSL https://raw.githubusercontent.com/curusarn/resh/master/scripts/rawinstall.sh | bash
-        fi
-
         msg_bold_blue "➜ Installation de paru"
         if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
             echo "Installation de PARU"
