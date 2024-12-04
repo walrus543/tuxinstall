@@ -555,7 +555,7 @@ do
         if [[ "$line" == add_basis_vm:* ]]; then
             p=${line#add_basis_vm:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet $p : "
+                echo -n "- - - Installation paquet 'VM' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -564,7 +564,7 @@ do
         if [[ "$line" == del_basis_vm:* ]]; then
             p=${line#del_basis_vm:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet $p : "
+                echo -n "- - - Suppression paquet 'VM' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -576,7 +576,7 @@ do
         if [[ "$line" == add_plasma:* ]]; then
             p=${line#add_plasma:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet $p : "
+                echo -n "- - - Installation paquet 'Plasma' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -585,7 +585,7 @@ do
         if [[ "$line" == del_plasma:* ]]; then
             p=${line#del_plasma:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet $p : "
+                echo -n "- - - Suppression paquet 'Plasma' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -596,7 +596,7 @@ do
         if [[ "$line" == add_xfce:* ]]; then
             p=${line#add_xfce:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet $p : "
+                echo -n "- - - Installation paquet 'Xfce' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -605,7 +605,7 @@ do
         if [[ "$line" == del_xfce:* ]]; then
             p=${line#del_xfce:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet $p : "
+                echo -n "- - - Suppression paquet 'Xfce' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
