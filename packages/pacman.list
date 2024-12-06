@@ -109,7 +109,7 @@ add_basis_vm:pacman-contrib
 add_basis_vm:plocate
 add_basis_vm:shellcheck
 add_basis_vm:tmux
-add_basis_vm:wl-clipboard
+#add_basis_vm:wl-clipboard
 add_basis_vm:zsh
 
 del_basis_vm:firefox
