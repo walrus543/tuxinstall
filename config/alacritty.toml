@@ -20,3 +20,5 @@ style = "block"
 
 [font]
 #size = 10.00
+[font.normal]
+family = "MesloLGS NF"
