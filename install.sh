@@ -719,21 +719,18 @@ if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
     systemctl enable paccache.timer >> "$log_root" 2>&1
     check_cmd
 fi
-if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
+if [[ "$VM" = "none" ]] && if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation du service sshd.service : "
     systemctl enable sshd.service >> "$log_root" 2>&1
     check_cmd
-    if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]]; then
-        echo -n "- - - Limiter SSH au réseau local : "
-        local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
-	check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
-	if [[ "$check_local_ip" -eq 192 ]]; then
-            sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
-            check_cmd
-	else
-            echo ${RED}"ERREUR"${RESET}
- 	fi
-    fi
+fi
+
+local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
+check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
+if [[ "$VM" = "none" ]] && [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
+    echo -n "- - - Limiter SSH au réseau local : "
+    sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
+    check_cmd
 fi
 
 #Sauvegarde perso
@@ -792,7 +789,9 @@ if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]
     cp "$ICI/config/alacritty.toml" $SUDO_HOME/.config/alacritty
     check_cmd
     if [[ "$VM" != "none" ]]; then
+    	echo -n "- - - VM détectée donc decorations = Full : "
         sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
+	check_cmd
     fi
     echo -n "- - - Propriétaire du dossier alacritty : "
     chown -R $SUDO_USER:$SUDO_USER $SUDO_HOME/.config/alacritty
