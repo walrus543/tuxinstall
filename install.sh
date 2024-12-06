@@ -333,6 +333,23 @@ if [[ "$1" = "user" ]]; then
             fi
             check_cmd
         fi
+        
+        if check_pkg tmux && [[ ! -f ~/.tmux.conf ]]; then
+            echo -n "- - - TPM : "
+            mkdir -p ~/.tmux/plugins/tpm
+            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm >> "$log_noroot" 2>&1
+            check_cmd
+
+            echo -n "- - - tmux.conf : "
+            cp "$ICI/config/tmux.conf" ~/.tmux.conf
+            check_cmd
+
+            if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
+                echo -n "- - - Lancer tmux par défaut : "
+                sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
+                check_cmd
+            fi
+        fi
 
 	if [[ "$VM" != "none" ]]; then
 	 	msg_bold_blue "➜ Gestion nvm"
@@ -793,22 +810,6 @@ if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]
     chown -R $SUDO_USER:$SUDO_USER $SUDO_HOME/.config/alacritty
     check_cmd
 fi
-if check_pkg tmux && [[ ! -f $SUDO_HOME/.tmux.conf ]]; then
-    echo -n "- - - TPM : "
-    mkdir -p $SUDO_HOME/.tmux/plugins/tpm
-    git clone https://github.com/tmux-plugins/tpm $SUDO_HOME/.tmux/plugins/tpm >> "$log_noroot" 2>&1
-    check_cmd
-
-    echo -n "- - - tmux.conf : "
-    cp "$ICI/config/tmux.conf" $SUDO_HOME/.tmux.conf
-    check_cmd
-
-    if [ "$(sed -n '1p' $SUDO_HOME/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
-        echo -n "- - - Lancer tmux par défaut : "
-        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' $SUDO_HOME/.zshrc
-        check_cmd
-    fi
-fi
 
 if check_pkg neovim && [[ $(grep -c "nocompatible" $SUDO_HOME/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
     echo -n "- - - Neovim : "
@@ -885,9 +886,40 @@ if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt
     check_cmd
 fi
 
-msg_bold_blue "➜ Carte réseau Realtek"
-#Gestion de la carte réseau Realtek RTL8821CE
+#########################
+# Uncomplicated FireWall
+#########################
+msg_bold_blue "➜ Pare-Feu UFW"
+if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
+    echo " - - - Paramétrage des règles par défaut"
+    ufw reset
+    ufw default deny incoming
+    ufw default allow outgoing
+    ufw allow to 192.168.1.0/24
+    ufw allow from 192.168.1.0/24
+    ufw deny 22 # SSH - uniquement local autorisé
+    ufw enable
+    systemctl enable ufw.service >> "$log_root" 2>&1
+    check_cmd
+
+#    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
+#        echo -n "- - - Désactivation IPV6 : "
+#        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
+#        check_cmd
+#	ufw reload
+#    fi
+
+    if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
+        echo -n "- - - Autoriser la police de transfert (VPN...) : "
+        sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
+        check_cmd
+	ufw reload
+    fi
+fi
+
+# FAUT PAS ETRE DANS UNE VM
 if [[ "$VM" = "none" ]]; then
+msg_bold_blue "➜ Carte réseau Realtek RTL8821CE" 
     if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
         echo -n "- - - Installation du paquet AUR  : "
         add_pkg_paru rtl8821ce-dkms-git
@@ -947,41 +979,7 @@ if [[ "$VM" = "none" ]]; then
     else
         echo ${YELLOW}"- - - Carte réseau Realtek RTL8821CE non détectée."${RESET}
     fi
-fi
 
-#########################
-# Uncomplicated FireWall
-#########################
-msg_bold_blue "➜ Pare-Feu UFW"
-if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
-    echo " - - - Paramétrage des règles par défaut"
-    ufw reset
-    ufw default deny incoming
-    ufw default allow outgoing
-    ufw allow to 192.168.1.0/24
-    ufw allow from 192.168.1.0/24
-    ufw deny 22 # SSH - uniquement local autorisé
-    ufw enable
-    systemctl enable ufw.service >> "$log_root" 2>&1
-    check_cmd
-
-#    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
-#        echo -n "- - - Désactivation IPV6 : "
-#        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
-#        check_cmd
-#	ufw reload
-#    fi
-
-    if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
-        echo -n "- - - Autoriser la police de transfert (VPN...) : "
-        sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
-        check_cmd
-	ufw reload
-    fi
-fi
-
-# FAUT PAS ETRE DANS UNE VM
-if [[ "$VM" = "none" ]]; then
     #NVIDIA
     read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
