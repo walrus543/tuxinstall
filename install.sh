@@ -422,11 +422,12 @@ if [[ "$1" = "user" ]]; then
         echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}"
         sleep $sleepmid
     fi
-    if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
-        echo -n "- - Lancer tmux par défaut : "
-        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
-        check_cmd
-    fi
+    #TMUX lancé automatiquement
+    #if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
+    #    echo -n "- - Lancer tmux par défaut : "
+    #    sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
+    #    check_cmd
+    #fi
 
     #NEOVIM
     if check_pkg neovim && [[ $(grep -c "nocompatible" ~/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
