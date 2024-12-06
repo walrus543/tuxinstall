@@ -168,7 +168,7 @@ if [[ $(grep -c "ID=arch" /etc/os-release) -lt 1 ]]; then
 fi
 
 ###################
-#### USER ####
+### START_USER ###
 ###################
 if [[ "$1" = "user" ]]; then
     if [[ $(id -u) -eq "0" ]]; then
@@ -333,25 +333,8 @@ if [[ "$1" = "user" ]]; then
             fi
             check_cmd
         fi
-        
-        if check_pkg tmux && [[ ! -f ~/.tmux.conf ]]; then
-            echo -n "- - - TPM : "
-            mkdir -p ~/.tmux/plugins/tpm
-            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm >> "$log_noroot" 2>&1
-            check_cmd
 
-            echo -n "- - - tmux.conf : "
-            cp "$ICI/config/tmux.conf" ~/.tmux.conf
-            check_cmd
-
-            if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
-                echo -n "- - - Lancer tmux par défaut : "
-                sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
-                check_cmd
-            fi
-        fi
-
-	if [[ "$VM" != "none" ]]; then
+	if [[ "$VM" = "none" ]]; then
 	 	msg_bold_blue "➜ Gestion nvm"
 	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
 	            echo -n "- - - Installation de NVM : "
@@ -381,9 +364,11 @@ if [[ "$1" = "user" ]]; then
         msg_bold_blue "➜ KDE Dolphin services menu"
         if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]]; then
         echo -n "- - - Comparer avec Meld : "
+            if [ -f "$ICI/config/compare-using-meld.desktop" ]; then
             mkdir -p ~/.local/share/kio/servicemenus
             cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/kio/servicemenus
             check_cmd
+            fi
         fi
     fi
 
@@ -396,8 +381,83 @@ if [[ "$1" = "user" ]]; then
         xdg-user-dirs-update
         check_cmd
     fi
+
+    msg_bold_blue "➜ ProtonMail Bridge Core"
+    if check_pkg protonmail-bridge-core && [[ ! -f ~/.config/autostart/protonmail.desktop ]]; then
+        echo -n "- - - Démarrage auto : "
+        cp "$ICI/config/protonmail.desktop" ~/.config/autostart/protonmail.desktop
+        chmod +r ~/.config/autostart/protonmail.desktop
+        check_cmd
+    fi
+
+    msg_bold_blue "➜ Fichiers de configuration"
+    if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]; then
+        echo -n "- - - Alacritty.toml : "
+        mkdir -p ~/.config/alacritty
+        cp "$ICI/config/alacritty.toml" ~/.config/alacritty
+        check_cmd
+        if [[ "$VM" != "none" ]]; then
+            echo -n "- - - VM détectée donc decorations = Full : "
+            sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
+        check_cmd
+        fi
+    fi
+
+    if [[ ! -f ~/.hidden ]]; then
+    echo -n "- - - Ajout .hidden pour masquer des dossiers du \$HOME : "
+    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > ~/.hidden
+    check_cmd
+    fi
+
+    #TMUX
+    if check_pkg tmux && [[ $(grep -c "unbind" ~/.tmux.conf) -lt 1 ]]; then
+        echo -n "- - - TPM : "
+        mkdir -p ~/.tmux/plugins/tpm
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm >> "$log_noroot" 2>&1
+        check_cmd
+
+        echo -n "- - - tmux.conf : "
+        cp "$ICI/config/tmux.conf" ~/.tmux.conf
+        check_cmd
+        echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}"
+        $sleepmid
+    fi
+    if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
+        echo -n "- - - Lancer tmux par défaut : "
+        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
+        check_cmd
+    fi
+
+    #NEOVIM
+    if check_pkg neovim && [[ $(grep -c "nocompatible" ~/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
+        echo -n "- - - Neovim : "
+        mkdir -p ~/.config/nvim/
+        cp "$ICI/config/neovim" ~/.config/nvim/init.vim
+        check_cmd
+    fi
+
+    msg_bold_blue "➜ Presse-papier Clipse"
+    #clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
+    if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f ~/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
+        echo -n "- - - Ajout clipse.desktop : "
+        cp "$ICI/config/clipse.desktop" ~/.config/autostart/clipse.desktop
+        check_cmd
+        echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
+        $sleepmid
+
+        if [[ $(cat ~/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
+            echo -n "- - - Nombre max d'entrées dans l'historique : "
+            sed -i 's/"maxHistory":.*/"maxHistory": 500,/' ~/.config/clipse/config.json
+            check_cmd
+        fi
+    fi
+
 exit 0
 fi
+
+###################
+### END_USER ###
+###################
 
 ###################
 ### MAIN - ROOT ###
@@ -664,207 +724,6 @@ do
 	fi
 done < "$ICI/packages/flatpak.list"
 
-### NPM
-if [[ "$VM" = "none" ]]; then
-	msg_bold_blue "➜ Paquets Node.js via npm"
-	if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
-	    echo -n "- - - Installation de clipboard-cli : "
-	    npm install --global clipboard-cli >> "$log_root" 2>&1
-	    check_cmd
-	fi
-fi
-
-### Systemd
-msg_bold_blue "➜ Paramètrage systemd"
-if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation du service Timeshift : "
-    systemctl enable cronie.service >> "$log_root" 2>&1
-    check_cmd
-fi
-
-if ! check_pkg cups; then
-    echo -n "- - - Installation du paquet cups : "
-    add_pkg_pacman cups
-    check_cmd
-elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation de cups.socket : "
-    systemctl enable --now cups.socket >> "$log_root" 2>&1
-    check_cmd
-fi
-
-if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation de cups.service : "
-    systemctl enable --now cups.service >> "$log_root" 2>&1
-    check_cmd
-fi
-
-#fstrim pour SSD
-#DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
-#Activé par défaut avec archinstall
-if [[ "$VM" = "none" ]]; then
-	device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
-	disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
-	disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
-
-	if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
-	    add_pkg_pacman util-linux
-	    if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
-	        echo -n "- - - Activation du timer fstrim pour $device_name : "
-	        systemctl enable fstrim.timer >> "$log_root" 2>&1
-	        check_cmd
-	    fi
-	else
-	    echo "- - - Activation du timer fstrim : "
-	    echo "$device_name ne semble pas supporter fstrim."
-	fi
-fi
-
-if ! check_pkg pacman-contrib; then
-    echo -n "- - - Installation du paquet pacman-contrib : "
-    add_pkg_pacman pacman-contrib
-    check_cmd
-fi
-if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation de paccache.timer : "
-    systemctl enable paccache.timer >> "$log_root" 2>&1
-    check_cmd
-fi
-if [[ "$VM" = "none" ]] && check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation du service sshd.service : "
-    systemctl enable sshd.service >> "$log_root" 2>&1
-    check_cmd
-fi
-
-local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
-check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
-if [[ "$VM" = "none" ]] && [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
-    echo -n "- - - Limiter SSH au réseau local : "
-    sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
-    check_cmd
-fi
-
-#Sauvegarde perso
-msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
-if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
-    if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]] && [[ "$DE" = 'KDE' ]]; then
-        echo ${YELLOW}"/!\ ~/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
-        sleep $sleepmid
-    elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
-        if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
-            echo -n "- - - Copie backup_nettoyage.service : "
-            mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
-            check_cmd
-        fi
-        if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
-            echo -n "- - - Copie backup_nettoyage.timer : "
-            mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
-            check_cmd
-        fi
-        if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
-            echo -n "- - - Activation du service backup_nettoyage.timer : "
-            systemctl enable backup_nettoyage.timer >> "$log_root" 2>&1
-            check_cmd
-        fi
-    fi
-fi
-
-msg_bold_blue "➜ Presse-papier Clipse"
-#clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
-if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f $SUDO_HOME/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
-    echo -n "- - - Ajout clipse.desktop : "
-    cp "$ICI/config/clipse.desktop" $SUDO_HOME/.config/autostart/clipse.desktop
-    chmod +r $SUDO_HOME/.config/autostart/clipse.desktop
-    check_cmd
-    echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
-
-    if [[ $(cat $SUDO_HOME/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
-    	echo -n "- - - Nombre max d'entrées dans l'historique : "
-     	sed -i 's/"maxHistory":.*/"maxHistory": 500,/' $SUDO_HOME/.config/clipse/config.json
-     	check_cmd
-    fi
-fi
-
-msg_bold_blue "➜ ProtonMail Bridge Core"
-if check_pkg protonmail-bridge-core && [[ ! -f $SUDO_HOME/.config/autostart/protonmail.desktop ]]; then
-    echo -n "- - - Démarrage auto : "
-    cp "$ICI/config/protonmail.desktop" $SUDO_HOME/.config/autostart/protonmail.desktop
-    chmod +r $SUDO_HOME/.config/autostart/protonmail.desktop
-    check_cmd
-fi
-
-msg_bold_blue "➜ Fichiers de configuration"
-if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]; then
-    echo -n "- - - Alacritty.toml : "
-    mkdir -p $SUDO_HOME/.config/alacritty
-    cp "$ICI/config/alacritty.toml" $SUDO_HOME/.config/alacritty
-    check_cmd
-    if [[ "$VM" != "none" ]]; then
-    	echo -n "- - - VM détectée donc decorations = Full : "
-        sed -i 's/^decorations =.*/decorations = \"Full\"/' $SUDO_HOME/.config/alacritty/alacritty.toml
-	check_cmd
-    fi
-    echo -n "- - - Propriétaire du dossier alacritty : "
-    chown -R $SUDO_USER:$SUDO_USER $SUDO_HOME/.config/alacritty
-    check_cmd
-fi
-
-if check_pkg neovim && [[ $(grep -c "nocompatible" $SUDO_HOME/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
-    echo -n "- - - Neovim : "
-    mkdir -p $SUDO_HOME/.config/nvim/
-    cp "$ICI/config/neovim" $SUDO_HOME/.config/nvim/init.vim
-    check_cmd
-fi
-
-if [[ ! -f $SUDO_HOME/.hidden ]]; then
-    echo -n "- - - Ajout .hidden pour masquer des dossiers du \$HOME : "
-    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > $SUDO_HOME/.hidden
-    check_cmd
-fi
-
-msg_bold_blue "➜ Suppression du bruit lors de recherches"
-if [[ ! -f /etc/modprobe.d/nobeep.conf ]]; then
-    touch /etc/modprobe.d/nobeep.conf
-fi
-
-if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
-    echo -n "- - - Blacklist pcspkr : "
-    echo "blacklist pcspkr" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
-    check_cmd
-fi
-if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
-    echo -n "- - - Blacklist snd_pcsp : "
-    echo "blacklist snd_pcsp" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
-    check_cmd
-fi
-
-# Rétention cache des paquets avec paccache
-msg_bold_blue "➜ Paccache : cache des paquets"
-if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]
-#Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne
-then
-	echo -n "- - - Ajustement de paccache à 1 version : "
-	paccache -rk1
-	check_cmd
-fi
-
-msg_bold_blue "➜ Pavé numérique"
-# On crée les fichiers si besoin
-if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]; then
-    touch /etc/sddm.conf
-fi
-if [ "$DE" = 'XFCE' ] && [[ ! -f /etc/lightdm/lightdm.conf ]]; then
-    touch /etc/lightdm/lightdm.conf
-fi
-
-if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
-    echo -n "- - - Activation pour KDE Plasma : "
-    echo "[General]" | tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | tee -a /etc/sddm.conf > /dev/null
-    check_cmd
-elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
-    echo -n "- - - Activation pour XFCE : "
-    sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
-    check_cmd
-fi
 
 msg_bold_blue "➜ Sudoers"
 if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && check_pkg plocate && [[ $(grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$SUDO_USER) -lt 1 ]] ; then
@@ -881,40 +740,183 @@ if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt
     check_cmd
 fi
 
-#########################
-# Uncomplicated FireWall
-#########################
-msg_bold_blue "➜ Pare-Feu UFW"
-if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
-    echo " - - - Paramétrage des règles par défaut"
-    ufw reset
-    ufw default deny incoming
-    ufw default allow outgoing
-    ufw allow to 192.168.1.0/24
-    ufw allow from 192.168.1.0/24
-    ufw deny 22 # SSH - uniquement local autorisé
-    ufw enable
-    systemctl enable ufw.service >> "$log_root" 2>&1
+msg_bold_blue "➜ Paccache"
+if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
+    echo -n "- - - Activation de paccache.timer : "
+    systemctl enable paccache.timer >> "$log_root" 2>&1
     check_cmd
-
-#    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
-#        echo -n "- - - Désactivation IPV6 : "
-#        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
-#        check_cmd
-#	ufw reload
-#    fi
-
-    if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
-        echo -n "- - - Autoriser la police de transfert (VPN...) : "
-        sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
-        check_cmd
-	ufw reload
-    fi
 fi
 
+# Rétention cache des paquets avec paccache
+if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]; then
+#Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne
+    echo -n "- - - Ajustement de paccache à 1 version : "
+    paccache -rk1
+    check_cmd
+fi
+
+###########################
 # FAUT PAS ETRE DANS UNE VM
+###########################
 if [[ "$VM" = "none" ]]; then
-msg_bold_blue "➜ Carte réseau Realtek RTL8821CE" 
+
+    ### NPM
+    msg_bold_blue "➜ Paquets Node.js via npm"
+    if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
+        echo -n "- - - Installation de clipboard-cli : "
+        npm install --global clipboard-cli >> "$log_root" 2>&1
+        check_cmd
+    fi
+
+    ### Systemd
+    msg_bold_blue "➜ Paramètrage systemd"
+    if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - - Activation du service Timeshift : "
+        systemctl enable cronie.service >> "$log_root" 2>&1
+        check_cmd
+    fi
+
+    if ! check_pkg cups; then
+        echo -n "- - - Installation du paquet cups : "
+        add_pkg_pacman cups
+        check_cmd
+    elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - - Activation de cups.socket : "
+        systemctl enable --now cups.socket >> "$log_root" 2>&1
+        check_cmd
+    fi
+
+    if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - - Activation de cups.service : "
+        systemctl enable --now cups.service >> "$log_root" 2>&1
+        check_cmd
+    fi
+
+    #fstrim pour SSD
+    #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
+    #Activé par défaut avec archinstall
+    device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
+    disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
+    disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
+
+    if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
+        add_pkg_pacman util-linux
+        if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - - Activation du timer fstrim pour $device_name : "
+            systemctl enable fstrim.timer >> "$log_root" 2>&1
+            check_cmd
+        fi
+    else
+        echo "- - - Activation du timer fstrim : "
+        echo "$device_name ne semble pas supporter fstrim."
+    fi
+
+    if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - - Activation du service sshd.service : "
+        systemctl enable sshd.service >> "$log_root" 2>&1
+        check_cmd
+    fi
+
+    local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
+    check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
+    if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
+        echo -n "- - - Limiter SSH au réseau local : "
+        sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
+        check_cmd
+    fi
+
+    msg_bold_blue "➜ Suppression du bruit lors de recherches"
+    if [[ ! -f /etc/modprobe.d/nobeep.conf ]]; then
+        touch /etc/modprobe.d/nobeep.conf
+    fi
+
+    if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
+        echo -n "- - - Blacklist pcspkr : "
+        echo "blacklist pcspkr" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+        check_cmd
+    fi
+    if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
+        echo -n "- - - Blacklist snd_pcsp : "
+        echo "blacklist snd_pcsp" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+        check_cmd
+    fi
+
+    msg_bold_blue "➜ Pavé numérique"
+    # On crée les fichiers si besoin
+    if [ "$DE" = 'KDE' ] && [[ ! -f /etc/sddm.conf ]]; then
+        touch /etc/sddm.conf
+    fi
+    if [ "$DE" = 'XFCE' ] && [[ ! -f /etc/lightdm/lightdm.conf ]]; then
+        touch /etc/lightdm/lightdm.conf
+    fi
+
+    if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
+        echo -n "- - - Activation pour KDE Plasma : "
+        echo "[General]" | tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | tee -a /etc/sddm.conf > /dev/null
+        check_cmd
+    elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
+        echo -n "- - - Activation pour XFCE : "
+        sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
+        check_cmd
+    fi
+
+    #########################
+    # Uncomplicated FireWall
+    #########################
+    msg_bold_blue "➜ Pare-Feu UFW"
+    if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
+        echo " - - - Paramétrage des règles par défaut"
+        ufw reset
+        ufw default deny incoming
+        ufw default allow outgoing
+        ufw allow to 192.168.1.0/24
+        ufw allow from 192.168.1.0/24
+        ufw deny 22 # SSH - uniquement local autorisé
+        ufw enable
+        systemctl enable ufw.service >> "$log_root" 2>&1
+        check_cmd
+
+    #    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
+    #        echo -n "- - - Désactivation IPV6 : "
+    #        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
+    #        check_cmd
+    #	ufw reload
+    #    fi
+
+        if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
+            echo -n "- - - Autoriser la police de transfert (VPN...) : "
+            sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
+            check_cmd
+        ufw reload
+        fi
+    fi
+
+    #Sauvegarde perso
+    msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
+    if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
+        if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]] && [[ "$DE" = 'KDE' ]]; then
+            echo ${YELLOW}"/!\ ~/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
+            sleep $sleepmid
+        elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
+            if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
+                echo -n "- - - Copie backup_nettoyage.service : "
+                mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
+                check_cmd
+            fi
+            if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
+                echo -n "- - - Copie backup_nettoyage.timer : "
+                mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
+                check_cmd
+            fi
+            if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
+                echo -n "- - - Activation du service backup_nettoyage.timer : "
+                systemctl enable backup_nettoyage.timer >> "$log_root" 2>&1
+                check_cmd
+            fi
+        fi
+    fi
+
+    msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
     if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
         echo -n "- - - Installation du paquet AUR  : "
         add_pkg_paru rtl8821ce-dkms-git
@@ -930,7 +932,7 @@ msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
         # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
         # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
         # Définir le répertoire cible et les patterns des noms de fichiers
-	# Ça reste visible avec journalctl -b --priority=3
+        # Ça reste visible avec journalctl -b --priority=3
         DIR="/boot/loader/entries"
         PATTERNS=("linux.conf" "linux-lts.conf")
 
@@ -993,7 +995,7 @@ msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
             if [[ "$line" == add_osheden:* ]]; then
                 p=${line#add_osheden:}
                 if ! check_pkg "$p"; then
-                    echo -n "- - - Installation paquet $p : "
+                    echo -n "$sign_green $p : "
                     add_pkg_pacman "$p"
                     check_cmd
                 fi
@@ -1002,7 +1004,7 @@ msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
             if [[ "$line" == del_osheden:* ]]; then
                 p=${line#del_osheden:}
                 if check_pkg "$p"; then
-                    echo -n "- - - Suppression paquet $p : "
+                    echo -n "$sign_red $p : "
                     del_pkg_pacman "$p"
                     check_cmd
                 fi
@@ -1125,20 +1127,18 @@ msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
             fi
         fi
     fi
-fi
 
-#Actions manuelles
-echo
-echo "${YELLOW}${BOLD}*******************"
-echo "Actions manuelles"
-echo "*******************${RESET}"
-if [[ ! -d $SUDO_HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
-    if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
-	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
-     fi
-fi
+    #Actions manuelles
+    echo
+    echo "${YELLOW}${BOLD}*******************"
+    echo "Actions manuelles"
+    echo "*******************${RESET}"
+    if [[ ! -d $SUDO_HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
+        if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
+            echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
+            echo "Avec une opacité du tableau de bord : **translucide**"
+        fi
+    fi
 
-# Message de fin
-if [[ "$VM" = "none" ]]; then
-	printf "\nConfigurer TIMESHIFT\n"
+    printf "\nConfigurer TIMESHIFT\n"
 fi
