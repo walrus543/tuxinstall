@@ -369,8 +369,7 @@ if [[ "$1" = "user" ]]; then
 	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
 	            check_cmd
 
-	            echo ${YELLOW}${BOLD}"- - - Coller ces commandes dans un NOUVEAU terminal : "${RESET}
-	            echo "déjà dans le presse-papier"
+	            echo ${YELLOW}${BOLD}"- - - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET}
 	            sleep $sleepmid
 	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
 	            sleep $sleepmid
