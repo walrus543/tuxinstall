@@ -91,11 +91,11 @@ check_systemd_user()
 }
 
 msg_bold_blue() {
-    echo "${BLUE}${BOLD}$1${RESET}"
+    printf "\n${BLUE}${BOLD}$1${RESET}\n"
 }
 
 msg_bold_red() {
-    echo "${RED}${BOLD}$1${RESET}"
+    printf "\n${RED}${BOLD}$1${RESET}\n"
 }
 
 #####################
@@ -198,16 +198,16 @@ if [[ "$1" = "user" ]]; then
             git clone https://aur.archlinux.org/paru.git >> "$log_noroot" 2>&1
             cd paru >> "$log_noroot" 2>&1
             makepkg -si
-            echo -n "- - - Statut de l'installation : "
+            echo -n "- - Statut de l'installation : "
             pacman -Q paru > /dev/null
             check_cmd
-            echo -n "- - - Nettoyage de l'installation : "
+            echo -n "- - Nettoyage de l'installation : "
             cd ..
             rm -rf paru
             check_cmd
 
             if check_pkg paru && [[ $(grep -c "^#NewsOnUpgrade" /etc/paru.conf) -lt 1 ]]; then
-                echo -n "- - - Correction de NewsOnUpgrade : "
+                echo -n "- - Correction de NewsOnUpgrade : "
                 sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf
                 check_cmd
             fi
@@ -269,37 +269,37 @@ if [[ "$1" = "user" ]]; then
 
         msg_bold_blue "➜ Configuration shell"
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh ]]; then
-            echo "- - - Installation Oh My ZSH"
+            echo "- - Installation Oh My ZSH"
             sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # >> "$log_noroot" 2>&1 # pas dans les logs pour le définir comme shell par défaut
-            echo -n "- - - Installation Oh My ZSH : "
+            echo -n "- - Installation Oh My ZSH : "
             check_pkg zsh
             check_cmd
         fi
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
-            echo -n "- - - Installation zsh-autosuggestions : "
+            echo -n "- - Installation zsh-autosuggestions : "
             git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions >> "$log_noroot" 2>&1
             check_cmd
         fi
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
-            echo -n "- - - Installation zsh-syntax-highlighting : "
+            echo -n "- - Installation zsh-syntax-highlighting : "
             git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting >> "$log_noroot" 2>&1
             check_cmd
         fi
         if check_pkg zsh && [[ ! -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
-            echo -n "- - - Installation powerlevel10k : "
+            echo -n "- - Installation powerlevel10k : "
             git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k >> "$log_noroot" 2>&1
             check_cmd
-            echo -n "- - - Définir powerlevel10k par défaut : "
+            echo -n "- - Définir powerlevel10k par défaut : "
             sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' ~/.zshrc
             check_cmd
         fi
         if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' ~/.zshrc) -lt 1 ]]; then
-            echo -n "- - - Activation des plugins : "
+            echo -n "- - Activation des plugins : "
             sed -E -i 's/plugins=\((.*?)\)/plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
             check_cmd
         fi
         if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]; then
-            echo -n "- - - Installation des polices : "
+            echo -n "- - Installation des polices : "
             sudo mkdir -p /usr/share/fonts/TTF
             sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
             sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
@@ -309,7 +309,7 @@ if [[ "$1" = "user" ]]; then
             fc-cache -f -v >> "$log_noroot" 2>&1
         fi
         if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
-            echo -n "- - - ZSH devient le shell par défaut : "
+            echo -n "- - ZSH devient le shell par défaut : "
             chsh -s /usr/bin/zsh
             check_cmd
             echo ${YELLOW}"Déconnexion requise pour changer le shell par défaut"${RESET}
@@ -317,7 +317,7 @@ if [[ "$1" = "user" ]]; then
 
         if check_pkg zsh # && [[ $(grep -c "ALIAS - GENERAL" ~/.zshrc) -lt 1 ]]
         then
-            echo -n "- - - Ajustement des alias par comparatif : "
+            echo -n "- - Ajustement des alias par comparatif : "
             if [ ! -f "$ICI/config/alias_listing" ]; then
                 echo "Le fichier source des alias n'existe pas."
             else
@@ -337,22 +337,22 @@ if [[ "$1" = "user" ]]; then
 	if [[ "$VM" = "none" ]]; then
 	 	msg_bold_blue "➜ Gestion nvm"
 	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
-	            echo -n "- - - Installation de NVM : "
+	            echo -n "- - Installation de NVM : "
 	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
 	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 	            check_cmd
 
-	            echo -n "- - - Nettoyage .zshrc : "
+	            echo -n "- - Nettoyage .zshrc : "
 	            sed -i '/NVM_DIR/d' ~/.zshrc
 	            check_cmd
 
-	            echo -n "- - - Paramètrage .zshrc : "
+	            echo -n "- - Paramètrage .zshrc : "
 	            echo "" >> ~/.zshrc
 	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
 	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
 	            check_cmd
 
-	            echo ${YELLOW}${BOLD}"- - - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET}
+	            echo ${YELLOW}${BOLD}"- - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET}
 	            sleep $sleepmid
 	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
 	            sleep $sleepmid
@@ -363,7 +363,7 @@ if [[ "$1" = "user" ]]; then
     if [[ "$DE" = 'KDE' ]]; then
         msg_bold_blue "➜ KDE Dolphin services menu"
         if check_pkg meld && [[ ! -f ~/.local/share/kio/servicemenus/compare-using-meld.desktop ]]; then
-        echo -n "- - - Comparer avec Meld : "
+        echo -n "- - Comparer avec Meld : "
             if [ -f "$ICI/config/compare-using-meld.desktop" ]; then
             mkdir -p ~/.local/share/kio/servicemenus
             cp "$ICI/config/compare-using-meld.desktop" ~/.local/share/kio/servicemenus
@@ -374,17 +374,17 @@ if [[ "$1" = "user" ]]; then
 
     if ! check_pkg xdg-user-dirs || [[ ! -d $HOME/Documents ]]; then
         msg_bold_blue "➜ Dossiers utilisateur dans $HOME"
-        echo -n "- - - Installation de xdg-user-dirs : "
+        echo -n "- - Installation de xdg-user-dirs : "
         add_pkg_pacman xdg-user-dirs
 	check_cmd
-	echo -n "- - - Génération des dossiers : "
+	echo -n "- - Génération des dossiers : "
         xdg-user-dirs-update
         check_cmd
     fi
 
     msg_bold_blue "➜ ProtonMail Bridge Core"
     if check_pkg protonmail-bridge-core && [[ ! -f ~/.config/autostart/protonmail.desktop ]]; then
-        echo -n "- - - Démarrage auto : "
+        echo -n "- - Démarrage auto : "
         cp "$ICI/config/protonmail.desktop" ~/.config/autostart/protonmail.desktop
         chmod +r ~/.config/autostart/protonmail.desktop
         check_cmd
@@ -392,50 +392,50 @@ if [[ "$1" = "user" ]]; then
 
     msg_bold_blue "➜ Fichiers de configuration"
     if check_pkg alacritty && [[ ! -f ~/.config/alacritty/alacritty.toml ]]; then
-        echo -n "- - - Alacritty.toml : "
+        echo -n "- - Alacritty.toml : "
         mkdir -p ~/.config/alacritty
         cp "$ICI/config/alacritty.toml" ~/.config/alacritty
         check_cmd
         if [[ "$VM" != "none" ]]; then
-            echo -n "- - - VM détectée donc decorations = Full : "
+            echo -n "- - VM détectée donc decorations = Full : "
             sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
         check_cmd
         fi
     fi
 
     if [[ ! -f ~/.hidden ]]; then
-    echo -n "- - - Ajout .hidden pour masquer des dossiers du \$HOME : "
+    echo -n "- - Ajout .hidden pour masquer des dossiers du \$HOME : "
     printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > ~/.hidden
     check_cmd
     fi
 
     #TMUX
     if check_pkg tmux && [[ $(grep -c "unbind" ~/.tmux.conf) -lt 1 ]]; then
-        echo -n "- - - TPM : "
+        echo -n "- - TPM : "
         mkdir -p ~/.tmux/plugins/tpm
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm >> "$log_noroot" 2>&1
         check_cmd
 
-        echo -n "- - - tmux.conf : "
+        echo -n "- - tmux.conf : "
         cp "$ICI/config/tmux.conf" ~/.tmux.conf
         check_cmd
         echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}"
         $sleepmid
     fi
     if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
-        echo -n "- - - Lancer tmux par défaut : "
+        echo -n "- - Lancer tmux par défaut : "
         sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
         check_cmd
     fi
 
     #NEOVIM
     if check_pkg neovim && [[ $(grep -c "nocompatible" ~/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
-        echo -n "- - - Config de base Neovim : "
+        echo -n "- - Config de base Neovim : "
         mkdir -p ~/.config/nvim/
         cp "$ICI/config/neovim" ~/.config/nvim/init.vim
         check_cmd
 
-        echo -n "- - - Plugin manager Neovim : "
+        echo -n "- - Plugin manager Neovim : "
  	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_noroot" 2>&1
         check_cmd
@@ -446,14 +446,14 @@ if [[ "$1" = "user" ]]; then
     msg_bold_blue "➜ Presse-papier Clipse"
     #clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
     if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f ~/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
-        echo -n "- - - Ajout clipse.desktop : "
+        echo -n "- - Ajout clipse.desktop : "
         cp "$ICI/config/clipse.desktop" ~/.config/autostart/clipse.desktop
         check_cmd
         echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
         $sleepmid
 
         if [[ $(cat ~/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
-            echo -n "- - - Nombre max d'entrées dans l'historique : "
+            echo -n "- - Nombre max d'entrées dans l'historique : "
             sed -i 's/"maxHistory":.*/"maxHistory": 500,/' ~/.config/clipse/config.json
             check_cmd
         fi
@@ -509,24 +509,24 @@ if [[ "$VM" != "none" ]]; then
     msg_bold_blue "➜ Paramètrage Virtualisation"
     if [[ "$VM" != "none" ]]; then
         if ! check_pkg virtualbox-guest-utils; then
-            echo -n "- - - Installation du paquet des guests : "
+            echo -n "- - Installation du paquet des guests : "
             pacman -S --needed --noconfirm virtualbox-guest-utils >> "$log_root"
             check_cmd
 
-            echo -n "- - - Activation de vboxservice.service : "
+            echo -n "- - Activation de vboxservice.service : "
             systemctl enable --now vboxservice.service >> "$log_root" 2>&1
             check_cmd
 
-            echo ${YELLOW}"Pensez à redémarrer."${RESET}
+            echo ${YELLOW}"Penser à redémarrer."${RESET}
             sleep $sleepmid
         fi
 	sleep $sleepquick
         if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]; then
-            echo -n "- - - Ajout du user au groupe vboxsf : "
+            echo -n "- - Ajout du user au groupe vboxsf : "
             usermod -a -G vboxsf $SUDO_USER
             check_cmd
 
-            echo -n "- - - Droits du dossier PartageVM : "
+            echo -n "- - Droits du dossier PartageVM : "
             chown -R $SUDO_USER:users /media/sf_PartageVM/
             check_cmd
         fi
@@ -537,17 +537,17 @@ fi
 ### CONF PACMAN
 msg_bold_blue "➜ Configuration pacman"
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]; then
-    echo -n "- - - Correction ILoveCandy : "
+    echo -n "- - Correction ILoveCandy : "
     sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
     check_cmd
 fi
 if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]; then
-    echo -n "- - - Correction téléchargements parallèles : "
+    echo -n "- - Correction téléchargements parallèles : "
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     check_cmd
 fi
 if [[ $(grep -c "^Color" /etc/pacman.conf) -lt 1 ]]; then
-    echo -n "- - - Correction des couleurs : "
+    echo -n "- - Correction des couleurs : "
     sed -i 's/^#Color/Color/' /etc/pacman.conf
     check_cmd
 fi
@@ -555,13 +555,13 @@ fi
 ### CONF MAKEPKG
 msg_bold_blue "➜ Configuration makepkg"
 if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]; then
-    echo -n "- - - Correction de la compression : "
+    echo -n "- - Correction de la compression : "
     sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
     check_cmd
 fi
 
 if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]; then
-    echo -n "- - - Correction de l'utilisation des coeurs : "
+    echo -n "- - Correction de l'utilisation des coeurs : "
     sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
     check_cmd
 fi
@@ -569,7 +569,7 @@ fi
 ### CONF JOURNALD
 msg_bold_blue "➜ Configuration journald.conf"
 if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]; then
-    echo -n "- - - Correction de la taille maximale autorisée : "
+    echo -n "- - Correction de la taille maximale autorisée : "
     sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
     check_cmd
 fi
@@ -577,22 +577,22 @@ fi
 ### CONF SYSTEMD-BOOT ou GRUB
 if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 1" /boot/loader/loader.conf) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu systemd-boot"
-    echo -n "- - - Kernel dernier sauvegardé sélectionné : "
+    echo -n "- - Kernel dernier sauvegardé sélectionné : "
     sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
     check_cmd
 
-    echo -n "- - - Timeout de 1s : "
+    echo -n "- - Timeout de 1s : "
     sed -i 's/^timeout .*$/timeout 1/' /boot/loader/loader.conf
     check_cmd
 fi
 
 if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub) -lt 1 ]]; then
     msg_bold_blue "➜ Configuration menu grub"
-    echo -n "- - - Timeout de 1s : "
+    echo -n "- - Timeout de 1s : "
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=1/' /etc/default/grub
     check_cmd
 
-    echo -n "- - - Regénérer grub.cfg : "
+    echo -n "- - Regénérer grub.cfg : "
     grub-mkconfig -o /boot/grub/grub.cfg  >> "$log_root" 2>&1
     check_cmd
 fi
@@ -692,18 +692,18 @@ done < "packages/pacman.list"
 msg_bold_blue "➜ Configuration Flatpak"
 ## FLATHUB
 if check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -ne 1 ]]; then
-	echo -n "- - - Installation Flathub : "
+	echo -n "- - Installation Flathub : "
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo > /dev/null
 	check_cmd
 
 elif ! check_pkg flatpak; then
-    echo -n "- - - Installation de Flatkpak : "
+    echo -n "- - Installation de Flatkpak : "
     add_pkg_pacman flatpak
     check_cmd
-    echo -n "- - - Installation de Flathub : "
+    echo -n "- - Installation de Flathub : "
     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo > /dev/null
     check_cmd
-    echo -n "- - - Eviter le crénelage des polices : "
+    echo -n "- - Eviter le crénelage des polices : "
     add_pkg_pacman xdg-desktop-portal-gtk
     check_cmd
 fi
@@ -734,7 +734,7 @@ done < "$ICI/packages/flatpak.list"
 
 msg_bold_blue "➜ Sudoers"
 if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && check_pkg plocate && [[ $(grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$SUDO_USER) -lt 1 ]] ; then
-    echo -n "- - - Commande updatedb sans mot de passe : "
+    echo -n "- - Commande updatedb sans mot de passe : "
     echo "$SUDO_USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$SUDO_USER
     check_cmd
 fi
@@ -749,7 +749,7 @@ fi
 
 msg_bold_blue "➜ Paccache"
 if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
-    echo -n "- - - Activation de paccache.timer : "
+    echo -n "- - Activation de paccache.timer : "
     systemctl enable paccache.timer >> "$log_root" 2>&1
     check_cmd
 fi
@@ -757,7 +757,7 @@ fi
 # Rétention cache des paquets avec paccache
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]; then
 #Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne
-    echo -n "- - - Ajustement de paccache à 1 version : "
+    echo -n "- - Ajustement de paccache à 1 version : "
     paccache -rk1
     check_cmd
 fi
@@ -770,7 +770,7 @@ if [[ "$VM" = "none" ]]; then
     ### NPM
     msg_bold_blue "➜ Paquets Node.js via npm"
     if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
-        echo -n "- - - Installation de clipboard-cli : "
+        echo -n "- - Installation de clipboard-cli : "
         npm install --global clipboard-cli >> "$log_root" 2>&1
         check_cmd
     fi
@@ -778,23 +778,23 @@ if [[ "$VM" = "none" ]]; then
     ### Systemd
     msg_bold_blue "➜ Paramètrage systemd"
     if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - - Activation du service Timeshift : "
+        echo -n "- - Activation du service Timeshift : "
         systemctl enable cronie.service >> "$log_root" 2>&1
         check_cmd
     fi
 
     if ! check_pkg cups; then
-        echo -n "- - - Installation du paquet cups : "
+        echo -n "- - Installation du paquet cups : "
         add_pkg_pacman cups
         check_cmd
     elif [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - - Activation de cups.socket : "
+        echo -n "- - Activation de cups.socket : "
         systemctl enable --now cups.socket >> "$log_root" 2>&1
         check_cmd
     fi
 
     if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - - Activation de cups.service : "
+        echo -n "- - Activation de cups.service : "
         systemctl enable --now cups.service >> "$log_root" 2>&1
         check_cmd
     fi
@@ -809,17 +809,17 @@ if [[ "$VM" = "none" ]]; then
     if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
         add_pkg_pacman util-linux
         if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
-            echo -n "- - - Activation du timer fstrim pour $device_name : "
+            echo -n "- - Activation du timer fstrim pour $device_name : "
             systemctl enable fstrim.timer >> "$log_root" 2>&1
             check_cmd
         fi
     else
-        echo "- - - Activation du timer fstrim : "
+        echo "- - Activation du timer fstrim : "
         echo "$device_name ne semble pas supporter fstrim."
     fi
 
     if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - - Activation du service sshd.service : "
+        echo -n "- - Activation du service sshd.service : "
         systemctl enable sshd.service >> "$log_root" 2>&1
         check_cmd
     fi
@@ -827,7 +827,7 @@ if [[ "$VM" = "none" ]]; then
     local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
     check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
     if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
-        echo -n "- - - Limiter SSH au réseau local : "
+        echo -n "- - Limiter SSH au réseau local : "
         sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
         check_cmd
     fi
@@ -838,12 +838,12 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
-        echo -n "- - - Blacklist pcspkr : "
+        echo -n "- - Blacklist pcspkr : "
         echo "blacklist pcspkr" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
         check_cmd
     fi
     if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
-        echo -n "- - - Blacklist snd_pcsp : "
+        echo -n "- - Blacklist snd_pcsp : "
         echo "blacklist snd_pcsp" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
         check_cmd
     fi
@@ -858,11 +858,11 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
-        echo -n "- - - Activation pour KDE Plasma : "
+        echo -n "- - Activation pour KDE Plasma : "
         echo "[General]" | tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | tee -a /etc/sddm.conf > /dev/null
         check_cmd
     elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
-        echo -n "- - - Activation pour XFCE : "
+        echo -n "- - Activation pour XFCE : "
         sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
         check_cmd
     fi
@@ -872,7 +872,7 @@ if [[ "$VM" = "none" ]]; then
     #########################
     msg_bold_blue "➜ Pare-Feu UFW"
     if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
-        echo " - - - Paramétrage des règles par défaut"
+        echo " - - Paramétrage des règles par défaut"
         ufw reset
         ufw default deny incoming
         ufw default allow outgoing
@@ -884,14 +884,14 @@ if [[ "$VM" = "none" ]]; then
         check_cmd
 
     #    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
-    #        echo -n "- - - Désactivation IPV6 : "
+    #        echo -n "- - Désactivation IPV6 : "
     #        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
     #        check_cmd
     #	ufw reload
     #    fi
 
         if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
-            echo -n "- - - Autoriser la police de transfert (VPN...) : "
+            echo -n "- - Autoriser la police de transfert (VPN...) : "
             sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
             check_cmd
         ufw reload
@@ -906,17 +906,17 @@ if [[ "$VM" = "none" ]]; then
             sleep $sleepmid
         elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
             if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
-                echo -n "- - - Copie backup_nettoyage.service : "
+                echo -n "- - Copie backup_nettoyage.service : "
                 mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
                 check_cmd
             fi
             if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
-                echo -n "- - - Copie backup_nettoyage.timer : "
+                echo -n "- - Copie backup_nettoyage.timer : "
                 mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
                 check_cmd
             fi
             if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
-                echo -n "- - - Activation du service backup_nettoyage.timer : "
+                echo -n "- - Activation du service backup_nettoyage.timer : "
                 systemctl enable backup_nettoyage.timer >> "$log_root" 2>&1
                 check_cmd
             fi
@@ -925,12 +925,12 @@ if [[ "$VM" = "none" ]]; then
 
     msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
     if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
-        echo -n "- - - Installation du paquet AUR  : "
+        echo -n "- - Installation du paquet AUR  : "
         add_pkg_paru rtl8821ce-dkms-git
         check_cmd
 
         if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
-            echo -n "- - - Configuration blacklist.conf  : "
+            echo -n "- - Configuration blacklist.conf  : "
             echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
             echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
             check_cmd
@@ -981,13 +981,13 @@ if [[ "$VM" = "none" ]]; then
         done
 
     else
-        echo ${YELLOW}"- - - Carte réseau Realtek RTL8821CE non détectée."${RESET}
+        echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
     fi
 
     #NVIDIA
     read -p ${BLUE}${BOLD}"➜ Besoin des paquets NVIDIA ? (y/N) "${RESET} -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]] && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
-        echo -n "- - - Installation des paquets NVIDIA : "
+        echo -n "- - Installation des paquets NVIDIA : "
         pacman -S --needed --noconfirm pacman -S --needed nvidia nvidia-lts nvidia-utils nvidia-settings >> "$log_root" 2>&1
         check_cmd
     fi
@@ -1070,7 +1070,7 @@ if [[ "$VM" = "none" ]]; then
     read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        printf "\n- - - Test de la connexion au site\n"
+        printf "\n- - Test de la connexion au site\n"
 
         url="https://developer.android.com/studio?hl=fr"
 
@@ -1083,7 +1083,7 @@ if [[ "$VM" = "none" ]]; then
 
         #Contrôler la disponibilité du site
         if [[ $response -ne 200 ]]; then
-            echo "${RED}- - - Impossible de se connecter au site $url${RESET}"
+            echo "${RED}- - Impossible de se connecter au site $url${RESET}"
         else
             # Récupérer le contenu de la page
             page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
@@ -1093,10 +1093,10 @@ if [[ "$VM" = "none" ]]; then
 
             # Vérifier si l'URL a été trouvée
             if [[ -z "$download_url" ]]; then
-                echo "${RED}- - - Impossible de trouver l'URL de téléchargement.${RESET}"
+                echo "${RED}- - Impossible de trouver l'URL de téléchargement.${RESET}"
             else
                 # Télécharger le fichier
-                echo "- - - Téléchargement : "
+                echo "- - Téléchargement : "
                 wget -P /tmp -q --show-progress "$download_url"
 
                 filename=$(basename $(ls -1 /tmp/android-studio*))
@@ -1104,25 +1104,25 @@ if [[ "$VM" = "none" ]]; then
                 path_install="/usr/local/android-studio"
 
                 if [[ "$filesize" -lt 1000000 ]]; then
-                    echo "${RED}- - - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
+                    echo "${RED}- - Taille du fichier /tmp/$filename anormalement basse...${RESET}"
                 else
                     printf "\nInstallation lancée...\n"
-                    echo -n "- - - Création du dossier final : "
+                    echo -n "- - Création du dossier final : "
                     mkdir -p $path_install
                     check_cmd
 
-                    echo -n "- - - Décompresssion $filename : "
+                    echo -n "- - Décompresssion $filename : "
                     tar -xzf /tmp/$filename -C $path_install --strip-components=1
                     check_cmd
 
-                    echo -n "- - - Rendre studio.sh exécutable : "
+                    echo -n "- - Rendre studio.sh exécutable : "
                     chmod +x $path_install/bin/studio.sh
                     check_cmd
 
-                    echo -n "- - - Suppression du fichier original $filename : "
+                    echo -n "- - Suppression du fichier original $filename : "
                     rm -f "/tmp/$filename"
                     check_cmd
-                    echo -n "- - - Changement du propriétaire et du groupe : "
+                    echo -n "- - Changement du propriétaire et du groupe : "
                     chown -R $SUDO_USER:$SUDO_USER $path_install
                     check_cmd
 
