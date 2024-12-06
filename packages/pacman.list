@@ -116,7 +116,7 @@ del_basis_vm:firefox
 
 #########################
 # PAQUETS KDE PLASMA
-add_plasma:kdeconnect
+#add_plasma:kdeconnect
 add_plasma:kio-admin
 add_plasma:partitionmanager
 add_plasma:gwenview
