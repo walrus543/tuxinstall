@@ -176,8 +176,7 @@ if [[ "$1" = "user" ]]; then
         exit 1;
     fi
 
-    if [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]] # Si désactivé c'est que le script en root n'a jamais été lancé.
-    then
+    if ! check_pkg zsh; then # si pas installé c'est que le script avec sudo n'a pas été lancé en premier
         echo ${RED}"Tout d'abord, lancer ce script en root et sans paramètre."${RESET}
         exit 1;
     else
