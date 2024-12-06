@@ -784,7 +784,7 @@ fi
 
 msg_bold_blue "➜ Fichiers de configuration"
 if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]; then
-    echo -n "- - - Ajout alacritty.toml : "
+    echo -n "- - - Alacritty.toml : "
     mkdir -p $SUDO_HOME/.config/alacritty
     cp "$ICI/config/alacritty.toml" $SUDO_HOME/.config/alacritty
     check_cmd
@@ -797,10 +797,26 @@ if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]
     chown -R $SUDO_USER:$SUDO_USER $SUDO_HOME/.config/alacritty
     check_cmd
 fi
+if check_pkg tmux && [[ ! -f $SUDO_HOME/.tmux.conf ]]; then
+    echo -n "- - - TPM : "
+    mkdir -p $SUDO_HOME/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm $SUDO_HOME/.tmux/plugins/tpm
+    check_cmd
+    
+    echo -n "- - - tmux.conf : "
+    cp "$ICI/config/tmux.config" $SUDO_HOME/.tmux.conf
+    check_cmd
+    
+    if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
+        echo -n "- - - Lancer tmux par défaut : "
+        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
+        check_cmd
+    fi
+fi
 
-if check_pkg vim && [[ $(grep -c "syntax" $SUDO_HOME/.vimrc 2>/dev/null) -lt 1 ]]; then
-    echo -n "- - - .vimrc : "
-    cp "$ICI/config/vimrc" $SUDO_HOME/.vimrc
+if check_pkg neovim && [[ $(grep -c "nocompatible" $SUDO_HOME/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
+    echo -n "- - - Neovim : "
+    cp "$ICI/config/neovim" $SUDO_HOME/.config/nvim/init.vim
     check_cmd
 fi
 
