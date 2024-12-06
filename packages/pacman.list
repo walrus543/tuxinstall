@@ -104,7 +104,7 @@ add_basis_vm:linux-lts-headers
 add_basis_vm:man-db
 add_basis_vm:man-pages
 add_basis_vm:meld
-add_basis_vm:npm
+#add_basis_vm:npm
 add_basis_vm:pacman-contrib
 add_basis_vm:plocate
 add_basis_vm:shellcheck
