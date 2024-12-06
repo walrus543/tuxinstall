@@ -430,10 +430,17 @@ if [[ "$1" = "user" ]]; then
 
     #NEOVIM
     if check_pkg neovim && [[ $(grep -c "nocompatible" ~/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
-        echo -n "- - - Neovim : "
+        echo -n "- - - Config de base Neovim : "
         mkdir -p ~/.config/nvim/
         cp "$ICI/config/neovim" ~/.config/nvim/init.vim
         check_cmd
+
+        echo -n "- - - Plugin manager Neovim : "
+ 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_noroot" 2>&1
+        check_cmd
+	echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}"
+ 	$sleepmid
     fi
 
     msg_bold_blue "➜ Presse-papier Clipse"
