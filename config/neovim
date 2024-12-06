@@ -27,3 +27,4 @@ colorscheme catppuccin-mocha
 call plug#begin()
 Plug 'catppuccin/nvim', { 'as': 'catppuccin'} 
 call plug#end()
+" En mode commande nvim, taper PlugInstall ou PlugUpdate
