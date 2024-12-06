@@ -657,7 +657,7 @@ do
 done < "$ICI/packages/flatpak.list"
 
 ### NPM
-if [[ "$VM" != "none" ]]; then
+if [[ "$VM" = "none" ]]; then
 	msg_bold_blue "➜ Paquets Node.js via npm"
 	if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
 	    echo -n "- - - Installation de clipboard-cli : "
@@ -693,20 +693,22 @@ fi
 #fstrim pour SSD
 #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
 #Activé par défaut avec archinstall
-device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
-disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
-disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
-
-if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
-    add_pkg_pacman util-linux
-    if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - - Activation du timer fstrim pour $device_name : "
-        systemctl enable fstrim.timer >> "$log_root" 2>&1
-        check_cmd
-    fi
-else
-    echo "- - - Activation du timer fstrim : "
-    echo "$device_name ne semble pas supporter fstrim."
+if [[ "$VM" = "none" ]]
+	device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
+	disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
+	disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
+	
+	if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
+	    add_pkg_pacman util-linux
+	    if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
+	        echo -n "- - - Activation du timer fstrim pour $device_name : "
+	        systemctl enable fstrim.timer >> "$log_root" 2>&1
+	        check_cmd
+	    fi
+	else
+	    echo "- - - Activation du timer fstrim : "
+	    echo "$device_name ne semble pas supporter fstrim."
+	fi
 fi
 
 if ! check_pkg pacman-contrib; then
@@ -790,7 +792,7 @@ if check_pkg alacritty && [[ ! -f $SUDO_HOME/.config/alacritty/alacritty.toml ]]
     check_cmd
     if [[ "$VM" != "none" ]]; then
     	echo -n "- - - VM détectée donc decorations = Full : "
-        sed -i 's/^decorations =.*/decorations = \"Full\"/' ~/.config/alacritty/alacritty.toml
+        sed -i 's/^decorations =.*/decorations = \"Full\"/' $SUDO_HOME/.config/alacritty/alacritty.toml
 	check_cmd
     fi
     echo -n "- - - Propriétaire du dossier alacritty : "
@@ -800,22 +802,23 @@ fi
 if check_pkg tmux && [[ ! -f $SUDO_HOME/.tmux.conf ]]; then
     echo -n "- - - TPM : "
     mkdir -p $SUDO_HOME/.tmux/plugins/tpm
-    git clone https://github.com/tmux-plugins/tpm $SUDO_HOME/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm $SUDO_HOME/.tmux/plugins/tpm >> "$log_noroot" 2>&1
     check_cmd
     
     echo -n "- - - tmux.conf : "
-    cp "$ICI/config/tmux.config" $SUDO_HOME/.tmux.conf
+    cp "$ICI/config/tmux.conf" $SUDO_HOME/.tmux.conf
     check_cmd
     
-    if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
+    if [ "$(sed -n '1p' $SUDO_HOME/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
         echo -n "- - - Lancer tmux par défaut : "
-        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' ~/.zshrc
+        sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' $SUDO_HOME/.zshrc
         check_cmd
     fi
 fi
 
 if check_pkg neovim && [[ $(grep -c "nocompatible" $SUDO_HOME/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
     echo -n "- - - Neovim : "
+    mkdir -p $SUDO_HOME/.config/nvim/
     cp "$ICI/config/neovim" $SUDO_HOME/.config/nvim/init.vim
     check_cmd
 fi
