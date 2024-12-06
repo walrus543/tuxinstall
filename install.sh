@@ -870,12 +870,10 @@ elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -l
 fi
 
 msg_bold_blue "➜ Sudoers"
-if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && check_pkg plocate ; then
+if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && check_pkg plocate && [[ $(grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$SUDO_USER) -lt 1 ]] ; then
     echo -n "- - - Commande updatedb sans mot de passe : "
     echo "$SUDO_USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$SUDO_USER
     check_cmd
-else
-    msg_bold_red "Fichier 00_$SUDO_USER Inexistant ou plocate non trouvé"
 fi
 
 msg_bold_blue "➜ Meld en comparateur"
