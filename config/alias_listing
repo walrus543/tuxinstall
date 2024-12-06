@@ -184,14 +184,3 @@ export FZF_DEFAULT_COMMAND="fd --type f"
 # Use fzf for command history search
 bindkey '^R' fzf-history-widget
 
-# Use fzf for directory navigation
-function cd() {
-  if [[ $# -gt 0 ]]; then
-    builtin cd "$@"
-  else
-    local dir
-    dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null | fzf +m) && builtin cd "$dir"
-  fi
-}
-
-
