@@ -307,12 +307,13 @@ if [[ "$1" = "user" ]]; then
             check_cmd
             fc-cache -f -v >> "$log_noroot" 2>&1
         fi
-        if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
-            echo -n "- - ZSH devient le shell par défaut : "
-            chsh -s /usr/bin/zsh
-            check_cmd
-            echo ${YELLOW}"Déconnexion requise pour changer le shell par défaut"${RESET}
-        fi
+        #Normalement non requis car déjà défini précédemment
+	#if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
+        #    echo -n "- - ZSH devient le shell par défaut : "
+        #    chsh -s /usr/bin/zsh
+        #    check_cmd
+        #    echo ${YELLOW}"Déconnexion requise pour changer le shell par défaut"${RESET}
+        #fi
 
         if check_pkg zsh # && [[ $(grep -c "ALIAS - GENERAL" ~/.zshrc) -lt 1 ]]
         then
@@ -419,7 +420,7 @@ if [[ "$1" = "user" ]]; then
         cp "$ICI/config/tmux.conf" ~/.tmux.conf
         check_cmd
         echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}"
-        $sleepmid
+        sleep $sleepmid
     fi
     if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
         echo -n "- - Lancer tmux par défaut : "
@@ -439,17 +440,17 @@ if [[ "$1" = "user" ]]; then
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_noroot" 2>&1
         check_cmd
 	echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}"
- 	$sleepmid
+ 	sleep $sleepmid
     fi
 
-    msg_bold_blue "➜ Presse-papier Clipse"
     #clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
     if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f ~/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
-        echo -n "- - Ajout clipse.desktop : "
+        msg_bold_blue "➜ Presse-papier Clipse"
+	echo -n "- - Ajout clipse.desktop : "
         cp "$ICI/config/clipse.desktop" ~/.config/autostart/clipse.desktop
         check_cmd
         echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
-        $sleepmid
+        sleep $sleepmid
 
         if [[ $(cat ~/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
             echo -n "- - Nombre max d'entrées dans l'historique : "
