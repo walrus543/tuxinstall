@@ -1137,8 +1137,10 @@ echo "*******************${RESET}"
 if [[ ! -d $SUDO_HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
     if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
 	    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
-	    echo "Avec une opacité du tableau de bord : **translucide**"
      fi
 fi
 
-printf "\nConfigurer TIMESHIFT\n"
+# Message de fin
+if [[ "$VM" = "none" ]]; then
+	printf "\nConfigurer TIMESHIFT\n"
+fi
