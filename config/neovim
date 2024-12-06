@@ -1,10 +1,11 @@
+cat .config/nvim/init.vim
 set nocompatible            " disable compatibility to old-time vi
-set showmatch               " show matching 
-set ignorecase              " case insensitive 
-set mouse=v                 " middle-click paste with 
-set hlsearch                " highlight search 
+set showmatch               " show matching
+set ignorecase              " case insensitive
+set mouse=v                 " middle-click paste with
+set hlsearch                " highlight search
 set incsearch               " incremental search
-set tabstop=4               " number of columns occupied by a tab 
+set tabstop=4               " number of columns occupied by a tab
 set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
 set expandtab               " converts tabs to white space
 set shiftwidth=4            " width for autoindents
@@ -22,9 +23,11 @@ set ttyfast                 " Speed up scrolling in Vim
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
-colorscheme catppuccin-mocha
 
 call plug#begin()
-Plug 'catppuccin/nvim', { 'as': 'catppuccin'} 
+
+Plug 'catppuccin/nvim', { 'as': 'catppuccin'}
+
 call plug#end()
-" En mode commande nvim, taper PlugInstall ou PlugUpdate
+
+colorscheme catppuccin-mocha
