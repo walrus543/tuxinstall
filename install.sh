@@ -10,12 +10,14 @@ VM=$(systemd-detect-virt)
 ICI=$(dirname "$0")
 
 #Coloration du texte
-export RESET=$(tput sgr0)
-export RED=$(tput setaf 1)
-export GREEN=$(tput setaf 2)
-export YELLOW=$(tput setaf 3)
-export BLUE=$(tput setaf 4)
-export BOLD=$(tput bold)
+RESET=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+BOLD=$(tput bold)
+sign_green="${GREEN}${BOLD}[+]${RESET}"
+sign_red="${RED}${BOLD}[-]${RESET}"
 
 #Pauses
 sleepquick=2
@@ -229,7 +231,7 @@ if [[ "$1" = "user" ]]; then
                     if [[ "$line" == add:* ]]; then
                         p=${line#add:}
                         if ! check_pkg "$p"; then
-                            echo -n "- - - Installation paquet $p : "
+                            echo -n "$sign_green $p : "
                             add_pkg_paru "$p"
                             check_cmd
                         fi
@@ -238,7 +240,7 @@ if [[ "$1" = "user" ]]; then
                     if [[ "$line" == del:* ]]; then
                         p=${line#del:}
                         if check_pkg "$p"; then
-                            echo -n "- - - Suppression paquet $p : "
+                            echo -n "$sign_red $p : "
                             del_pkg_paru "$p"
                             check_cmd
                         fi
@@ -247,7 +249,7 @@ if [[ "$1" = "user" ]]; then
                     if [[ "$line" == add_vm:* ]]; then
                         p=${line#add_vm:}
                         if ! check_pkg "$p"; then
-                            echo -n "- - - Installation paquet $p : "
+                            echo -n "$sign_green 'VM' $p : "
                             add_pkg_paru "$p"
                             check_cmd
                         fi
@@ -256,7 +258,7 @@ if [[ "$1" = "user" ]]; then
                     if [[ "$line" == del_vm:* ]]; then
                         p=${line#del_vm:}
                         if check_pkg "$p"; then
-                            echo -n "- - - Suppression paquet $p : "
+                            echo -n "$sign_red 'VM' $p : "
                             del_pkg_paru "$p"
                             check_cmd
                         fi
@@ -528,7 +530,7 @@ do
         if [[ "$line" == add_basis:* ]]; then
             p=${line#add_basis:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet $p : "
+                echo -n "$sign_green $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -537,7 +539,7 @@ do
         if [[ "$line" == del_basis:* ]]; then
             p=${line#del_basis:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet $p : "
+                echo -n "$sign_red $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -548,7 +550,7 @@ do
         if [[ "$line" == add_basis_vm:* ]]; then
             p=${line#add_basis_vm:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet 'VM' $p : "
+                echo -n "$sign_green 'VM' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -557,7 +559,7 @@ do
         if [[ "$line" == del_basis_vm:* ]]; then
             p=${line#del_basis_vm:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet 'VM' $p : "
+                echo -n "$sign_red 'VM' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -569,7 +571,7 @@ do
         if [[ "$line" == add_plasma:* ]]; then
             p=${line#add_plasma:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet 'Plasma' $p : "
+                echo -n "$sign_green 'Plasma' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -578,7 +580,7 @@ do
         if [[ "$line" == del_plasma:* ]]; then
             p=${line#del_plasma:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet 'Plasma' $p : "
+                echo -n "$sign_red 'Plasma' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -589,7 +591,7 @@ do
         if [[ "$line" == add_xfce:* ]]; then
             p=${line#add_xfce:}
             if ! check_pkg "$p"; then
-                echo -n "- - - Installation paquet 'Xfce' $p : "
+                echo -n "$sign_green 'Xfce' $p : "
                 add_pkg_pacman "$p"
                 check_cmd
             fi
@@ -598,7 +600,7 @@ do
         if [[ "$line" == del_xfce:* ]]; then
             p=${line#del_xfce:}
             if check_pkg "$p"; then
-                echo -n "- - - Suppression paquet 'Xfce' $p : "
+                echo -n "$sign_red 'Xfce' $p : "
                 del_pkg_pacman "$p"
                 check_cmd
             fi
@@ -625,14 +627,6 @@ elif ! check_pkg flatpak; then
     check_cmd
 fi
 
-### MAJ Flatpak
-#if check_pkg flatpak
-#then
-#    echo -n "- - - Mise à jour des Flatpaks : "
-#    flatpak update --noninteractive >> "$log_root"  2>&1
-#    check_cmd
-#fi
-
 ### PAQUETS FLATPAK
 msg_bold_blue "➜ Gestion des paquets FLATPAK (long si première installation)"
 while read -r line
@@ -640,7 +634,7 @@ do
 	if [[ "$line" == add:* ]]; then
 		p=${line#add:}
 		if ! check_flatpak "$p"; then
-			echo -n "- - - Installation flatpak $p : "
+			echo -n "$sign_green $p : "
 			add_flatpak "$p"
 			check_cmd
 		fi
@@ -649,7 +643,7 @@ do
 	if [[ "$line" == del:* ]]; then
 		p=${line#del:}
 		if check_flatpak "$p"; then
-			echo -n "- - - Suppression flatpak $p : "
+			echo -n "$sign_red $p : "
 			del_flatpak "$p"
 			check_cmd
 		fi
@@ -693,11 +687,11 @@ fi
 #fstrim pour SSD
 #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
 #Activé par défaut avec archinstall
-if [[ "$VM" = "none" ]]
+if [[ "$VM" = "none" ]]; then
 	device_name=$(lsblk | grep part | grep -v boot | awk '{print $1}' | head -n 1 | sed 's/└─//' )
 	disc_gran=$(lsblk --discard | grep $device_name | awk '{print $3}')
 	disc_max=$(lsblk --discard | grep $device_name | awk '{print $4}')
-	
+
 	if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
 	    add_pkg_pacman util-linux
 	    if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
@@ -721,7 +715,7 @@ if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
     systemctl enable paccache.timer >> "$log_root" 2>&1
     check_cmd
 fi
-if [[ "$VM" = "none" ]] && if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
+if [[ "$VM" = "none" ]] && check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - - Activation du service sshd.service : "
     systemctl enable sshd.service >> "$log_root" 2>&1
     check_cmd
@@ -804,11 +798,11 @@ if check_pkg tmux && [[ ! -f $SUDO_HOME/.tmux.conf ]]; then
     mkdir -p $SUDO_HOME/.tmux/plugins/tpm
     git clone https://github.com/tmux-plugins/tpm $SUDO_HOME/.tmux/plugins/tpm >> "$log_noroot" 2>&1
     check_cmd
-    
+
     echo -n "- - - tmux.conf : "
     cp "$ICI/config/tmux.conf" $SUDO_HOME/.tmux.conf
     check_cmd
-    
+
     if [ "$(sed -n '1p' $SUDO_HOME/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
         echo -n "- - - Lancer tmux par défaut : "
         sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' $SUDO_HOME/.zshrc
