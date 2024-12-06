@@ -16,6 +16,6 @@ add:zen-browser-bin
 
 ######################
 # VM
-add_vm:clipse
+#add_vm:clipse
 add_vm:downgrade
 add_vm:zen-browser-bin
