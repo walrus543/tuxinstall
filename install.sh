@@ -297,16 +297,6 @@ if [[ "$1" = "user" ]]; then
             sed -E -i 's/plugins=\((.*?)\)/plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
             check_cmd
         fi
-        if check_pkg zsh && [[ -d ~/.oh-my-zsh/custom/themes/powerlevel10k ]] && [[ $(fc-list | grep -c MesloLGS\ NF\ Regular.ttf 2>&1 ) -lt 1 ]]; then
-            echo -n "- - Installation des polices : "
-            sudo mkdir -p /usr/share/fonts/TTF
-            sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
-            sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
-            sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
-            sudo wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -P /usr/share/fonts/TTF/ >> "$log_noroot" 2>&1
-            check_cmd
-            fc-cache -f -v >> "$log_noroot" 2>&1
-        fi
         #Normalement non requis car déjà défini précédemment
 	#if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
         #    echo -n "- - ZSH devient le shell par défaut : "
@@ -761,6 +751,23 @@ if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]'
     echo -n "- - Ajustement de paccache à 1 version : "
     paccache -rk1
     check_cmd
+fi
+
+#Nerd Font HACK
+if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
+	msg_bold_blue "➜ Nerd Font HACK"
+ echo -n "- - Téléchargement de la police : "
+	 derniere_version=$(curl -s https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+	url_telechargement="https://github.com/ryanoasis/nerd-fonts/releases/download/${derniere_version}/Hack.zip"
+	curl -L -o /tmp/Hack.zip "$url_telechargement" >> "$log_root" 2>&1
+	check_cmd
+
+# Décompresser
+# Installation en tant que police système : https://github.com/source-foundry/Hack?tab=readme-ov-file#quick-installation
+# Cache puis contrôler sa bonne installation
+
+
+#    fc-cache -f -v >> "$log_noroot" 2>&1
 fi
 
 ###########################
