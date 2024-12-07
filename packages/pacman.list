@@ -73,6 +73,7 @@ add_basis:tldr
 add_basis:tmux
 add_basis:trash-cli
 add_basis:ufw
+add_basis:unzip
 add_basis:virtualbox
 add_basis:virtualbox-guest-iso
 add_basis:virtualbox-host-dkms
@@ -109,6 +110,7 @@ add_basis_vm:pacman-contrib
 add_basis_vm:plocate
 add_basis_vm:shellcheck
 add_basis_vm:tmux
+add_basis_vm:unzip
 #add_basis_vm:wl-clipboard
 add_basis_vm:zsh
 
