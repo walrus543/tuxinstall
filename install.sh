@@ -93,7 +93,9 @@ check_systemd_user()
 msg_bold_blue() {
     printf "\n${BLUE}${BOLD}$1${RESET}\n"
 }
-
+msg_bold_green() {
+    printf "\n${GREEN}${BOLD}$1${RESET}\n"
+}
 msg_bold_red() {
     printf "\n${RED}${BOLD}$1${RESET}\n"
 }
@@ -754,20 +756,30 @@ if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]'
 fi
 
 #Nerd Font HACK
+#Github => https://github.com/source-foundry/Hack?tab=readme-ov-file#quick-installation
 if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
-	msg_bold_blue "➜ Nerd Font HACK"
- echo -n "- - Téléchargement de la police : "
-	 derniere_version=$(curl -s https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
-	url_telechargement="https://github.com/ryanoasis/nerd-fonts/releases/download/${derniere_version}/Hack.zip"
-	curl -L -o /tmp/Hack.zip "$url_telechargement" >> "$log_root" 2>&1
-	check_cmd
-
-# Décompresser
-# Installation en tant que police système : https://github.com/source-foundry/Hack?tab=readme-ov-file#quick-installation
-# Cache puis contrôler sa bonne installation
-
-
-#    fc-cache -f -v >> "$log_noroot" 2>&1
+    msg_bold_blue "➜ Nerd Font HACK"
+    echo -n "- - Téléchargement de la police : "
+    derniere_version=$(curl -s https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+    url_telechargement="https://github.com/ryanoasis/nerd-fonts/releases/download/${derniere_version}/Hack.zip"
+    curl -L -o /tmp/Hack.zip "$url_telechargement" >> "$log_root" 2>&1
+    check_cmd
+    
+    if [[ -f /tmp/Hack.zip ]]; then
+        echo -n "- - Décompression de l'archive : "
+        unzip /tmp/Hack.zip -d /usr/share/fonts >> "$log_root" 2>&1
+        check_cmd
+        
+        echo -n "- - Regénération du cache des polices : "
+        fc-cache -f -v >> "$log_root" 2>&1
+        check_cmd
+        echo -n "- - Contrôle de l'installation : "
+        if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
+            msg_bold_green "OK"
+        else
+            msg_bold_red "ERREUR"
+        fi
+    fi
 fi
 
 ###########################
