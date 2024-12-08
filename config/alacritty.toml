@@ -1,24 +1,44 @@
 # Doc : https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd
 
 [window]
-opacity = 0.95
+###################
+# ESTHETISME
+###################
+opacity = 1
 padding.x = 10
 padding.y = 10
-decorations = "None"
-#blur = true
+decorations = "none"
+blur = true
+###################
+# TAILLE
+###################
 #startup_mode = "Maximized"
-dimensions = { columns = 120, lines = 30 }
+dimensions = { columns = 120, lines = 35 }
 
 [scrolling]
 multiplier = 15
 
 [selection]
-#save_to_clipboard = true
+save_to_clipboard = true
 
 [cursor]
 style = "block"
 
 [font]
-#size = 10.00
+size = 11.0
+
+[font.bold]
+family = "Hack"
+style = "Bold"
+
+[font.bold_italic]
+family = "Hack"
+style = "Bold Italic"
+
+[font.italic]
+family = "Hack"
+style = "Italic"
+
 [font.normal]
-family = "MesloLGS NF"
+family = "Hack"
+style = "Regular"
