@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #################
-### VARIABLES ######
+### VARIABLES ###
 #################
 log_root="/tmp/config-arch.log"
 log_noroot="$HOME/config-arch.log"
