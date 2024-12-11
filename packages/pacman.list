@@ -78,7 +78,9 @@ add_basis:virtualbox
 add_basis:virtualbox-guest-iso
 add_basis:virtualbox-host-dkms
 add_basis:wl-clipboard
+add_basis:yazi
 add_basis:yt-dlp
+add_basis:zoxide
 add_basis:zsh
 
 del_basis:firefox
@@ -112,6 +114,8 @@ add_basis_vm:shellcheck
 add_basis_vm:tmux
 add_basis_vm:unzip
 #add_basis_vm:wl-clipboard
+add_basis_vm:yazi
+add_basis_vm:zoxide
 add_basis_vm:zsh
 
 del_basis_vm:firefox

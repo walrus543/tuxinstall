@@ -184,3 +184,12 @@ export FZF_DEFAULT_COMMAND="fd --type f"
 # Use fzf for command history search
 bindkey '^R' fzf-history-widget
 
+#yazi
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
