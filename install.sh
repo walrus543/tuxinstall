@@ -192,9 +192,8 @@ if [[ "$1" = "user" ]]; then
         date >> "$log_noroot"
     fi
 
-        msg_bold_blue "➜ Installation de paru"
         if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
-            echo "Installation de PARU"
+            msg_bold_blue "➜ Installation de paru"
             rustup default stable >> "$log_noroot" 2>&1
             git clone https://aur.archlinux.org/paru.git >> "$log_noroot" 2>&1
             cd paru >> "$log_noroot" 2>&1
