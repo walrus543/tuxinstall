@@ -100,6 +100,17 @@ msg_bold_red() {
     printf "\n${RED}${BOLD}$1${RESET}\n"
 }
 
+ask_continue() {
+    while true; do
+        read -p "On continue ? (Y/n) : " reponse
+        case ${reponse:0:1} in
+            [Nn]* ) echo "Script arrêté."; exit;;
+            "" | [Yy]* ) return 0;;
+            * ) echo "Veuillez répondre par 'Y' ou 'N'.";;
+        esac
+    done
+}
+
 #####################
 ### FIN FONCTIONS ###
 #####################
@@ -343,10 +354,9 @@ if [[ "$1" = "user" ]]; then
 	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
 	            check_cmd
 
-	            echo ${YELLOW}${BOLD}"- - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET}
-	            sleep $sleepmid
-	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard
-	            sleep $sleepmid
+	            echo ${YELLOW}${BOLD}"- - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET} | tee -a ~/post_installation.txt
+	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard | tee -a ~/post_installation.txt
+	            ask_continue
 	        fi
 	 fi
 
@@ -410,8 +420,8 @@ if [[ "$1" = "user" ]]; then
         echo -n "- - tmux.conf : "
         cp "$ICI/config/tmux.conf" ~/.tmux.conf
         check_cmd
-        echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}"
-        sleep $sleepmid
+        echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a ~/post_installation.txt
+        ask_continue
     fi
     #TMUX lancé automatiquement
     #if [ "$(sed -n '1p' ~/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
@@ -428,11 +438,11 @@ if [[ "$1" = "user" ]]; then
         check_cmd
 
         echo -n "- - Plugin manager Neovim : "
- 	sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+        sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_noroot" 2>&1
         check_cmd
-	echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}"
- 	sleep $sleepmid
+        echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}" | tee -a ~/post_installation.txt
+        ask_continue
     fi
 
     #clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
@@ -441,8 +451,8 @@ if [[ "$1" = "user" ]]; then
 	echo -n "- - Ajout clipse.desktop : "
         cp "$ICI/config/clipse.desktop" ~/.config/autostart/clipse.desktop
         check_cmd
-        echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}"
-        sleep $sleepmid
+        echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}" | tee -a ~/post_installation.txt
+        ask_continue
 
         if [[ $(cat ~/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
             echo -n "- - Nombre max d'entrées dans l'historique : "
@@ -487,6 +497,12 @@ if [[ -f $log_root ]]; then
     check_cmd
 fi
 
+if [[ -f $SUDO_HOME/post_installation.txt ]]; then
+    echo -n "Suppression du fichier de post-installation existant : "
+    rm -f $SUDO_HOME/post_installation.txt
+    check_cmd
+fi
+
 # Date dans le log
 echo '-------------------' >> "$log_root"
 date >> "$log_root"
@@ -512,7 +528,7 @@ if [[ "$VM" != "none" ]]; then
             echo ${YELLOW}"Penser à redémarrer."${RESET}
             sleep $sleepmid
         fi
-	sleep $sleepquick
+
         if [[ $(grep vboxsf /etc/group | grep -c $SUDO_USER) -lt 1 ]]; then
             echo -n "- - Ajout du user au groupe vboxsf : "
             usermod -a -G vboxsf $SUDO_USER
@@ -922,7 +938,7 @@ if [[ "$VM" = "none" ]]; then
     if [[ "$VM" = "none" ]]; then # Uniquement si on n'est PAS dans une VM
         if [[ ! -f ~/Documents/Linux/backup_nettoyage.sh ]] && [[ "$DE" = 'KDE' ]]; then
             echo ${YELLOW}"/!\ ~/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
-            sleep $sleepmid
+            ask_continue
         elif [[ -f ~/Documents/Linux/backup_nettoyage.sh ]]; then
             if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
                 echo -n "- - Copie backup_nettoyage.service : "
@@ -1147,8 +1163,8 @@ if [[ "$VM" = "none" ]]; then
 
                     echo "${GREEN}${BOLD}Installation terminée.${RESET}"
                     echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
-            echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk"
-            sleep $sleepquick
+            echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk" | tee -a $SUDO_HOME/post_installation.txt
+            ask_continue
                 fi
             fi
         fi
@@ -1161,10 +1177,18 @@ if [[ "$VM" = "none" ]]; then
     echo "*******************${RESET}"
     if [[ ! -d $SUDO_HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
         if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
-            echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}"
-            echo "Avec une opacité du tableau de bord : **translucide**"
+            echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}" | tee -a $SUDO_HOME/post_installation.txt
         fi
     fi
 
-    printf "\nConfigurer TIMESHIFT\n"
+    printf "\nConfigurer TIMESHIFT\n" >> $SUDO_HOME/post_installation.txt
+    
+    #Ouverture du fichier de post installation
+    if check_pkg kate; then
+        kate $SUDO_HOME/post_installation.txt &
+    elif check_pkg mousepad; then
+        mousepad $SUDO_HOME/post_installation.txt &
+    else
+        msg_bold_red "Impossible d'ouvrir $SUDO_HOME/post_installation.txt"
+    fi
 fi
