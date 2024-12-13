@@ -863,7 +863,7 @@ if [[ "$VM" = "none" ]]; then
     check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
     if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
         echo -n "- - Limiter SSH au réseau local : "
-        sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress $local_ip' /etc/ssh/sshd_config
+        sed -i "s/^#ListenAddress 0.0.0.0.*/ListenAddress $local_ip/" /etc/ssh/sshd_config
         check_cmd
     fi
 
@@ -1184,11 +1184,5 @@ if [[ "$VM" = "none" ]]; then
     printf "\nConfigurer TIMESHIFT\n" >> $SUDO_HOME/post_installation.txt
     
     #Ouverture du fichier de post installation
-    if check_pkg kate; then
-        kate $SUDO_HOME/post_installation.txt &
-    elif check_pkg mousepad; then
-        mousepad $SUDO_HOME/post_installation.txt &
-    else
-        msg_bold_red "Impossible d'ouvrir $SUDO_HOME/post_installation.txt"
-    fi
+    "$EDITOR $SUDO_HOME/post_installation.txt"
 fi
