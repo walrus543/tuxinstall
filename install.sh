@@ -238,7 +238,7 @@ if [[ "$1" = "user" ]]; then
         if check_pkg paru; then
             while read -r line
             do
-                if [[ "$VM" = "none" ]]; then
+                if [[ "$VM" = "none" ]] and [[ "$DE" = 'KDE' ]]; then
                     if [[ "$line" == add:* ]]; then
                         p=${line#add:}
                         if ! check_pkg "$p"; then
@@ -250,6 +250,24 @@ if [[ "$1" = "user" ]]; then
 
                     if [[ "$line" == del:* ]]; then
                         p=${line#del:}
+                        if check_pkg "$p"; then
+                            echo -n "$sign_red $p : "
+                            del_pkg_paru "$p"
+                            check_cmd
+                        fi
+                    fi
+                elif [[ "$VM" = "none" ]] and [[ "$DE" != 'KDE' ]]; then
+                    if [[ "$line" == add_not_kde:* ]]; then
+                        p=${line#add_not_kde:}
+                        if ! check_pkg "$p"; then
+                            echo -n "$sign_green $p : "
+                            add_pkg_paru "$p"
+                            check_cmd
+                        fi
+                    fi
+
+                    if [[ "$line" == del_not_kde:* ]]; then
+                        p=${line#del_not_kde:}
                         if check_pkg "$p"; then
                             echo -n "$sign_red $p : "
                             del_pkg_paru "$p"
