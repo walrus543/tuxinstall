@@ -238,7 +238,7 @@ if [[ "$1" = "user" ]]; then
         if check_pkg paru; then
             while read -r line
             do
-                if [[ "$VM" = "none" ]] and [[ "$DE" = 'KDE' ]]; then
+                if [[ "$VM" = "none" ]] && [[ "$DE" = 'KDE' ]]; then
                     if [[ "$line" == add:* ]]; then
                         p=${line#add:}
                         if ! check_pkg "$p"; then
@@ -256,7 +256,7 @@ if [[ "$1" = "user" ]]; then
                             check_cmd
                         fi
                     fi
-                elif [[ "$VM" = "none" ]] and [[ "$DE" != 'KDE' ]]; then
+                elif [[ "$VM" = "none" ]] && [[ "$DE" != 'KDE' ]]; then
                     if [[ "$line" == add_not_kde:* ]]; then
                         p=${line#add_not_kde:}
                         if ! check_pkg "$p"; then
@@ -1200,7 +1200,8 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     printf "\nConfigurer TIMESHIFT\n" >> $SUDO_HOME/post_installation.txt
-    
+    chown $SUDO_USER:$SUDO_USER $SUDO_HOME/post_installation.txt
+
     #Ouverture du fichier de post installation
     "$EDITOR $SUDO_HOME/post_installation.txt"
 fi
