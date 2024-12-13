@@ -144,6 +144,23 @@ add_xfce:gnome-keyring
 add_xfce:gvfs-smb
 add_xfce:numlockx
 
+del_xfce:element-desktop
+del_xfce:fdupes
+del_xfce:jdk21-openjdk
+del_xfce:obsidian
+del_xfce:protonmail-bridge-core
+del_xfce:syncthing
+del_xfce:telegram-desktop
+del_xfce:thunderbird
+del_xfce:thunderbird-i18n-fr
+del_xfce:thunderbird-ublock-origin
+del_xfce:timeshift
+del_xfce:trash-cli
+del_xfce:virtualbox
+del_xfce:virtualbox-guest-iso
+del_xfce:virtualbox-host-dkms
+
+
 #########################
 # PAQUETS OSHEDEN
 add_osheden:adobe-source-han-sans-cn-fonts
