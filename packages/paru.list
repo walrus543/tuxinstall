@@ -22,5 +22,6 @@ add_vm:zen-browser-bin
 
 ######################
 # DE != KDE Plasma
-add:proton-vpn-gtk-app
-add:zen-browser-bin
+add_not_kde:proton-vpn-gtk-app
+add_not_kde:zen-browser-bin
+add_not_kde:reflector-simple
