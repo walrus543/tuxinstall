@@ -354,29 +354,29 @@ if [[ "$1" = "user" ]]; then
             check_cmd
         fi
 
-	if [[ "$VM" = "none" ]]; then
-	 	msg_bold_blue "➜ Gestion nvm"
-	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
-	            echo -n "- - Installation de NVM : "
-	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
-	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-	            check_cmd
-
-	            echo -n "- - Nettoyage .zshrc : "
-	            sed -i '/NVM_DIR/d' ~/.zshrc
-	            check_cmd
-
-	            echo -n "- - Paramètrage .zshrc : "
-	            echo "" >> ~/.zshrc
-	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
-	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
-	            check_cmd
-
-	            echo ${YELLOW}${BOLD}"- - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET} | tee -a ~/post_installation.txt
-	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard | tee -a ~/post_installation.txt
-	            ask_continue
-	        fi
-	 fi
+#	if [[ "$VM" = "none" ]]; then
+#	 	msg_bold_blue "➜ Gestion nvm"
+#	        if [[ ! -f ~/.nvm/nvm.sh ]]; then
+#	            echo -n "- - Installation de NVM : "
+#	            wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash >> "$log_noroot" 2>&1
+#	            # Check MAJ : https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+#	            check_cmd
+#
+#	            echo -n "- - Nettoyage .zshrc : "
+#	            sed -i '/NVM_DIR/d' ~/.zshrc
+#	            check_cmd
+#
+#	            echo -n "- - Paramètrage .zshrc : "
+#	            echo "" >> ~/.zshrc
+#	            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> ~/.zshrc
+#	            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> ~/.zshrc
+#	            check_cmd
+#
+#	            echo ${YELLOW}${BOLD}"- - Coller les commandes mises dans le presse-papier dans un NOUVEAU terminal !"${RESET} | tee -a ~/post_installation.txt
+#	            echo "nvm install --lts && nvm use --lts && nvm install --reinstall-packages-from=current 'lts/*'" | xclip -selection clipboard | tee -a ~/post_installation.txt
+#	            ask_continue
+#	        fi
+#	 fi
 
 
     if [[ "$DE" = 'KDE' ]]; then
@@ -478,6 +478,9 @@ if [[ "$1" = "user" ]]; then
             check_cmd
         fi
     fi
+
+    #Ouverture du fichier de post installation
+    $EDITOR ../post_installation.txt
 
 exit 0
 fi
@@ -820,13 +823,13 @@ fi
 ###########################
 if [[ "$VM" = "none" ]]; then
 
-    ### NPM
-    msg_bold_blue "➜ Paquets Node.js via npm"
-    if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
-        echo -n "- - Installation de clipboard-cli : "
-        npm install --global clipboard-cli >> "$log_root" 2>&1
-        check_cmd
-    fi
+#    ### NPM
+#    msg_bold_blue "➜ Paquets Node.js via npm"
+#    if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
+#        echo -n "- - Installation de clipboard-cli : "
+#        npm install --global clipboard-cli >> "$log_root" 2>&1
+#        check_cmd
+#    fi
 
     ### Systemd
     msg_bold_blue "➜ Paramètrage systemd"
@@ -1201,7 +1204,4 @@ if [[ "$VM" = "none" ]]; then
 
     printf "\nConfigurer TIMESHIFT\n" >> $SUDO_HOME/post_installation.txt
     chown $SUDO_USER:$SUDO_USER $SUDO_HOME/post_installation.txt
-
-    #Ouverture du fichier de post installation
-    "$EDITOR $SUDO_HOME/post_installation.txt"
 fi
