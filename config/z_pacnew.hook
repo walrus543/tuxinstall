@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Looking for .pacnew files...
+Exec = /home/arnaud/Documents/Linux/Divers_Scripts/pacman_pacnew.hook 
+When = PostTransaction
+NeedsTargets

@@ -979,6 +979,18 @@ if [[ "$VM" = "none" ]]; then
         fi
     fi
 
+    msg_bold_blue "➜ Pacman hooks"
+    if [[ ! -f /usr/share/libalpm/hooks/z_orphans.hook ]]; then
+        echo -n "- - Ajout de z_orphans.hook : "
+        mv $ICI/config/z_orphans.hook /usr/share/libalpm/hooks
+        check_cmd
+    fi
+    if [[ ! -f /usr/share/libalpm/hooks/z_pacnew.hook ]]; then
+        echo -n "- - Ajout de z_pacnew.hook : "
+        mv $ICI/config/z_pacnew.hook /usr/share/libalpm/hooks
+        check_cmd
+    fi
+
     msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
     if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
         echo -n "- - Installation du paquet AUR  : "
