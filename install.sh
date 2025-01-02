@@ -1138,6 +1138,15 @@ if [[ "$VM" = "none" ]]; then
     read -p ${BLUE}${BOLD}"➜ Installer Android Studio ? (y/N) "${RESET} -n 1 -r
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+        path_install="/usr/local/android-studio"
+        if [[ -d "$path_install" ]]; then
+            echo "Android Studio déjà installé"
+            echo -n "Sauvegarde de la version actuelle : "
+            if [[ -d /usr/local/android-studio_backup ]]; then rm -rf /usr/local/android-studio_backup; fi
+            mv $path_install /usr/local/android-studio_backup
+            check_cmd
+        fi
+
         printf "\n- - Test de la connexion au site\n"
 
         url="https://developer.android.com/studio?hl=fr"
@@ -1183,7 +1192,8 @@ if [[ "$VM" = "none" ]]; then
                     tar -xzf /tmp/$filename -C $path_install --strip-components=1
                     check_cmd
 
-                    echo -n "- - Rendre studio.sh exécutable : "
+                    echo -n "- - Rendre studio exécutable : "
+                    chmod +x $path_install/bin/studio
                     chmod +x $path_install/bin/studio.sh
                     check_cmd
 
@@ -1195,7 +1205,7 @@ if [[ "$VM" = "none" ]]; then
                     check_cmd
 
                     echo "${GREEN}${BOLD}Installation terminée.${RESET}"
-                    echo "Prêt pour ajouter le raccourci $path_install/bin/studio.sh"
+                    echo "Prêt pour ajouter le raccourci $path_install/bin/studio"
             echo "Lancer Android Studio pour télécharger le SDK dans ~/Android/Sdk" | tee -a $SUDO_HOME/post_installation.txt
             ask_continue
                 fi
