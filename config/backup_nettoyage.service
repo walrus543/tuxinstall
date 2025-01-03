@@ -2,8 +2,8 @@
 Description=Nettoyage et sauvegarde
 After=network-online.target
 Wants=network-online.target
-ConditionFileIsExecutable=/home/arnaud/Documents/Linux/backup_nettoyage.sh
+ConditionFileIsExecutable=/home/kratos/Documents/Linux/backup_nettoyage.sh
 
 [Service]
 Type=oneshot
-ExecStart=/home/arnaud/Documents/Linux/backup_nettoyage.sh
+ExecStart=/home/kratos/Documents/Linux/backup_nettoyage.sh

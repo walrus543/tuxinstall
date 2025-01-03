@@ -127,7 +127,7 @@ alias xmlwhitart='kate ~/Thèmes/WhitArt/app/src/main/res/xml/appfilter.xml'
 
 ## ANDROID STUDIO
 alias mvandroidstudio='bash $PathIR/___Emails___/Scripts/mvandroidstudio.sh'
-
+alias upandroidstudio='bash $HOME/Documents/Linux/Divers_Scripts/android_studio_update.sh'
 
 ## ICON REQUEST
 ### REFAIRE

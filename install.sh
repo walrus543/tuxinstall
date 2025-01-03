@@ -989,6 +989,14 @@ if [[ "$VM" = "none" ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
         mv $ICI/config/z_pacnew.hook /usr/share/libalpm/hooks
         check_cmd
+        if [[ ! -f $SUDO_HOME/Documents/Linux/Divers_Scripts/pacman_pacnew.hook ]]; then
+            echo -n "- - - Déplacement de pacman_pacnew.hook : "
+            mv $ICI/config/pacman_pacnew.hook $SUDO_HOME/Documents/Linux/Divers_Scripts
+            chown $SUDO_USER:$SUDO_USER $SUDO_HOME/Documents/Linux/Divers_Scripts/pacman_pacnew.hook
+            check_cmd
+        else
+            rm -f $ICI/config/pacman_pacnew.hook
+        fi
     fi
 
     msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
