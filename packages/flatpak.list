@@ -1,6 +1,28 @@
-# GUI : Utilitaires
-#add:com.usebottles.bottles
-#add:com.github.tchx84.Flatseal
-#add:io.github.giantpinkrobots.flatsweep
-#add:io.github.cboxdoerfer.FSearch
-#add:io.github.flattool.Warehouse
+############################
+# PAQUETS POUR TOUS
+############################
+#add_defaut:com.usebottles.bottles
+#add_defaut:com.github.tchx84.Flatseal
+#add_defaut:io.github.giantpinkrobots.flatsweep
+#add_defaut:io.github.cboxdoerfer.FSearch
+#add_defaut:io.github.flattool.Warehouse
+
+############################
+# PAQUETS POUR TOUS SAUF VM
+############################
+#add_not_vm:
+
+############################
+# PAQUETS POUR VM
+############################
+#add_vm:
+
+############################
+# PAQUETS SI COMPLETE
+############################
+#add_full:
+
+############################
+# PAQUETS SI LITE
+############################
+#add_lite:

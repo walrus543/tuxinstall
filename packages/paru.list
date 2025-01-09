@@ -1,27 +1,25 @@
 #add:packagename
 #del:packagename
 
-#####################
-# BASE
-add:brave-bin
-add:clipse
-add:downgrade
-add:onlyoffice-bin
-add:payload-dumper-go-bin
-add:proton-vpn-gtk-app
-add:reflector-simple
-add:uniutils
-add:ventoy-bin
-add:zen-browser-bin
+############################
+# PAQUETS POUR TOUS
+############################
+add_defaut:downgrade
+add_defaut:zen-browser-bin
 
-######################
-# VM
-#add_vm:clipse
-add_vm:downgrade
-add_vm:zen-browser-bin
+############################
+# PAQUETS POUR TOUS SAUF VM
+############################
+add_not_vm:brave-bin
+add_not_vm:clipse
+add_not_vm:downgrade
+add_not_vm:proton-vpn-gtk-app
+add_not_vm:reflector-simple
 
-######################
-# DE != KDE Plasma
-add_not_kde:proton-vpn-gtk-app
-add_not_kde:zen-browser-bin
-add_not_kde:reflector-simple
+############################
+# PAQUETS SI COMPLETE
+############################
+add_full:ventoy-bin
+add_full:onlyoffice-bin
+add_full:payload-dumper-go-bin
+add_full:uniutils
