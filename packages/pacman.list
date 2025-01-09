@@ -30,7 +30,6 @@ add_defaut:man-pages
 add_defaut:meld
 add_defaut:ncdu
 add_defaut:openssh
-add_defaut:p7zip
 add_defaut:pacman-contrib
 add_defaut:pdfarranger
 add_defaut:pdfgrep

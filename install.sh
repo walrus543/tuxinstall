@@ -234,9 +234,6 @@ if [[ "$VM" != "none" ]]; then
         echo -n "- - Activation de vboxservice.service : "
         sudo systemctl enable --now vboxservice.service >> "$log_file" 2>&1
         check_cmd
-
-        echo ${YELLOW}"Penser à redémarrer."${RESET}
-        sleep $sleepmid
     fi
 
     if [[ $(grep vboxsf /etc/group | grep -c $USER) -lt 1 ]]; then
@@ -251,6 +248,8 @@ if [[ "$VM" != "none" ]]; then
         else
             msg_bold_red "Le dossier habituel PartageVM n'a pas été trouvé"
         fi
+        echo ${YELLOW}"Penser à redémarrer."${RESET}
+        sleep $sleepmid
     fi
 fi
 #--------------------------------------
@@ -952,313 +951,312 @@ fi
 #++++++++++++++++++++++++++++++++++++++
 # [DEBUT] VERSION COMPLÈTE OU LITE
 #++++++++++++++++++++++++++++++++++++++
-msg_bold_yellow "********************************"
-msg_bold_yellow "*Installation complète ou lite ?"
-msg_bold_yellow "********************************"
+msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
 
 choix=""
 
 while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
 
-echo "1) Complète"
-echo "2) Lite"
+    echo "1) Complète"
+    echo "2) Lite"
+    echo
+    read -p "Entrez votre choix (1 ou 2) : " choix
 
-read -p "Entrez votre choix (1 ou 2) : " choix
-
-if [ "$choix" = "1" ]; then
-    msg_bold_blue "➜ Paquets PACMAN supplémentaires FULL"
-    while read -r line
-    do
-        if [[ "$line" == add_full:* ]]; then
-            p=${line#add_full:}
-            if ! check_pkg "$p"; then
-                echo -n "$sign_green $p : "
-                add_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-
-        if [[ "$line" == del_full:* ]]; then
-            p=${line#del_full:}
-            if check_pkg "$p"; then
-                echo -n "$sign_red $p : "
-                del_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-    done < "packages/pacman.list"
-
-    msg_bold_blue "➜ Paquets PARU supplémentaires FULL"
-    if check_pkg paru; then
+    if [ "$choix" = "1" ]; then
+        msg_bold_blue "➜ Paquets PACMAN supplémentaires FULL"
         while read -r line
         do
-            # Par défaut
             if [[ "$line" == add_full:* ]]; then
                 p=${line#add_full:}
                 if ! check_pkg "$p"; then
                     echo -n "$sign_green $p : "
-                    add_pkg_paru "$p"
+                    add_pkg_pacman "$p"
                     check_cmd
                 fi
             fi
+
             if [[ "$line" == del_full:* ]]; then
                 p=${line#del_full:}
                 if check_pkg "$p"; then
                     echo -n "$sign_red $p : "
-                    del_pkg_paru "$p"
+                    del_pkg_pacman "$p"
                     check_cmd
                 fi
             fi
-        done < "packages/paru.list"
-    fi
+        done < "packages/pacman.list"
 
-    msg_bold_blue "➜ Fichiers de configuration"
-    if check_pkg protonmail-bridge-core && [[ ! -f $HOME/.config/autostart/protonmail.desktop ]]; then
-        echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
-        cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
-        check_cmd
-    fi
-
-    if [[ "$VM" = "none" ]]; then
-        msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
-        if [[ ! -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
-            echo ${YELLOW}"/!\ $HOME/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
-            ask_continue
-        elif [[ -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
-            if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
-                echo -n "- - Copie backup_nettoyage.service : "
-                sudo mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
-                check_cmd
-            fi
-            if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
-                echo -n "- - Copie backup_nettoyage.timer : "
-                sudo mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
-                check_cmd
-            fi
-            if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
-                echo -n "- - Activation du service backup_nettoyage.timer : "
-                sudo systemctl enable backup_nettoyage.timer >> "$log_file" 2>&1
-                check_cmd
-            fi
+        msg_bold_blue "➜ Paquets PARU supplémentaires FULL"
+        if check_pkg paru; then
+            while read -r line
+            do
+                # Par défaut
+                if [[ "$line" == add_full:* ]]; then
+                    p=${line#add_full:}
+                    if ! check_pkg "$p"; then
+                        echo -n "$sign_green $p : "
+                        add_pkg_paru "$p"
+                        check_cmd
+                    fi
+                fi
+                if [[ "$line" == del_full:* ]]; then
+                    p=${line#del_full:}
+                    if check_pkg "$p"; then
+                        echo -n "$sign_red $p : "
+                        del_pkg_paru "$p"
+                        check_cmd
+                    fi
+                fi
+            done < "packages/paru.list"
         fi
 
-        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
-        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
-            echo -n "- - Installation du paquet AUR  : "
-            add_pkg_paru rtl8821ce-dkms-git
+        msg_bold_blue "➜ Fichiers de configuration"
+        if check_pkg protonmail-bridge-core && [[ ! -f $HOME/.config/autostart/protonmail.desktop ]]; then
+            echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
+            cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
             check_cmd
+        fi
 
-            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
-                echo -n "- - Configuration blacklist.conf  : "
-                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-                sudo echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-                check_cmd
+        if [[ "$VM" = "none" ]]; then
+            msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
+            if [[ ! -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
+                echo ${YELLOW}"/!\ $HOME/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
+                ask_continue
+            elif [[ -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
+                if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
+                    echo -n "- - Copie backup_nettoyage.service : "
+                    sudo mv $ICI/config/backup_nettoyage.service /etc/systemd/system/
+                    check_cmd
+                fi
+                if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
+                    echo -n "- - Copie backup_nettoyage.timer : "
+                    sudo mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/
+                    check_cmd
+                fi
+                if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
+                    echo -n "- - Activation du service backup_nettoyage.timer : "
+                    sudo systemctl enable backup_nettoyage.timer >> "$log_file" 2>&1
+                    check_cmd
+                fi
             fi
 
-            # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
-            # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
-            # Définir le répertoire cible et les patterns des noms de fichiers
-            # Ça reste visible avec journalctl -b --priority=3
-            DIR="/boot/loader/entries"
-            PATTERNS=("linux.conf" "linux-lts.conf")
+            msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
+            if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
+                echo -n "- - Installation du paquet AUR  : "
+                add_pkg_paru rtl8821ce-dkms-git
+                check_cmd
 
-            # Fonction pour ajouter ou modifier la ligne dans le fichier
-            modify_file() {
-                local file="$1"
-                local tempfile=$(mktemp)
+                if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
+                    echo -n "- - Configuration blacklist.conf  : "
+                    sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                    sudo echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                    check_cmd
+                fi
 
-                if [ -f "$file" ]; then
-                    # Lire le fichier et ajouter/modifier la ligne
-                    while IFS= read -r line; do
-                        if [[ "$line" =~ ^options\ root= ]]; then
-                            if [[ "$line" != *"pci=noaer"* ]]; then
-                                echo "${line} pci=noaer" >> "$tempfile"
+                # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
+                # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
+                # Définir le répertoire cible et les patterns des noms de fichiers
+                # Ça reste visible avec journalctl -b --priority=3
+                DIR="/boot/loader/entries"
+                PATTERNS=("linux.conf" "linux-lts.conf")
+
+                # Fonction pour ajouter ou modifier la ligne dans le fichier
+                modify_file() {
+                    local file="$1"
+                    local tempfile=$(mktemp)
+
+                    if [ -f "$file" ]; then
+                        # Lire le fichier et ajouter/modifier la ligne
+                        while IFS= read -r line; do
+                            if [[ "$line" =~ ^options\ root= ]]; then
+                                if [[ "$line" != *"pci=noaer"* ]]; then
+                                    echo "${line} pci=noaer" >> "$tempfile"
+                                else
+                                    echo "$line" >> "$tempfile"
+                                fi
                             else
                                 echo "$line" >> "$tempfile"
                             fi
-                        else
-                            echo "$line" >> "$tempfile"
-                        fi
-                    done < "$file"
-                else
-                    # Créer le fichier avec la ligne par défaut
-                    echo "options root= pci=noaer" > "$tempfile"
-                fi
-
-                # Remplacer l'ancien fichier par le nouveau
-                sudo mv "$tempfile" "$file"
-            }
-
-            # Parcourir les motifs de fichiers cibles
-            for pattern in "${PATTERNS[@]}"; do
-                # Rechercher les fichiers correspondant au motif
-                for filepath in "$DIR"/*_"$pattern"; do
-                    if [ -f "$filepath" ]; then
-                        modify_file "$filepath"
-                    fi
-                done
-            done
-
-        else
-            echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
-        fi
-
-        # OSheden
-        if [[ ! -d $HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $HOME/Thèmes/Alta/app/src/main/ ]]; then
-            echo -n "➜➜ Création des liens symboliques : "
-            ln -s $HOME/Thèmes/Alta/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Alta
-            ln -s $HOME/Thèmes/Altess/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Altess
-            ln -s $HOME/Thèmes/Azulox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Azulox
-            ln -s $HOME/Thèmes/Black_Army_Diamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
-            ln -s $HOME/Thèmes/Black_Army_Emerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
-            ln -s $HOME/Thèmes/Black_Army_Omni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
-            ln -s $HOME/Thèmes/Black_Army_Ruby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
-            ln -s $HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
-            ln -s $HOME/Thèmes/Caya/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Caya
-            ln -s $HOME/Thèmes/Ciclo/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ciclo
-            ln -s $HOME/Thèmes/DarkArmyDiamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
-            ln -s $HOME/Thèmes/DarkArmyEmerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
-            ln -s $HOME/Thèmes/DarkArmyOmni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
-            ln -s $HOME/Thèmes/DarkArmyRuby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
-            ln -s $HOME/Thèmes/DarkArmySapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
-            ln -s $HOME/Thèmes/Darky/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darky
-            ln -s $HOME/Thèmes/Darly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darly
-            ln -s $HOME/Thèmes/Distraction_Free/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Distraction
-            ln -s $HOME/Thèmes/Ecliptic/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ecliptic
-            ln -s $HOME/Thèmes/Focus/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Focus
-            ln -s $HOME/Thèmes/Friendly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Friendly
-            ln -s $HOME/Thèmes/GIN/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GIN
-            ln -s $HOME/Thèmes/GoldOx/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GoldOx
-            ln -s $HOME/Thèmes/Goody/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Goody
-            ln -s $HOME/Thèmes/Lox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Lox
-            ln -s $HOME/Thèmes/Luzicon/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Luzicon
-            ln -s $HOME/Thèmes/NubeReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
-            ln -s $HOME/Thèmes/Oscuro/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Oscuro
-            ln -s $HOME/Thèmes/Raya_Black/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaBlack
-            ln -s $HOME/Thèmes/RayaReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
-            ln -s $HOME/Thèmes/Shapy/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Shapy
-            ln -s $HOME/Thèmes/Sinfonia/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Sinfonia
-            ln -s $HOME/Thèmes/Spark/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Spark
-            ln -s $HOME/Thèmes/Stony/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Stony
-            ln -s $HOME/Thèmes/Supernova/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Supernova
-            ln -s $HOME/Thèmes/Whirl/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whirl
-            ln -s $HOME/Thèmes/WhirlBlack/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
-            ln -s $HOME/Thèmes/Whirless/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Whirless
-            ln -s $HOME/Thèmes/WhitArt/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhitArt
-            ln -s $HOME/Thèmes/Whity/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whity
-            check_cmd
-        fi
-
-        # Android Studio
-        path_install="/usr/local/android-studio"
-
-        if [[ ! -d "$path_install" ]]; then
-            msg_bold_blue "➜ Installation Android Studio"
-            printf "\n- - Test de la connexion au site\n"
-
-            url="https://developer.android.com/studio?hl=fr"
-
-            # Effectuer la requête HTTPS avec curl
-            response=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
-            # -s pour mode silencieux
-            # -S pour afficher les erreurs
-            # -o /dev/null pour rediriger la sortie vers null
-            # -w "%{http_code}" pour récupérer uniquement le code de statut HTTP
-
-            #Contrôler la disponibilité du site
-            if [[ $response -ne 200 ]]; then
-                echo "${RED}- - Impossible de se connecter au site $url${RESET}"
-            else
-                # Récupérer le contenu de la page
-                page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
-
-                # Extraire l'URL de téléchargement pour Linux
-                download_url=$(echo "$page_content" | grep -oP 'https://.*?android-studio-.*?-linux.tar.gz' | head -n 1)
-
-                # Vérifier si l'URL a été trouvée
-                if [[ -z "$download_url" ]]; then
-                    echo "${RED}- - Impossible de trouver l'URL de téléchargement.${RESET}"
-                else
-                    # Télécharger le fichier
-                    echo "- - Téléchargement : "
-                    wget -P $HOME/Tmp -q --show-progress "$download_url"
-
-                    filename=$(basename $(ls -1 $HOME/Tmp/android-studio*))
-                    filesize=$(du $HOME/Tmp/$filename | awk '{print $1}')
-
-                    if [[ "$filesize" -lt 1000000 ]]; then
-                        echo "${RED}- - Taille du fichier $HOME/Tmp/$filename anormalement basse...${RESET}"
+                        done < "$file"
                     else
-                        printf "\nInstallation lancée...\n"
-                        echo -n "- - Création du dossier final : "
-                        sudo mkdir -p $path_install
-                        check_cmd
+                        # Créer le fichier avec la ligne par défaut
+                        echo "options root= pci=noaer" > "$tempfile"
+                    fi
 
-                        echo -n "- - Décompresssion $filename : "
-                        sudo tar -xzf $HOME/Tmp/$filename -C $path_install --strip-components=1
-                        check_cmd
+                    # Remplacer l'ancien fichier par le nouveau
+                    sudo mv "$tempfile" "$file"
+                }
 
-                        echo -n "- - Rendre studio exécutable : "
-                        sudo chmod +x $path_install/bin/studio
-                        sudo chmod +x $path_install/bin/studio.sh
-                        check_cmd
+                # Parcourir les motifs de fichiers cibles
+                for pattern in "${PATTERNS[@]}"; do
+                    # Rechercher les fichiers correspondant au motif
+                    for filepath in "$DIR"/*_"$pattern"; do
+                        if [ -f "$filepath" ]; then
+                            modify_file "$filepath"
+                        fi
+                    done
+                done
 
-                        echo -n "- - Suppression du fichier original $filename : "
-                        rm -f "$HOME/Tmp/$filename"
-                        check_cmd
-                        echo -n "- - Changement du propriétaire et du groupe : "
-                        sudo chown -R $USER:$USER $path_install
-                        check_cmd
+            else
+                echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
+            fi
 
-                        echo "${GREEN}${BOLD}Installation terminée.${RESET}"
-                        echo "Prêt pour ajouter le raccourci $path_install/bin/studio"
-                        echo "Lancer Android Studio pour télécharger le SDK dans $HOME/Android/Sdk" | tee -a $HOME/Tmp/post_installation.txt
-                        ask_continue
+            # OSheden
+            if [[ ! -d $HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $HOME/Thèmes/Alta/app/src/main/ ]]; then
+                echo -n "➜➜ Création des liens symboliques : "
+                ln -s $HOME/Thèmes/Alta/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Alta
+                ln -s $HOME/Thèmes/Altess/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Altess
+                ln -s $HOME/Thèmes/Azulox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Azulox
+                ln -s $HOME/Thèmes/Black_Army_Diamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
+                ln -s $HOME/Thèmes/Black_Army_Emerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
+                ln -s $HOME/Thèmes/Black_Army_Omni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
+                ln -s $HOME/Thèmes/Black_Army_Ruby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
+                ln -s $HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
+                ln -s $HOME/Thèmes/Caya/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Caya
+                ln -s $HOME/Thèmes/Ciclo/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ciclo
+                ln -s $HOME/Thèmes/DarkArmyDiamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+                ln -s $HOME/Thèmes/DarkArmyEmerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+                ln -s $HOME/Thèmes/DarkArmyOmni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
+                ln -s $HOME/Thèmes/DarkArmyRuby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
+                ln -s $HOME/Thèmes/DarkArmySapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
+                ln -s $HOME/Thèmes/Darky/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darky
+                ln -s $HOME/Thèmes/Darly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darly
+                ln -s $HOME/Thèmes/Distraction_Free/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Distraction
+                ln -s $HOME/Thèmes/Ecliptic/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ecliptic
+                ln -s $HOME/Thèmes/Focus/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Focus
+                ln -s $HOME/Thèmes/Friendly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Friendly
+                ln -s $HOME/Thèmes/GIN/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GIN
+                ln -s $HOME/Thèmes/GoldOx/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GoldOx
+                ln -s $HOME/Thèmes/Goody/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Goody
+                ln -s $HOME/Thèmes/Lox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Lox
+                ln -s $HOME/Thèmes/Luzicon/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Luzicon
+                ln -s $HOME/Thèmes/NubeReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
+                ln -s $HOME/Thèmes/Oscuro/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Oscuro
+                ln -s $HOME/Thèmes/Raya_Black/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaBlack
+                ln -s $HOME/Thèmes/RayaReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
+                ln -s $HOME/Thèmes/Shapy/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Shapy
+                ln -s $HOME/Thèmes/Sinfonia/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Sinfonia
+                ln -s $HOME/Thèmes/Spark/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Spark
+                ln -s $HOME/Thèmes/Stony/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Stony
+                ln -s $HOME/Thèmes/Supernova/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Supernova
+                ln -s $HOME/Thèmes/Whirl/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whirl
+                ln -s $HOME/Thèmes/WhirlBlack/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
+                ln -s $HOME/Thèmes/Whirless/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Whirless
+                ln -s $HOME/Thèmes/WhitArt/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhitArt
+                ln -s $HOME/Thèmes/Whity/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whity
+                check_cmd
+            fi
+
+            # Android Studio
+            path_install="/usr/local/android-studio"
+
+            if [[ ! -d "$path_install" ]]; then
+                msg_bold_blue "➜ Installation Android Studio"
+                printf "\n- - Test de la connexion au site\n"
+
+                url="https://developer.android.com/studio?hl=fr"
+
+                # Effectuer la requête HTTPS avec curl
+                response=$(curl -sS -o /dev/null -w "%{http_code}" "$url")
+                # -s pour mode silencieux
+                # -S pour afficher les erreurs
+                # -o /dev/null pour rediriger la sortie vers null
+                # -w "%{http_code}" pour récupérer uniquement le code de statut HTTP
+
+                #Contrôler la disponibilité du site
+                if [[ $response -ne 200 ]]; then
+                    echo "${RED}- - Impossible de se connecter au site $url${RESET}"
+                else
+                    # Récupérer le contenu de la page
+                    page_content=$(curl -s "https://developer.android.com/studio?hl=fr")
+
+                    # Extraire l'URL de téléchargement pour Linux
+                    download_url=$(echo "$page_content" | grep -oP 'https://.*?android-studio-.*?-linux.tar.gz' | head -n 1)
+
+                    # Vérifier si l'URL a été trouvée
+                    if [[ -z "$download_url" ]]; then
+                        echo "${RED}- - Impossible de trouver l'URL de téléchargement.${RESET}"
+                    else
+                        # Télécharger le fichier
+                        echo "- - Téléchargement : "
+                        wget -P $HOME/Tmp -q --show-progress "$download_url"
+
+                        filename=$(basename $(ls -1 $HOME/Tmp/android-studio*))
+                        filesize=$(du $HOME/Tmp/$filename | awk '{print $1}')
+
+                        if [[ "$filesize" -lt 1000000 ]]; then
+                            echo "${RED}- - Taille du fichier $HOME/Tmp/$filename anormalement basse...${RESET}"
+                        else
+                            printf "\nInstallation lancée...\n"
+                            echo -n "- - Création du dossier final : "
+                            sudo mkdir -p $path_install
+                            check_cmd
+
+                            echo -n "- - Décompresssion $filename : "
+                            sudo tar -xzf $HOME/Tmp/$filename -C $path_install --strip-components=1
+                            check_cmd
+
+                            echo -n "- - Rendre studio exécutable : "
+                            sudo chmod +x $path_install/bin/studio
+                            sudo chmod +x $path_install/bin/studio.sh
+                            check_cmd
+
+                            echo -n "- - Suppression du fichier original $filename : "
+                            rm -f "$HOME/Tmp/$filename"
+                            check_cmd
+                            echo -n "- - Changement du propriétaire et du groupe : "
+                            sudo chown -R $USER:$USER $path_install
+                            check_cmd
+
+                            echo "${GREEN}${BOLD}Installation terminée.${RESET}"
+                            echo "Prêt pour ajouter le raccourci $path_install/bin/studio"
+                            echo "Lancer Android Studio pour télécharger le SDK dans $HOME/Android/Sdk" | tee -a $HOME/Tmp/post_installation.txt
+                            ask_continue
+                        fi
                     fi
                 fi
+            fi #Fin Android Studio
+
+            #Actions manuelles
+            echo
+            echo "${YELLOW}${BOLD}*******************"
+            echo "Actions manuelles"
+            echo "*******************${RESET}"
+            if [[ ! -d $HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
+                if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
+                    echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+                fi
             fi
-        fi #Fin Android Studio
 
-        #Actions manuelles
-        echo
-        echo "${YELLOW}${BOLD}*******************"
-        echo "Actions manuelles"
-        echo "*******************${RESET}"
-        if [[ ! -d $HOME/.local/share/plasma/look-and-feel/Colorful-Dark-Global-6/ ]]; then
-            if [[ ! -d .local/share/plasma/desktoptheme/Colorful-Dark-Plasma ]]; then
-                echo "➜ Installer le thème ${BOLD}Colorful-Dark-Global-6${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+            printf "\nConfigurer TIMESHIFT\n" >> $HOME/Tmp/post_installation.txt
+
+        fi #Fin si NON VM
+
+    elif [ "$choix" = "2" ]; then
+        msg_bold_blue "➜ Paquets PACMAN supplémentaires LITE"
+        while read -r line
+        do
+            if [[ "$line" == add_lite:* ]]; then
+                p=${line#add_lite:}
+                if ! check_pkg "$p"; then
+                    echo -n "$sign_green $p : "
+                    add_pkg_pacman "$p"
+                    check_cmd
+                fi
             fi
-        fi
 
-        printf "\nConfigurer TIMESHIFT\n" >> $HOME/Tmp/post_installation.txt
-
-    fi #Fin si NON VM
-
-elif [ "$choix" = "2" ]; then
-    msg_bold_blue "➜ Paquets PACMAN supplémentaires LITE"
-    while read -r line
-    do
-        if [[ "$line" == add_lite:* ]]; then
-            p=${line#add_lite:}
-            if ! check_pkg "$p"; then
-                echo -n "$sign_green $p : "
-                add_pkg_pacman "$p"
-                check_cmd
+            if [[ "$line" == del_lite:* ]]; then
+                p=${line#del_lite:}
+                if check_pkg "$p"; then
+                    echo -n "$sign_red $p : "
+                    del_pkg_pacman "$p"
+                    check_cmd
+                fi
             fi
-        fi
-
-        if [[ "$line" == del_lite:* ]]; then
-            p=${line#del_lite:}
-            if check_pkg "$p"; then
-                echo -n "$sign_red $p : "
-                del_pkg_pacman "$p"
-                check_cmd
-            fi
-        fi
-    done < "packages/pacman.list"
-else
-    echo "Choix invalide."
-fi
+        done < "packages/pacman.list"
+    else
+        echo "Choix invalide."
+    fi
+done
 #--------------------------------------
 # [FIN] VERSION COMPLÈTE OU LITE
 #--------------------------------------
