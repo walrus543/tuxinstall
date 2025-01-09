@@ -6,7 +6,7 @@
 # VARIABLES
 ##############################
 export EDITOR='nvim'
-export ANDROID_HOME=~/Android/Sdk/
+export ANDROID_HOME=~/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
 #############################
@@ -35,10 +35,7 @@ alias ..='cd ..'
 ######
 # ARCH
 #######
-# Suppression des paquets orphelins et détection d'échec au démarrage avec systemd
-alias carch='paru -c ; systemctl --failed'
-# MaJ pacman+AUR, traiter les fichiers .pacnew avec pacdiff et mettre à jour les flatpaks si besoin
-alias uarch='paru; if [ -n "$(flatpak list)" ]; then flatpak update -y; fi'
+alias uarch='bash ~/Documents/Linux/Divers_Scripts/uarch.sh'
 alias umirrors='sudo pacman -Syy'
 alias fix-key='sudo rm /var/lib/pacman/sync/* && sudo rm -rf /etc/pacman.d/gnupg/* && sudo pacman-key --init && sudo pacman-key --populate && sudo pacman -Sy --noconfirm archlinux-keyring && sudo pacman --noconfirm -Su'
 alias archiso='mkdir -p ~/Tmp && wget https://mirrors.gandi.net/archlinux/iso/latest/archlinux-x86_64.iso ~/Tmp'
