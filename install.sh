@@ -514,7 +514,7 @@ fi
 if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
     path_meld=$(which meld)
     echo -n "- - [Pacdiff] Meld par défaut : "
-    sudo echo "DIFFPROG=$path_meld" >> /etc/environment
+    echo "À ajouter dans /etc/environment : \"DIFFPROG=/usr/bin/meld\"" >> $HOME/Tmp/post_installation.txt
     check_cmd
 fi
 
@@ -720,7 +720,7 @@ if check_pkg tmux && [[ $(grep -c "unbind" $HOME/.tmux.conf) -lt 1 ]]; then
     echo -n "- - [Tmux] tmux.conf : "
     cp "$ICI/config/tmux.conf" $HOME/.tmux.conf
     check_cmd
-    echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a $HOME/post_installation.txt
+    echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi
 #TMUX lancé automatiquement
@@ -740,7 +740,7 @@ if check_pkg neovim && [[ $(grep -c "nocompatible" $HOME/.config/nvim/init.vim 2
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_file" 2>&1
     check_cmd
-    echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}" | tee -a $HOME/post_installation.txt
+    echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi
 
@@ -749,7 +749,7 @@ if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f $HOME/.config/autostart
     echo -n "- - [Clipse] Ajout clipse.desktop : "
     cp "$ICI/config/clipse.desktop" $HOME/.config/autostart/clipse.desktop
     check_cmd
-    echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}" | tee -a $HOME/post_installation.txt
+    echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 
     if [[ $(cat $HOME/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
@@ -1260,7 +1260,7 @@ done
 #--------------------------------------
 # [FIN] VERSION COMPLÈTE OU LITE
 #--------------------------------------
-
-$EDITOR $HOME/Tmp/post_installation.txt
-
+if [[ -f $HOME/Tmp/post_installation.txt ]]; then
+    $EDITOR $HOME/Tmp/post_installation.txt
+fi
 exit 0
