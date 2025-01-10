@@ -1265,7 +1265,7 @@ done
 #--------------------------------------
 # [FIN] VERSION COMPLÈTE OU LITE
 #--------------------------------------
-if [[ -f $HOME/Tmp/post_installation.txt ]]; then
-    $EDITOR $HOME/Tmp/post_installation.txt
+if [[ -f $HOME/Tmp/post_installation.txt ]] && check_pkg neovim ; then
+    nvim $HOME/Tmp/post_installation.txt
 fi
 exit 0
