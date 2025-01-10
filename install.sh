@@ -1279,4 +1279,7 @@ done
 if [[ -f $HOME/Tmp/post_installation.txt ]] && check_pkg neovim ; then
     nvim $HOME/Tmp/post_installation.txt
 fi
+
+msg_bold_green "Installation terminée."
+
 exit 0
