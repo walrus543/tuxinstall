@@ -308,7 +308,7 @@ if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg  >> "$log_file" 2>&1
     check_cmd
 fi
-if [[ -f /etc/sudoers.d/00_$USER ]] && [[ $(grep -c "passwd_timeout" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
+if [[ -f /etc/sudoers.d/00_$USER ]] && [[ $(sudo grep -c "passwd_timeout" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
     echo -n "- - [Sudoers] Délai saisie mot de passe : "
     sudo echo "Defaults passwd_timeout=0" >> /etc/sudoers.d/00_$USER
     check_cmd
@@ -510,7 +510,7 @@ do
 done < "$ICI/packages/flatpak.list"
 
 msg_bold_blue "➜ Configuration système additionnelle"
-if [[ -f /etc/sudoers.d/00_$USER ]] && check_pkg plocate && [[ $(grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
+if [[ -f /etc/sudoers.d/00_$USER ]] && check_pkg plocate && [[ $(sudo grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
     echo -n "- - [Sudoers] Commande updatedb sans mot de passe : "
     sudo echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$USER
     check_cmd
