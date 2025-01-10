@@ -621,6 +621,13 @@ if check_pkg zsh; then
         done < "$ICI/config/alias_listing"
     fi
     check_cmd
+
+    if [[ ! -f $HOME/Documents/Linux/Divers_Scripts/uarch.sh ]]; then
+        echo -n "- - - Déplacement de uarch.sh : "
+        mkdir -p $HOME/Documents/Linux/Divers_Scripts
+        cp $ICI/config/uarch.sh $HOME/Documents/Linux/Divers_Scripts
+        check_cmd
+    fi
 fi
 
 if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
