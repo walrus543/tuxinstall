@@ -627,6 +627,10 @@ if check_pkg zsh; then
         mkdir -p $HOME/Documents/Linux/Divers_Scripts
         cp $ICI/config/uarch.sh $HOME/Documents/Linux/Divers_Scripts
         check_cmd
+        echo -n "- - - Déplacement de shared.sh : "
+        mkdir -p $HOME/Documents/Linux/Divers_Scripts
+        cp $ICI/config/shared.sh $HOME/Documents/Linux/Divers_Scripts
+        check_cmd
     fi
 fi
 
