@@ -432,16 +432,6 @@ elif check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -eq 1 ]] && ! 
     echo -n "- - Eviter le crénelage des polices : "
     add_pkg_pacman xdg-desktop-portal-gtk
     check_cmd
-else
-    echo -n "- - Installation de Flatkpak : "
-    add_pkg_pacman flatpak
-    check_cmd
-    echo -n "- - Installation de Flathub : "
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo > /dev/null
-    check_cmd
-    echo -n "- - Eviter le crénelage des polices : "
-    add_pkg_pacman xdg-desktop-portal-gtk
-    check_cmd
 fi
 
 msg_bold_blue "➜ Paquets FLATPAK par défaut"
