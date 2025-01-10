@@ -509,6 +509,9 @@ if [[ -f /etc/sudoers.d/00_$USER ]] && check_pkg plocate && [[ $(grep -c "/usr/b
     echo -n "- - [Sudoers] Commande updatedb sans mot de passe : "
     sudo echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$USER
     check_cmd
+    echo -n "- - [Sudoers] Délai saisie mot de passe : "
+    sudo echo "Defaults passwd_timeout=0" >> /etc/sudoers.d/00_$USER
+    check_cmd
 fi
 
 if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
