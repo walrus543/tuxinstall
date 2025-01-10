@@ -9,8 +9,7 @@ sudo pacman -S --needed --noconfirm git base-devel \
   && chmod +x ./install.sh
 ````
 ## How to run
-* Run `sudo ./install.sh` to set main settings and install packages
-* Run `./install.sh user` for user specific commands without root access
+* Run `./install.sh` 
 
 # Credits
 Inspired from Adrien D.'s script of Linuxtricks.fr  
