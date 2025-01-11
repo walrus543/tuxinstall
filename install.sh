@@ -465,7 +465,11 @@ elif check_pkg flatpak && [[ $(flatpak remotes | grep -c flathub) -eq 1 ]] && ! 
 fi
 
 msg_bold_blue "➜ Paquets FLATPAK par défaut"
-echo "(long si première installation)"
+
+if [[ $(grep -e "^add" "$ICI/packages/flatpak.list" | wc -l) -gt 0 ]] && [[ $(flatpak list | grep -c 'org.freedesktop.Platform.GL.default') -lt 1 ]]; then
+    echo "(besoin d'installer des paquets système en plus)"
+fi
+
 while read -r line
 do
     # Par défaut
