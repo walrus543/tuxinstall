@@ -39,7 +39,6 @@ add_defaut:ripgrep
 add_defaut:shellcheck
 add_defaut:tailspin
 add_defaut:tar
-add_defaut:thunar
 add_defaut:tldr
 add_defaut:tmux
 add_defaut:trash-cli

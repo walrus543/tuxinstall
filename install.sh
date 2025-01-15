@@ -142,6 +142,12 @@ if ! ping -c 1 google.com &> /dev/null; then
     exit 2;
 fi
 
+# Le script root doit être lancé en premier
+if [[ ! -f $ICI/.root_finished ]];then
+    msg_bold_red "Merci de lancer l'autre script avec sudo avant de continuer."
+    exit 1
+fi
+
 ###################
 #### Arch Only ####
 ###################
@@ -175,11 +181,9 @@ EOF
 	exit 0;
 fi
 
-# Seulement pour Arch
-if [[ $(grep -c "ID=arch" /etc/os-release) -lt 1 ]]; then
-    echo ${RED}"Ce script n'est fait que pour Arch Linux"${RESET}
-    echo "\"ID=arch\" non trouvé dans /etc/os-release."
-    exit 1;
+if ! check_pkg pacman; then
+	msg_bold_red "Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("
+	exit 2;
 fi
 
 ###################
@@ -187,14 +191,8 @@ fi
 ###################
 # Tester si root
 if [[ $(id -u) -eq "0" ]]; then
-    echo ${RED}"Ne PAS lancer le script avec les droits root (su - root ou sudo)"${RESET}
+    msg_bold_red "Ne PAS lancer le script avec les droits root (su - root ou sudo)"
 	exit 1;
-fi
-
-# Tester si bien une base Arch
-if ! check_pkg pacman; then
-	echo ${RED}"Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("${RESET}
-	exit 2;
 fi
 
 # Infos fichier log
@@ -336,11 +334,6 @@ if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub
 
     echo -n "- - [Grub] Regénérer grub.cfg : "
     sudo grub-mkconfig -o /boot/grub/grub.cfg  >> "$log_file" 2>&1
-    check_cmd
-fi
-if [[ -f /etc/sudoers.d/00_$USER ]] && [[ $(sudo grep -c "passwd_timeout" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
-    echo -n "- - [Sudoers] Délai saisie mot de passe : "
-    sudo echo "Defaults passwd_timeout=0" >> /etc/sudoers.d/00_$USER
     check_cmd
 fi
 
@@ -537,13 +530,6 @@ msg_bold_blue "➜ Configuration système additionnelle"
 if [[ -f /etc/sudoers.d/00_$USER ]] && check_pkg plocate && [[ $(sudo grep -c "/usr/bin/updatedb" /etc/sudoers.d/00_$USER) -lt 1 ]] ; then
     echo -n "- - [Sudoers] Commande updatedb sans mot de passe : "
     sudo echo "$USER ALL=(ALL) NOPASSWD: /usr/bin/updatedb" >> /etc/sudoers.d/00_$USER
-    check_cmd
-fi
-
-if check_pkg meld && [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
-    path_meld=$(which meld)
-    echo -n "- - [Pacdiff] Meld par défaut : "
-    echo "À ajouter dans /etc/environment : \"DIFFPROG=/usr/bin/meld\"" >> $HOME/Tmp/post_installation.txt
     check_cmd
 fi
 
