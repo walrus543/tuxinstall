@@ -31,7 +31,6 @@ add_defaut:meld
 add_defaut:ncdu
 add_defaut:openssh
 add_defaut:pacman-contrib
-add_defaut:pdfarranger
 add_defaut:pdfgrep
 add_defaut:pkgfile
 add_defaut:plocate
@@ -90,6 +89,7 @@ add_full:obsidian
 add_full:jdk21-openjdk
 add_full:hplip
 add_full:fdupes
+add_full:pdfarranger
 add_full:element-desktop
 add_full:cups
 add_full:adobe-source-han-sans-cn-fonts

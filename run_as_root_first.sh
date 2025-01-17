@@ -95,7 +95,8 @@ if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && [[ $(grep -c "passwd_timeout" /etc/s
     echo "Defaults passwd_timeout=0" >> /etc/sudoers.d/00_$SUDO_USER
     check_cmd
 fi
-
+    
+pacman -S --needed --noconfirm meld > /dev/null
 if [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
     path_meld=$(which meld)
     echo -n "- - [Pacdiff] Meld par défaut : "
