@@ -62,7 +62,6 @@ add_not_vm:android-tools
 add_not_vm:yt-dlp
 add_not_vm:smbclient
 add_not_vm:samba
-add_not_vm:rsync
 add_not_vm:qbittorrent
 #Détection disque dur externe
 add_not_vm:ntfs-3g
@@ -79,6 +78,7 @@ add_full:virtualbox
 add_full:virtualbox-guest-iso
 add_full:virtualbox-host-dkms
 add_full:syncthing
+add_full:rsync
 add_full:simple-scan
 add_full:print-manager
 add_full:protonmail-bridge-core

@@ -571,7 +571,7 @@ if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
         fc-cache -f -v >> "$log_file" 2>&1
         check_cmd
         echo -n "- - [Nerd Font] Contrôle de l'installation : "
-        if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
+        if [[ $(fc-list | grep -c "Hack" 2>&1) -gt 0 ]]; then
             msg_bold_green "OK"
         else
             msg_bold_red "ERREUR"
@@ -861,12 +861,12 @@ if [[ "$VM" = "none" ]]; then
 
     if [[ $(grep -c "blacklist pcspkr" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
         echo -n "- - [Bruit recherche] Blacklist pcspkr : "
-        sudo echo "blacklist pcspkr" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+        sudo echo "blacklist pcspkr" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
         check_cmd
     fi
     if [[ $(grep -c "blacklist snd_pcsp" /etc/modprobe.d/nobeep.conf) -lt 1 ]]; then
         echo -n "- - [Bruit recherche] Blacklist snd_pcsp : "
-        sudo echo "blacklist snd_pcsp" | tee -a /etc/modprobe.d/nobeep.conf > /dev/null
+        sudo echo "blacklist snd_pcsp" | sudo tee -a /etc/modprobe.d/nobeep.conf > /dev/null
         check_cmd
     fi
 
@@ -884,7 +884,7 @@ if [[ "$VM" = "none" ]]; then
 
     if [ "$DE" = 'KDE' ] && [[ $(grep -c "Numlock=on" /etc/sddm.conf) -lt 1 ]]; then
         echo -n "- - [Pavé numérique] Activation pour KDE Plasma : "
-        sudo echo "[General]" | tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | tee -a /etc/sddm.conf > /dev/null
+        sudo echo "[General]" | sudo tee -a /etc/sddm.conf > /dev/null && echo "Numlock=on" | sudo tee -a /etc/sddm.conf > /dev/null
         check_cmd
     elif [ "$DE" = 'XFCE' ] && [[ $(grep -c "numlockx" /etc/lightdm/lightdm.conf) -lt 1 ]]; then
         echo -n "- - [Pavé numérique] Activation pour XFCE : "
@@ -1036,8 +1036,8 @@ if [ "$install_type" = 1 ]; then
 
             if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
                 echo -n "- - Configuration blacklist.conf  : "
-                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-                sudo echo "blacklist rtw88_8821ce" | tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
                 check_cmd
             fi
 
