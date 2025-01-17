@@ -96,7 +96,7 @@ if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && [[ $(grep -c "passwd_timeout" /etc/s
     check_cmd
 fi
     
-pacman -S --needed --noconfirm meld > /dev/null
+pacman -S --needed --noconfirm meld > /dev/null 2>&1
 if [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
     path_meld=$(which meld)
     echo -n "- - [Pacdiff] Meld par défaut : "
@@ -137,7 +137,7 @@ done
 
 if [ "$install_type" = 1 ]; then
     msg_bold_blue "➜ Pare-Feu UFW"
-    pacman -S --needed --noconfirm ufw > /dev/null
+    pacman -S --needed --noconfirm ufw > /dev/null 2>&1
 
     if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
         echo -n " - - Paramétrage des règles : "
