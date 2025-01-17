@@ -15,23 +15,28 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 #source $HOME/.bash_aliases
 #alias lsa='eza -la --color=always --group-directories-first' #remplacé par eza zsh plugin
 #alias ls='eza -l --color=always --group-directories-first' #remplacé par eza zsh plugin
-alias op8p='bash ~/AndroidAll/OP8P/backup_sdcard.sh'
-alias supthumbnail='find ~/.cache/thumbnails/normal/ -type f -delete'
+alias op8p='bash $HOME/AndroidAll/OP8P/backup_sdcard.sh'
+alias majapt='sudo apt update && sudo apt -y full-upgrade && flatpak update'
+alias majpk='pkcon refresh && pkcon update'
+alias supthumbnail='find $HOME/.cache/thumbnails/normal/ -type f -delete'
 alias winsave='VBoxManage controlvm "Win11" savestate'
 alias winkill='VBoxManage controlvm "Win11" poweroff'
 alias winlist='VBoxManage list runningvms'
 alias wingo='VBoxManage startvm "Win11"'
 alias doublonsextensions='fdupes .'
 alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\'' {} \; | sort | uniq --repeated'
-alias pdfcompress='sh ~/Documents/Linux/compress_pdf.sh'
+alias pdfcompress='sh $HOME/Documents/Linux/compress_pdf.sh'
 alias coprobackup='bash $HOME/Documents/Linux/Divers_Scripts/copro_backup.sh'
-alias borgbackup='bash ~/Documents/Linux/borg_menu.sh'
+alias borgbackup='bash $HOME/Documents/Linux/borg_menu.sh'
 alias boxddbackup='bash $HOME/Documents/Linux/Divers_Scripts/box_dd_backup.sh'
 alias magisk_lineageos='bash $HOME/Documents/Linux/Divers_Scripts/update_lineageos_magisk.sh'
+alias tuxinstall_git='bash $HOME/Documents/Linux/Divers_Scripts/tuxinstall_git.sh'
 alias od='dolphin . &'
 alias ls='ls -1 --color=always --group-directories-first'
 alias ll='eza -l --group-directories-first'
 alias ..='cd ..'
+alias vi='nvim'
+alias cb='wl-copy'
 
 ######
 # ARCH
