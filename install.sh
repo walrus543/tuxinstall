@@ -647,6 +647,10 @@ if check_pkg zsh; then
         mkdir -p $HOME/Documents/Linux/Divers_Scripts
         cp $ICI/config/shared.sh $HOME/Documents/Linux/Divers_Scripts
         check_cmd
+        echo -n "- - - Déplacement de borg_menu.sh : "
+        mkdir -p $HOME/Documents/Linux
+        cp $ICI/config/borg_menu.sh $HOME/Documents/Linux
+        check_cmd
     fi
 fi
 
