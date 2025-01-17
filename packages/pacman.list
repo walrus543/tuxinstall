@@ -61,7 +61,6 @@ del_defaut:firefox
 ############################
 add_not_vm:android-tools
 add_not_vm:yt-dlp
-add_not_vm:ufw
 add_not_vm:smbclient
 add_not_vm:samba
 add_not_vm:rsync
@@ -97,6 +96,7 @@ add_full:adobe-source-han-sans-cn-fonts
 add_full:adobe-source-han-sans-jp-fonts
 add_full:adobe-source-han-sans-kr-fonts
 add_full:dos2unix
+add_full:ufw
 add_full:fdupes
 add_full:imagemagick
 add_full:perl-rename
