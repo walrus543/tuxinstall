@@ -816,6 +816,11 @@ if [[ "$VM" = "none" ]]; then
         sudo systemctl enable --now cups.service >> "$log_file" 2>&1
         check_cmd
     fi
+    if [[ ! -f /etc/samba/smb.conf ]]; then
+        echo -n "- - [SAMBA] Fichier smb.conf : "
+        sudo cp "$ICI/config/smb.conf" /etc/samba
+        check_cmd
+    fi
 
     #fstrim pour SSD
     #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
