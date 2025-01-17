@@ -800,22 +800,6 @@ fi
 # [DEBUT] FAUT PAS ETRE DANS UNE VM
 #++++++++++++++++++++++++++++++++++++++
 if [[ "$VM" = "none" ]]; then
-    if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - [Timeshift] Activation du service : "
-        sudo systemctl enable cronie.service >> "$log_file" 2>&1
-        check_cmd
-    fi
-
-    if check_pkg cups && [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - [Cups] Activation de cups.socket : "
-        sudo systemctl enable --now cups.socket >> "$log_file" 2>&1
-        check_cmd
-    fi
-    if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - [Cups] Activation de cups.service : "
-        sudo systemctl enable --now cups.service >> "$log_file" 2>&1
-        check_cmd
-    fi
     if [[ ! -f /etc/samba/smb.conf ]]; then
         echo -n "- - [SAMBA] Fichier smb.conf : "
         sudo cp "$ICI/config/smb.conf" /etc/samba
@@ -1003,13 +987,6 @@ if [ "$install_type" = 1 ]; then
         done < "packages/paru.list"
     fi
 
-    msg_bold_blue "➜ Fichiers de configuration"
-    if check_pkg protonmail-bridge-core && [[ ! -f $HOME/.config/autostart/protonmail.desktop ]]; then
-        echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
-        cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
-        check_cmd
-    fi
-
     if [[ "$VM" = "none" ]]; then
         msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
         if [[ ! -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
@@ -1031,6 +1008,29 @@ if [ "$install_type" = 1 ]; then
                 sudo systemctl enable backup_nettoyage.timer >> "$log_file" 2>&1
                 check_cmd
             fi
+        fi
+
+        msg_bold_blue "➜ Configuration pour installation ${BOLD}Complète${RESET}"
+        if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Timeshift] Activation du service : "
+            sudo systemctl enable cronie.service >> "$log_file" 2>&1
+            check_cmd
+        fi
+
+        if check_pkg cups && [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Cups] Activation de cups.socket : "
+            sudo systemctl enable --now cups.socket >> "$log_file" 2>&1
+            check_cmd
+        fi
+        if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Cups] Activation de cups.service : "
+            sudo systemctl enable --now cups.service >> "$log_file" 2>&1
+            check_cmd
+        fi
+        if check_pkg protonmail-bridge-core && [[ ! -f $HOME/.config/autostart/protonmail.desktop ]]; then
+            echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
+            cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
+            check_cmd
         fi
 
         msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
