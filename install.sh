@@ -603,9 +603,13 @@ if check_pkg zsh && [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; the
     check_cmd
 fi
 if check_pkg zsh && [[ $(grep -c 'zsh-syntax-highlighting' $HOME/.zshrc) -lt 1 ]]; then
-    echo -n "- - [ZSH Plugins] Activation des plugins : "
-    sed -E -i 's/plugins=\((.*?)\)/plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)/' $HOME/.zshrc
-    check_cmd
+    if [[ -f $HOME/.zshrc ]]; then
+        echo -n "- - [ZSH Plugins] Activation des plugins : "
+        sed -E -i 's/plugins=\((.*?)\)/plugins=(colored-man-pages copyfile copypath eza git gradle safe-paste web-search zsh-autosuggestions zsh-syntax-highlighting)/' $HOME/.zshrc
+        check_cmd
+    else
+        msg_bold_red "$HOME/.zshrc manquant"
+    fi
 fi
 #Normalement non requis car déjà défini précédemment
 #if check_pkg zsh && [[ $(echo $SHELL | grep -c "zsh") -lt 1 ]]; then
@@ -619,6 +623,8 @@ if check_pkg zsh; then
     echo -n "- - [ZSHRC] Ajustement des alias par comparatif : "
     if [ ! -f "$ICI/config/alias_listing" ]; then
         echo "Le fichier source des alias n'existe pas."
+    elif [ ! -f "$HOME/.zshrc" ]; then
+        msg_bold_red "$HOME/.zshrc manquant"
     else
         # Ajoute chaque ligne du fichier source au fichier cible si elle n'existe pas déjà
         while IFS= read -r ligne; do
@@ -884,38 +890,6 @@ if [[ "$VM" = "none" ]]; then
         echo -n "- - [Pavé numérique] Activation pour XFCE : "
         sudo sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf
         check_cmd
-    fi
-
-    #########################
-    # Uncomplicated FireWall
-    #########################
-    msg_bold_blue "➜ Pare-Feu UFW"
-    if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
-        echo -n " - - Paramétrage des règles : "
-        sudo ufw reset >> "$log_file" 2>&1
-        sudo ufw default deny incoming >> "$log_file" 2>&1
-        sudo ufw default allow outgoing >> "$log_file" 2>&1
-        sudo ufw allow to 192.168.1.0/24 >> "$log_file" 2>&1
-        sudo ufw allow from 192.168.1.0/24 >> "$log_file" 2>&1
-        sudo ufw deny 22  >> "$log_file" 2>&1 # SSH - uniquement local autorisé
-        sudo ufw enable >> "$log_file" 2>&1
-        sudo systemctl enable --now ufw.service >> "$log_file" 2>&1
-        check_cmd
-
-    #    if [[ $(grep -c 'IPV6=no' /etc/default/ufw) -lt 1 ]]; then
-    #        echo -n "- - Désactivation IPV6 : "
-    #        sed -i sed -i 's/^IPV6=.*/IPV6=no/' /etc/default/ufw
-    #        check_cmd
-    #	ufw reload
-    #    fi
-
-        if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
-            echo -n "- - Autoriser la police de transfert (VPN...) : "
-            sudo sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
-            check_cmd
-        fi
-
-        sudo ufw reload
     fi
 
     msg_bold_blue "➜ Pacman hooks"
