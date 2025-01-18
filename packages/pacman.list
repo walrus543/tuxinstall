@@ -66,6 +66,8 @@ add_not_vm:samba
 add_not_vm:qbittorrent
 #Détection disque dur externe
 add_not_vm:ntfs-3g
+#Monter sauvegarde borg
+add_not_vm:python-pyfuse3
 
 ############################
 # PAQUETS SI COMPLETE

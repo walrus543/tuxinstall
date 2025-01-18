@@ -538,6 +538,12 @@ if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
     sudo systemctl enable paccache.timer >> "$log_file" 2>&1
     check_cmd
 fi
+if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
+    echo -n "- - [SSH] Activation du service : "
+    sudo systemctl enable sshd.service >> "$log_file" 2>&1
+    check_cmd
+fi
+
 
 # Rétention cache des paquets avec paccache
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]; then
@@ -827,12 +833,6 @@ if [[ "$VM" = "none" ]]; then
     else
         echo "- - [fstrim] Activation du timer : "
         echo "$device_name ne semble pas supporter fstrim."
-    fi
-
-    if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
-        echo -n "- - [SSH] Activation du service : "
-        sudo systemctl enable sshd.service >> "$log_file" 2>&1
-        check_cmd
     fi
 
     #UFW doit suffire
