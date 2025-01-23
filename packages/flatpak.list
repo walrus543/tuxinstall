@@ -2,10 +2,10 @@
 # PAQUETS POUR TOUS
 ############################
 #add_defaut:com.usebottles.bottles
-#add_defaut:com.github.tchx84.Flatseal
+add_defaut:com.github.tchx84.Flatseal
 #add_defaut:io.github.giantpinkrobots.flatsweep
 #add_defaut:io.github.cboxdoerfer.FSearch
-#add_defaut:io.github.flattool.Warehouse
+add_defaut:io.github.flattool.Warehouse
 
 ############################
 # PAQUETS POUR TOUS SAUF VM
