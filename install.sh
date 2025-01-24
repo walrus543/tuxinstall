@@ -741,30 +741,41 @@ if [[ ! -f $HOME/.hidden ]]; then
     check_cmd
 fi
 
-if check_pkg alacritty && [[ ! -f $HOME/.config/alacritty/alacritty.toml ]]; then
-    echo -n "- - [Alacritty] Fichier toml : "
-    mkdir -p $HOME/.config/alacritty
-    cp "$ICI/config/alacritty.toml" $HOME/.config/alacritty
+if check_pkg kitty && [[ ! -f $HOME/.config/kitty/kitty.conf ]]; then
+    echo -n "- - [Kitty] Fichier de configuration : "
+    mkdir -p $HOME/.config/kitty
+    cp "$ICI/config/kitty.conf" $HOME/.config/kitty
     check_cmd
-    if [[ "$VM" != "none" ]] || [[ "$DE" != "KDE" ]]; then
-        echo -n "- - [Alacritty] Decorations = Full : "
-        sed -i 's/^decorations =.*/decorations = \"Full\"/' $HOME/.config/alacritty/alacritty.toml
+    echo -n "- - [Kitty] Thème catppuccin Mocha : "
+    kitten theme catppuccin-mocha
     check_cmd
-    fi
 fi
 
-if check_pkg tmux && [[ $(grep -c "unbind" $HOME/.tmux.conf) -lt 1 ]]; then
-    echo -n "- - [Tmux] TPM : "
-    mkdir -p $HOME/.tmux/plugins/tpm
-    git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm >> "$log_file" 2>&1
-    check_cmd
+#if check_pkg alacritty && [[ ! -f $HOME/.config/alacritty/alacritty.toml ]]; then
+#    echo -n "- - [Alacritty] Fichier toml : "
+#    mkdir -p $HOME/.config/alacritty
+#    cp "$ICI/config/alacritty.toml" $HOME/.config/alacritty
+#    check_cmd
+#    if [[ "$VM" != "none" ]] || [[ "$DE" != "KDE" ]]; then
+#        echo -n "- - [Alacritty] Decorations = Full : "
+#        sed -i 's/^decorations =.*/decorations = \"Full\"/' $HOME/.config/alacritty/alacritty.toml
+#    check_cmd
+#    fi
+#fi
 
-    echo -n "- - [Tmux] tmux.conf : "
-    cp "$ICI/config/tmux.conf" $HOME/.tmux.conf
-    check_cmd
-    echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a $HOME/Tmp/post_installation.txt
-    ask_continue
-fi
+#if check_pkg tmux && [[ $(grep -c "unbind" $HOME/.tmux.conf) -lt 1 ]]; then
+#    echo -n "- - [Tmux] TPM : "
+#    mkdir -p $HOME/.tmux/plugins/tpm
+#    git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm >> "$log_file" 2>&1
+#    check_cmd
+#
+#    echo -n "- - [Tmux] tmux.conf : "
+#    cp "$ICI/config/tmux.conf" $HOME/.tmux.conf
+#    check_cmd
+#    echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+#    ask_continue
+#fi
+
 #TMUX lancé automatiquement
 #if [ "$(sed -n '1p' $HOME/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
 #    echo -n "- - Lancer tmux par défaut : "

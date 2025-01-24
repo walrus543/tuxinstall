@@ -4,7 +4,8 @@
 ############################
 # PAQUETS POUR TOUS
 ############################
-add_defaut:alacritty
+#add_defaut:alacritty
+add_default:kitty
 add_defaut:base-devel
 add_defaut:bat
 add_defaut:btop
@@ -39,7 +40,7 @@ add_defaut:shellcheck
 add_defaut:tailspin
 add_defaut:tar
 add_defaut:tldr
-add_defaut:tmux
+#add_defaut:tmux
 add_defaut:trash-cli
 add_defaut:unzip
 add_defaut:wget
