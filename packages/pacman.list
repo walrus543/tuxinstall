@@ -64,6 +64,7 @@ add_not_vm:borg
 add_not_vm:smbclient
 add_not_vm:samba
 add_not_vm:qbittorrent
+add_not_vm:perl-rename
 #Détection disque dur externe
 add_not_vm:ntfs-3g
 #Monter sauvegarde borg
@@ -102,7 +103,6 @@ add_full:dos2unix
 add_full:ufw
 add_full:fdupes
 add_full:imagemagick
-add_full:perl-rename
 add_full:python-beautifulsoup4
 add_full:python-requests
 
