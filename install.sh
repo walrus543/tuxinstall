@@ -749,6 +749,9 @@ if check_pkg kitty && [[ ! -f $HOME/.config/kitty/kitty.conf ]]; then
     echo -n "- - [Kitty] Thème catppuccin Mocha : "
     kitten theme catppuccin-mocha
     check_cmd
+    echo -n "- - [Kitty] Background : "
+    cp "$ICI/config/background.png" $HOME/.config/kitty
+    check_cmd
 fi
 
 #if check_pkg alacritty && [[ ! -f $HOME/.config/alacritty/alacritty.toml ]]; then
