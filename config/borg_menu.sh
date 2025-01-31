@@ -2,10 +2,11 @@
 
 source "$HOME/Documents/Linux/Divers_Scripts/shared.sh"
 
+model='Seagate'
 hd_name='Seagate_DDE'
 hd_mounted='/run/media/arnaud/'$hd_name
 hd_mounter_folder=$hd_mounted'/borg'
-dev_block=$(lsblk -fi | grep Seagate_DDE | awk '{print $1}' | sed 's/.*-//')
+dev_block="/dev/$(lsblk -fi | grep "$model" | awk '{print $1}' | sed 's/.*-//')"
 today_date=$(date +"%Y%m%d_%H%M")
 
 
@@ -56,7 +57,7 @@ afficher_menu() {
 executer_action() {
     case $1 in
         0)
-            msg_bold_read "Penser à revoir la variable \"hd_mounter_folder\" de ce script après avoir terminé !"
+            msg_bold_red "Penser à revoir la variable \"hd_mounter_folder\" de ce script après avoir terminé !"
             echo -n "Nom du répertoire à créer : "
             read -r reponame
 
@@ -157,14 +158,30 @@ executer_action() {
             return 1
             ;;
         9)
-            echo -n "Démontage du disque dur : "
-            # Démonter sans sudo en premier
-            umount "/dev/$dev_block" > /dev/null 2>&1
-            if [[ $? -ne 0 ]]; then
-                sudo umount "/dev/$dev_block"
+            # Synchronisation des données
+            printf "\n➜ Synchronisation des données...\n"
+            sync
+
+            # Vérification si le périphérique est monté et démontage
+            if [[ $(mount | grep -c "$dev_block") -eq 1 ]]; then
+                echo "➜ Démontage des partitions..."
+                udisksctl unmount -b "$dev_block" > /dev/null || { msg_bold_red "Erreur lors du démontage"; exit 1; }
+            else
+                echo "Le périphérique n'est pas monté."
             fi
-            check_cmd
+
+            # Demander confirmation pour l'éjection
             echo
+            read -p "Éjecter $dev_block ? (Y/n) " response
+            if [[ "$response" =~ ^[nN]$ ]]; then
+                echo "Le disque n'a pas été éjecté."
+            else
+                echo "➜ Éjection du disque..."
+                udisksctl power-off -b "$dev_block" && msg_bold_green "Disque éjecté avec succès." || msg_bold_red "Erreur lors de l'éjection."
+            fi
+
+            echo
+            return 0
             ;;
         10)
             echo "Contrôle d'intégrité lancé"
@@ -189,28 +206,16 @@ executer_action() {
 }
 
 #######################
-# Montage du disque dur
+# Contrôle du disque dur
 #######################
-if [[ $(lsblk -f | grep -c $hd_mounted) -lt 1 ]]; then # DD pas monté
-    if [[ $(lsblk -f | grep -c $hd_name) -eq 1 ]]; then # DD branché/reconnu
-        while true; do
-            read -p "Monter $hd_name avec sudo ? (Y/n) : " reponse
-            case ${reponse:0:1} in
-                [Nn]* ) echo "Script arrêté."; exit;;
-                "" | [Yy]* ) return 0;;
-                * ) echo "Veuillez répondre par 'Y' ou 'N'.";;
-            esac
-        done
-
-        sudo mkdir -p $hd_mounted
-        sudo mount "/dev/$dev_block" $hd_mounted
-        echo -n "Montage de $hd_name sur $hd_mounted${RESET} : "
-        check_cmd
-    else
-        echo "Le disque dur externe \"$hd_name\" n'est pas branché, n'est pas reconnu ou a été éjecté."
-        echo "Merci de le brancher."
-        exit 1;
-    fi
+if [[ $(udisksctl status | grep -c "$model") -lt 1 ]]; then
+    msg_bold_red "Disque $model non branché"
+    exit 1
+elif [[ $(lsblk -f | grep Seagate | grep -c "/run/media") -lt 1 ]]; then
+    msg_bold_red "Disque $model non monté"
+    echo "Pour rappel, KDE Plasma permet de le faire automatiquement"
+    echo "Rechercher \"Montage automatique\" dans les paramètres"
+    exit 1
 fi
 
 echo
