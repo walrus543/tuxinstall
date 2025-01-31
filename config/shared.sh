@@ -16,6 +16,9 @@ sleepmid=4
 sleeplong=6
 
 # Fonctions
+msg_bold_yellow() {
+    printf "\n${YELLOW}${BOLD}$1${RESET}\n"
+}
 msg_bold_blue() {
     printf "\n${BLUE}${BOLD}$1${RESET}\n"
 }
@@ -35,4 +38,12 @@ ask_continue() {
             * ) echo "Veuillez répondre par 'Y' ou 'N'.";;
         esac
     done
+}
+check_cmd()
+{
+if [[ $? -eq 0 ]]; then
+    echo ${GREEN}${BOLD}"OK"${RESET}
+else
+    echo ${RED}${BOLD}"ERREUR"${RESET}
+fi
 }
