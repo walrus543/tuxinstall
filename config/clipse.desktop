@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=/usr/bin/clipse -listen %f
-Icon=
-Name=clipse
-Path=
-Terminal=False
-Type=Application

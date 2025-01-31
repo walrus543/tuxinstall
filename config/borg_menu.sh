@@ -1,15 +1,6 @@
 #!/usr/bin/env bash
 
-#####################
-# VARIABLES GLOBALES
-#####################
-#Coloration du texte
-RESET=$(tput sgr0)
-RED=$(tput setaf 1)
-GREEN=$(tput setaf 2)
-YELLOW=$(tput setaf 3)
-BLUE=$(tput setaf 4)
-BOLD=$(tput bold)
+source "$HOME/Documents/Linux/Divers_Scripts/shared.sh"
 
 hd_name='Seagate_DDE'
 hd_mounted='/run/media/arnaud/'$hd_name
@@ -23,7 +14,7 @@ today_date=$(date +"%Y%m%d_%H%M")
 ###################
 if [[ $(grep 'This is a Borg Backup repository' $hd_mounted/**/README 2>/dev/null | wc -l ) -gt 1 ]]
 then
-    echo "${RED}${BOLD}Il existe plusieurs dossiers racine de sauvegarde BORG${RESET}"
+    msg_bold_red "Il existe plusieurs dossiers racine de sauvegarde BORG"
     echo "Ce script ne fonctionne qu'avec un seul dossier racine BORG, désolé."
     exit 0
 fi
@@ -43,7 +34,7 @@ fi
 
 # Fonction pour afficher le menu
 afficher_menu() {
-    echo "${BLUE}${BOLD}--- MENU --- ${RESET}"
+    msg_bold_blue "--- MENU --"
     echo "0. Initialiser un nouveau répertoire de sauvegarde"
     echo "1. Lancer une sauvegarde"
     echo "2. Lister les sauvegardes"
@@ -65,7 +56,7 @@ afficher_menu() {
 executer_action() {
     case $1 in
         0)
-            echo "${RED}${BOLD}Penser à revoir la variable \"hd_mounter_folder\" de ce script après avoir terminé !${RESET}"
+            msg_bold_read "Penser à revoir la variable \"hd_mounter_folder\" de ce script après avoir terminé !"
             echo -n "Nom du répertoire à créer : "
             read -r reponame
 
@@ -76,7 +67,7 @@ executer_action() {
             else
                 borg init -e none "$hd_mounted"/"$reponame"
             fi
-            echo "Initialisation terminée."
+            msg_bold_green "Initialisation terminée."
             return 1
             ;;
         1)
@@ -94,7 +85,7 @@ executer_action() {
                 else
                     archivename=$(date +"%Y%m%d_%H%M")
             fi
-            echo "Sauvegarde lancée : $archivename."
+            msg_bold_green "Sauvegarde lancée : $archivename."
             cp ~/.vimrc ~/.zshrc ~/Documents/Linux
 			cd || exit # Impératif et le exit permet de sortir si cd ne fonctionne pas !
             if [[ $(pwd | grep -c '/home/') -eq 1 ]]
@@ -132,7 +123,7 @@ executer_action() {
         6)
             echo "Compression lancée"
             borg compact --progress "$hd_mounter_folder"
-            echo "Compression terminée"
+            msg_bold_green "Compression terminée"
             return 1
             ;;
         7)
@@ -152,22 +143,28 @@ executer_action() {
             echo "Dossier /tmp/$hd_name prêt."
             echo "${YELLOW}Penser à le démonter une fois terminé !${RESET}"
             sleep 2s
-            if [[ $(pacman -Q dolphin 2>/dev/null) ]]
-            then
+            if [[ $(pacman -Q dolphin 2>/dev/null) ]]; then
                 dolphin /tmp/"$hd_name" &
+            elif [[ $(pacman -Q thunar 2>/dev/null) ]]; then
+                thunar /tmp/"$hd_name" &
             fi
             return 1
             ;;
         8)
-            echo "Démontage de /tmp/$hd_name"
+            printf "\nDémontage de /tmp/$hd_name\n"
             umount /tmp/$hd_name
             rm -rf /tmp/"$hd_name"
             return 1
             ;;
         9)
             echo -n "Démontage du disque dur : "
-            sudo umount "/dev/$dev_block"
+            # Démonter sans sudo en premier
+            umount "/dev/$dev_block" > /dev/null 2>&1
+            if [[ $? -ne 0 ]]; then
+                sudo umount "/dev/$dev_block"
+            fi
             check_cmd
+            echo
             ;;
         10)
             echo "Contrôle d'intégrité lancé"
@@ -194,10 +191,17 @@ executer_action() {
 #######################
 # Montage du disque dur
 #######################
-if [[ $(lsblk -f | grep -c $hd_mounted) -lt 1 ]] # DD pas monté
-then
-    if [[ $(lsblk -f | grep -c $hd_name) -eq 1 ]] # DD branché/reconnu
-    then
+if [[ $(lsblk -f | grep -c $hd_mounted) -lt 1 ]]; then # DD pas monté
+    if [[ $(lsblk -f | grep -c $hd_name) -eq 1 ]]; then # DD branché/reconnu
+        while true; do
+            read -p "Monter $hd_name avec sudo ? (Y/n) : " reponse
+            case ${reponse:0:1} in
+                [Nn]* ) echo "Script arrêté."; exit;;
+                "" | [Yy]* ) return 0;;
+                * ) echo "Veuillez répondre par 'Y' ou 'N'.";;
+            esac
+        done
+
         sudo mkdir -p $hd_mounted
         sudo mount "/dev/$dev_block" $hd_mounted
         echo -n "Montage de $hd_name sur $hd_mounted${RESET} : "

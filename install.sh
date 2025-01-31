@@ -792,27 +792,12 @@ if check_pkg neovim && [[ $(grep -c "nocompatible" $HOME/.config/nvim/init.vim 2
     cp "$ICI/config/neovim" $HOME/.config/nvim/init.vim
     check_cmd
 
-    echo -n "- - [NeoVim] Plugin manager : "
+    echo -n "- - [NeoVim] Plugin manager vim-plug : "
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' >> "$log_file" 2>&1
     check_cmd
     echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
-fi
-
-#clipse doit avoir un service lancé au démarrage pour alimenter le presse-papier
-if check_pkg clipse && check_pkg wl-clipboard && [[ ! -f $HOME/.config/autostart/clipse.desktop ]] && [[ $(echo $XDG_SESSION_TYPE) = 'wayland' ]]; then
-    echo -n "- - [Clipse] Ajout clipse.desktop : "
-    cp "$ICI/config/clipse.desktop" $HOME/.config/autostart/clipse.desktop
-    check_cmd
-    echo : "Commande pour raccourci clavier : ${BOLD}alacritty -e clipse${RESET}" | tee -a $HOME/Tmp/post_installation.txt
-    ask_continue
-
-    if [[ $(cat $HOME/.config/clipse/config.json | grep 'maxHistory' | grep -c '500') -lt 1 ]]; then
-        echo -n "- - [Clipse] Nombre max d'entrées dans l'historique : "
-        sed -i 's/"maxHistory":.*/"maxHistory": 500,/' $HOME/.config/clipse/config.json
-        check_cmd
-    fi
 fi
 
 #--------------------------------------
@@ -900,11 +885,11 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     msg_bold_blue "➜ Pacman hooks"
-    if [[ ! -f /usr/share/libalpm/hooks/z_orphans.hook ]]; then
-        echo -n "- - Ajout de z_orphans.hook : "
-        sudo cp $ICI/config/z_orphans.hook /usr/share/libalpm/hooks
-        check_cmd
-    fi
+#    if [[ ! -f /usr/share/libalpm/hooks/z_orphans.hook ]]; then
+#        echo -n "- - Ajout de z_orphans.hook : "
+#        sudo cp $ICI/config/z_orphans.hook /usr/share/libalpm/hooks
+#        check_cmd
+#    fi
     if [[ ! -f /usr/share/libalpm/hooks/z_pacnew.hook ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
         sudo cp $ICI/config/z_pacnew.hook /usr/share/libalpm/hooks

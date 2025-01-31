@@ -10,12 +10,9 @@ if [ -n "$(flatpak list)" ]; then
     flatpak update -y
 fi
 
-if [[ "$(paru -c | grep -c 'rien à faire')" -lt 1 ]]; then
-    msg_bold_red "NETTOYAGE DES DÉPENDANCES..."
-    paru -c
-fi
+msg_bold_blue "NETTOYAGE DES DÉPENDANCES..."
+paru -c
 
-if [[ "$(git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull | grep -c 'à jour')" -lt 1 ]]; then
-    msg_bold_blue "MISE À JOUR POWERLEVEL10K..."
-fi
+msg_bold_blue "MISE À JOUR POWERLEVEL10K..."
+git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull 
 

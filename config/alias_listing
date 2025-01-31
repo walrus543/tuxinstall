@@ -37,6 +37,8 @@ alias ll='eza -l --group-directories-first'
 alias ..='cd ..'
 alias vi='nvim'
 alias cb='wl-copy'
+alias ee='exit'
+alias icat="kitten icat"
 
 ######
 # ARCH
