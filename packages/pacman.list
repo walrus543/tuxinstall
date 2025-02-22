@@ -70,6 +70,7 @@ add_not_vm:perl-rename
 add_not_vm:ntfs-3g
 #Monter sauvegarde borg
 add_not_vm:python-pyfuse3
+add_not_vm:vlc
 
 ############################
 # PAQUETS SI COMPLETE
@@ -110,7 +111,7 @@ add_full:python-requests
 ############################
 # PAQUETS SI LITE
 ############################
-#add_lite:
+del_lite:parole
 
 ############################
 # PAQUETS SI VM
