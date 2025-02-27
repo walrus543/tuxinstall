@@ -5,7 +5,7 @@
 # PAQUETS POUR TOUS
 ############################
 #add_defaut:alacritty
-add_default:kitty
+add_defaut:kitty
 add_defaut:base-devel
 add_defaut:bat
 add_defaut:btop
