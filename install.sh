@@ -144,8 +144,9 @@ fi
 
 # Le script root doit être lancé en premier
 if [[ ! -f $ICI/.root_finished ]];then
-    msg_bold_red "Merci de lancer l'autre script avec sudo avant de continuer."
-    exit 1
+    sudo ./run_as_root_first.sh
+#    msg_bold_red "Merci de lancer l'autre script avec sudo avant de continuer."
+#    exit 1
 fi
 
 ###################
