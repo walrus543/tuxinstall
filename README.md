@@ -10,8 +10,7 @@ sudo pacman -S --needed --noconfirm git base-devel \
   && chmod +x ./install.sh
 ````
 ## How to run
-1. Run `sudo ./run_as_root_first.sh` 
-2. Run `./install.sh` 
+1. Run `./install.sh` 
 
 # Credits
 Inspired from Adrien D.'s script of Linuxtricks.fr  
