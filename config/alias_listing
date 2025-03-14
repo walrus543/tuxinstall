@@ -6,6 +6,7 @@
 # VARIABLES
 ##############################
 export EDITOR='nvim'
+export TERM=xterm # kitty
 export ANDROID_HOME=~/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
@@ -195,3 +196,6 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+
+# Zoxixe
+eval "$(zoxide init zsh)"
