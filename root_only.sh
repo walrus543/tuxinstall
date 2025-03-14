@@ -131,6 +131,8 @@ while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
     fi
 done
 
+echo "$install_type" > "$ICI/type_install.txt"
+
 #--------------------------------------
 # [FIN] CHOIX COMPLÈTE OU LITE
 #--------------------------------------

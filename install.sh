@@ -205,31 +205,41 @@ fi
 #++++++++++++++++++++++++++++++++++++++
 # [DEBUT] CHOIX COMPLÈTE OU LITE
 #++++++++++++++++++++++++++++++++++++++
-install_type=$(sed -n 's/^install_type=//p' 2.sh)
-echo "install_type : $install_type"
+if [[ ! -f "$ICI/type_install.txt" ]]; then
+    msg_bold_red "Type d'installation inconnue"
+    exit 1
+fi
+
+install_type=$(cat "$ICI/type_install.txt")
+
+if [[ "$install_type" -ne 1 ]] && [[ "$install_type" -ne 2 ]]; then
+    msg_bold_red "Anomalie dans le type d'installation"
+    exit 1
+fi
+
+rm -f "$ICI/type_install.txt"
+
+echo "type_install : $install_type"
 exit 0
 
-msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
-
-
-
-while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
-
-    echo "1) Complète"
-    echo "2) Lite"
-    echo
-    read -p "Entrez votre choix (1 ou 2) : " choix
-
-    if [ "$choix" = "1" ]; then
-        install_type=1
-    elif [ "$choix" = "2" ]; then
-        install_type=2
-    else
-        msg_bold_red "Choix invalide."
-        echo
-        install_type=""
-    fi
-done
+# msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
+#while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
+#
+#    echo "1) Complète"
+#    echo "2) Lite"
+#    echo
+#    read -p "Entrez votre choix (1 ou 2) : " choix
+#
+#    if [ "$choix" = "1" ]; then
+#        install_type=1
+#    elif [ "$choix" = "2" ]; then
+#        install_type=2
+#    else
+#        msg_bold_red "Choix invalide."
+#        echo
+#        install_type=""
+#    fi
+#done
 
 #--------------------------------------
 # [FIN] CHOIX COMPLÈTE OU LITE
