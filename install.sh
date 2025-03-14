@@ -145,9 +145,8 @@ fi
 # Le script root doit être lancé en premier
 if [[ ! -f $ICI/.root_finished ]];then
     sudo ./root_only.sh
-#    msg_bold_red "Merci de lancer l'autre script avec sudo avant de continuer."
-#    exit 1
 fi
+rm -f $ICI/.root_finished # Plus besoin
 
 ###################
 #### Arch Only ####
@@ -206,10 +205,13 @@ fi
 #++++++++++++++++++++++++++++++++++++++
 # [DEBUT] CHOIX COMPLÈTE OU LITE
 #++++++++++++++++++++++++++++++++++++++
+install_type=$(sed -n 's/^install_type=//p' 2.sh)
+echo "install_type : $install_type"
+exit 0
+
 msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
 
-choix=""
-install_type=""
+
 
 while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
 
