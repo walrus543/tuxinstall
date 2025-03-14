@@ -6,7 +6,7 @@ Basic repo for Arch post install for personal use.
 sudo pacman -S --needed --noconfirm git base-devel \
   && git clone https://github.com/walrus543/tuxinstall.git ~/tuxinstall \
   && cd ~/tuxinstall \
-  && chmod +x ./run_as_root_first.sh \
+  && chmod +x ./root_only.sh \
   && chmod +x ./install.sh
 ````
 ## How to run
