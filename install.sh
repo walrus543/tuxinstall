@@ -219,8 +219,6 @@ fi
 
 rm -f "$ICI/type_install.txt"
 
-echo "type_install : $install_type"
-exit 0
 
 # msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
 #while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
