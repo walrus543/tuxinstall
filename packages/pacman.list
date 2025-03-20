@@ -89,6 +89,8 @@ add_full:simple-scan
 add_full:print-manager
 add_full:protonmail-bridge-core
 add_full:obsidian
+add_full:libreoffice-fresh
+add_full:libreoffice-fresh-fr
 #JRE requis pour exécution appli Java
 #add_full:jre-openjdk-headless
 #JDK requis pour compilation Android

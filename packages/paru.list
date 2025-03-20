@@ -19,6 +19,5 @@ add_not_vm:reflector-simple
 # PAQUETS SI COMPLETE
 ############################
 add_full:ventoy-bin
-add_full:onlyoffice-bin
 add_full:payload-dumper-go-bin
 add_full:uniutils
