@@ -150,6 +150,7 @@ alias 1existant='bash $PathIR/___Emails___/Scripts/1existant.sh && cd $PathIR/ic
 alias 2existant='cd $PathIR/icons/ && bash $PathIR/___Emails___/Scripts/2existant.sh'
 
 ### PJ emails
+alias pjextractem='bash $PathIR/___Emails___/Scripts/PJ_ExtractEm.sh'
 alias pjalta='bash $PathIR/___Emails___/Scripts/pj/alta.sh'
 alias pjazulox='bash $PathIR/___Emails___/Scripts/pj/azulox.sh'
 alias pjblackarmy='bash $PathIR/___Emails___/Scripts/pj/blackarmy.sh'
