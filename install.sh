@@ -1139,6 +1139,10 @@ if [ "$install_type" = 1 ]; then
             ln -s $HOME/Thèmes/Darly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darly
             ln -s $HOME/Thèmes/Distraction_Free/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Distraction
             ln -s $HOME/Thèmes/Ecliptic/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ecliptic
+            ln -s $HOME/Thèmes/EclipticBrown/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticBrown
+            ln -s $HOME/Thèmes/EclipticPink/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticPink
+            ln -s $HOME/Thèmes/EclipticRed/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticRed
+            ln -s $HOME/Thèmes/EclipticWhite/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticWhite
             ln -s $HOME/Thèmes/Focus/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Focus
             ln -s $HOME/Thèmes/Friendly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Friendly
             ln -s $HOME/Thèmes/GIN/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GIN
