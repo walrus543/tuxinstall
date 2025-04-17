@@ -43,6 +43,7 @@ add_defaut:tldr
 #add_defaut:tmux
 add_defaut:trash-cli
 add_defaut:unzip
+add_defaut:vivaldi
 add_defaut:wget
 add_defaut:wl-clipboard
 add_defaut:yazi
