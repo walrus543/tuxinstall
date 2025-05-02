@@ -4,8 +4,8 @@ source "$HOME/Documents/Linux/Divers_Scripts/shared.sh"
 
 model='Seagate'
 hd_name='Seagate_DDE'
-hd_mounted='/run/media/arnaud/'$hd_name
-hd_mounter_folder=$hd_mounted'/borg'
+hd_mounted="/run/media/$USER/$hd_name"
+hd_mounter_folder="$hd_mounted/borg"
 dev_block="/dev/$(lsblk -fi | grep "$model" | awk '{print $1}' | sed 's/.*-//')"
 today_date=$(date +"%Y%m%d_%H%M")
 
@@ -42,13 +42,14 @@ afficher_menu() {
     echo "3. Rechercher un contenu spécifique dans une archive"
     echo "4. Supprimer une sauvegarde"
     echo "5. Ne conserver que les X dernières sauvegardes"
-    echo "6. Compresser les sauvegardes"
-    echo "7. Monter une sauvegarde"
-    echo "8. Démonter le dossier temporaire de la sauvegarde"
-    echo "9. Démonter le disque dur"
-    echo "10. Faire un contrôle d'intégrité de toutes les sauvegardes"
-	echo "11. Supprimer le cache"    
-	echo "q. Quitter"
+    echo "6. Appliquer la politique de rétention avancée"
+    echo "7. Compresser les sauvegardes"
+    echo "8. Monter une sauvegarde"
+    echo "9. Démonter le dossier temporaire de la sauvegarde"
+    echo "10. Démonter le disque dur"
+    echo "11. Faire un contrôle d'intégrité de toutes les sauvegardes"
+    echo "12. Supprimer le cache"
+    echo "q. Quitter"
     echo
     echo -n "${BOLD}➜ Entrez votre choix : ${RESET}"
 }
@@ -122,12 +123,19 @@ executer_action() {
             return 1
             ;;
         6)
+            echo "Application de la politique de rétention avancée :"
+            # Garder les 3 dernières sauvagardes + 1 par mois sur les 5 derniers mois + 2 par an et cibler uniquement celles qui commencent pas 20
+            borg prune --keep-last 3 --keep-monthly 5 --keep-yearly 2 --glob-archives '20*' "$hd_mounter_folder"
+            msg_bold_green "Politique de rétention appliquée."
+            return 1
+            ;;
+        7)
             echo "Compression lancée"
             borg compact --progress "$hd_mounter_folder"
             msg_bold_green "Compression terminée"
             return 1
             ;;
-        7)
+        8)
             echo -n "Nom de l'archive à monter : "
             read -r archivename
 
@@ -151,13 +159,13 @@ executer_action() {
             fi
             return 1
             ;;
-        8)
+        9)
             printf "\nDémontage de /tmp/$hd_name\n"
             umount /tmp/$hd_name
             rm -rf /tmp/"$hd_name"
             return 1
             ;;
-        9)
+        10)
             # Synchronisation des données
             printf "\n➜ Synchronisation des données...\n"
             sync
@@ -183,12 +191,12 @@ executer_action() {
             echo
             return 0
             ;;
-        10)
+        11)
             echo "Contrôle d'intégrité lancé"
             borg check --progress "$hd_mounter_folder"
             return 1
             ;;
-        11)
+        12)
             echo "Suppression du cache."
             borg delete --cache-only $hd_mounter_folder
             return 1
