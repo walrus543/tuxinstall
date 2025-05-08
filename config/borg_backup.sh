@@ -92,7 +92,7 @@ executer_action() {
 			cd || exit # Impératif et le exit permet de sortir si cd ne fonctionne pas !
             if [[ $(pwd | grep -c '/home/') -eq 1 ]]
             then
-                borg create --stats -C zstd,10 --progress -e 'Thèmes/*/app/build' $hd_mounter_folder::${archivename} AndroidAll Bureau Documents Images PartageVM Thèmes Vidéos
+                borg create --stats -C zstd,10 --progress -e 'Thèmes/*/app/build' $hd_mounter_folder::${archivename} AndroidAll Bureau Calibre Documents Images PartageVM Thèmes Vidéos
             fi
 			return 1
             ;;
