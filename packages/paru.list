@@ -13,11 +13,13 @@ add_defaut:zen-browser-bin
 #add_not_vm:brave-bin
 add_not_vm:downgrade
 add_not_vm:proton-vpn-gtk-app
-add_not_vm:reflector-simple
 
 ############################
 # PAQUETS SI COMPLETE
 ############################
-add_full:ventoy-bin
-add_full:payload-dumper-go-bin
+add_full:normcap
+add_full:tesseract-data-eng
+add_full:tesseract-data-fra
+#add_full:ventoy-bin
+#add_full:payload-dumper-go-bin
 add_full:uniutils
