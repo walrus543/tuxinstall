@@ -86,7 +86,7 @@ add_full:virtualbox-guest-iso
 add_full:virtualbox-host-dkms
 add_full:syncthing
 add_full:rsync
-add_full:simple-scan
+#add_full:simple-scan
 add_full:print-manager
 add_full:protonmail-bridge-core
 add_full:obsidian

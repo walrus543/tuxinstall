@@ -17,6 +17,7 @@ add_not_vm:proton-vpn-gtk-app
 ############################
 # PAQUETS SI COMPLETE
 ############################
+add_full:naps2-bin
 add_full:normcap
 add_full:tesseract-data-eng
 add_full:tesseract-data-fra
