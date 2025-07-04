@@ -8,7 +8,7 @@
 add_defaut:kitty
 add_defaut:base-devel
 add_defaut:bat
-add_defaut:btop
+#add_defaut:btop
 add_defaut:curl
 add_defaut:dkms
 add_defaut:dosfstools

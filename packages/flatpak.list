@@ -24,6 +24,7 @@ add_defaut:io.github.flattool.Warehouse
 #Game Launcher
 #add_full:page.kramo.Cartridges
 add_full:org.upscayl.Upscayl
+add_full:io.missioncenter.MissionCenter
 
 ############################
 # PAQUETS SI LITE
