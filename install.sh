@@ -1050,11 +1050,25 @@ if [ "$install_type" = 1 ]; then
             sudo systemctl enable --now cups.service >> "$log_file" 2>&1
             check_cmd
         fi
-        if check_pkg protonmail-bridge-core && [[ ! -f $HOME/.config/autostart/protonmail.desktop ]]; then
+        if check_pkg protonmail-bridge-core && [[ ! -f "$HOME"/.config/autostart/protonmail.desktop ]]; then
             echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
             cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
             check_cmd
         fi
+        if check_pkg rust; then
+            if [[ ! -f "$HOME"/.cargo/bin/cargo-install-update ]]; then
+                echo -n "- - [Cargo] Installation de cargo-update : "
+                cargo install cargo-update >> "$log_file" 2>&1
+                check_cmd
+            fi
+            if [[ ! -f "$HOME"/.cargo/bin/arx ]]; then
+                echo -n "- - [Cargo] Installation de arx : "
+                cargo install arx >> "$log_file" 2>&1
+                check_cmd
+            fi
+        fi
+    fi
+fi
 
 #        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
 #        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
