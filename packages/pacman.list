@@ -72,6 +72,7 @@ add_not_vm:ntfs-3g
 #Monter sauvegarde borg
 add_not_vm:python-pyfuse3
 add_not_vm:vlc
+add_not_vmc:vlc-plugins-all
 
 ############################
 # PAQUETS SI COMPLETE
