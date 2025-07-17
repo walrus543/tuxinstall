@@ -1,6 +1,10 @@
 #############################
 # FUNCTION
 ##############################
+locatef() {
+	sudo updatedb
+	locate $1
+}
 
 #############################
 # VARIABLES
@@ -9,30 +13,22 @@ export EDITOR='nvim'
 export TERM=xterm # kitty
 export ANDROID_HOME=~/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+export PATH="$HOME/.cargo/bin:$PATH"
 
 #############################
 # ALIAS - GENERAL
 ##############################
-#source $HOME/.bash_aliases
-#alias lsa='eza -la --color=always --group-directories-first' #remplacé par eza zsh plugin
-#alias ls='eza -l --color=always --group-directories-first' #remplacé par eza zsh plugin
-alias op8p='bash $HOME/AndroidAll/OP8P/backup_sdcard.sh'
-alias majapt='sudo apt update && sudo apt -y full-upgrade && flatpak update'
-alias majpk='pkcon refresh && pkcon update'
 alias supthumbnail='find $HOME/.cache/thumbnails/normal/ -type f -delete'
-alias winsave='VBoxManage controlvm "Win11" savestate'
-alias winkill='VBoxManage controlvm "Win11" poweroff'
-alias winlist='VBoxManage list runningvms'
-alias wingo='VBoxManage startvm "Win11"'
 alias doublonsextensions='fdupes .'
 alias doublonswoextensions='find . -exec bash -c '\''basename "$0" ".${0##*.}"'\'' {} \; | sort | uniq --repeated'
-alias pdfcompress='sh $HOME/Documents/Linux/compress_pdf.sh'
+alias pdfcompress='bash $HOME/Documents/Linux/Divers_Scripts/compress_pdf.sh'
 alias coprobackup='bash $HOME/Documents/Linux/Divers_Scripts/copro_backup.sh'
 alias borgbackup='bash $HOME/Documents/Linux/Divers_Scripts/borg_backup.sh'
 alias borgmanuelbackup='bash $HOME/Documents/Linux/Divers_Scripts/borg_manuel_backup.sh'
 alias boxddbackup='bash $HOME/Documents/Linux/Divers_Scripts/box_dd_backup.sh'
-alias magisk_lineageos='bash $HOME/Documents/Linux/Divers_Scripts/update_lineageos_magisk.sh'
-alias tuxinstall_git='bash $HOME/Documents/Linux/Divers_Scripts/tuxinstall_git.sh'
+alias magisk_lineageos='bash $HOME/Documents/Linux/Divers_Scripts/magisk_lineageos.sh'
+alias aya='bash $HOME/Documents/Linux/Divers_Scripts/aya.sh'
+alias gittuxinstall='bash $HOME/Documents/Linux/Divers_Scripts/tuxinstall_git.sh'
 alias od='dolphin . &'
 alias ls='ls -1 --color=always --group-directories-first'
 alias ll='eza -l --group-directories-first'
@@ -46,7 +42,7 @@ alias icat="kitten icat"
 # ARCH
 #######
 alias uarch='bash ~/Documents/Linux/Divers_Scripts/uarch.sh'
-alias umirrors='sudo pacman -Syy'
+alias umirrors='bash ~/Documents/Linux/Divers_Scripts/pacman_mirrorlist.sh'
 alias fix-key='sudo rm /var/lib/pacman/sync/* && sudo rm -rf /etc/pacman.d/gnupg/* && sudo pacman-key --init && sudo pacman-key --populate && sudo pacman -Sy --noconfirm archlinux-keyring && sudo pacman --noconfirm -Su'
 alias archiso='mkdir -p ~/Tmp && wget https://mirrors.gandi.net/archlinux/iso/latest/archlinux-x86_64.iso ~/Tmp'
 
@@ -59,81 +55,61 @@ PathPartageons=~/PartageVM/Partageons/W10/To_W10
 #############
 # ProtonVPN
 ##############
-#    alias vpnlogin='protonvpn-cli login xxxxxx@proton.me'
-#    alias vpnconnect='protonvpn-cli connect'
-#    alias vpnstatus='protonvpn-cli status'
-#    alias vpndisconnect='protonvpn-cli disconnect'
-#    alias vpnkson='protonvpn-cli ks --on'
-#    alias vpnksperm='protonvpn-cli ks --permanent'
-#    alias vpnksoff='protonvpn-cli ks --off'
-#    alias vpnnetoff='protonvpn-cli netshield --off'
-#    alias vpnnetmal='protonvpn-cli netshield --malware'
-#    alias vpnnetads='protonvpn-cli netshield --ads-malware'
-#    alias vpnhelp='protonvpn-cli --help'
-#    alias vpnfast='protonvpn-cli c -f'
-#    alias vpndoc='cat ~/Documents/Linux/DocProtonVPN_cli.txt'
 alias vpnpf='natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 && while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done'
 
 #alias irsup='bash $PathIR/___Emails___/Scripts/irsup.sh'
 alias ir='bash $PathIR/___Emails___/Scripts/ir.sh && cd $PathIR/icons/'
 alias ircount='for dir in $(find . -type d); do     echo "${dir}: $(find ${dir} -maxdepth 1 -type f | wc -l)"; done'
-alias irmap='while read -r old new; do     mv "$old.png" "$new.png"; done < map.txt' # ; rm map.txt'
-alias irrm='rm -v $(<1.txt) && rm 1.txt'
 alias ircopyall='bash $PathIR/___Emails___/Scripts/ircopyall.sh'
 alias irfirst='bash $PathIR/___Emails___/Scripts/ir_first_todo.sh'
-alias irfullddl="python $HOME/AndroidAll/ddl_icons/full_ddl.py && cp -r $HOME/PartageVM/Partageons/ENVOI/* $PathIR/___Emails___ && bash $PathIR/___Emails___/Scripts/ir_doublons.sh"
+alias irfullddl='bash $PathIR/___Emails___/Scripts/irfullddl.sh'
 alias unz='unzip '\''*.zip'\'''
 alias unzsup='unzip '\''*.zip'\'' && rm *.zip'
 alias lss='clear && ls -1 | sed '\''s/\ /\\\ /g'\'''
 alias meteo='curl wttr.in/~Saint+Felix+74540'
 alias screenshot='adb shell screencap -p /sdcard/screen.png && adb pull /sdcard/screen.png && adb shell rm /sdcard/screen.png'
-alias renommer='thunar --bulk-rename'
+#alias renommer='thunar --bulk-rename'
 alias candybarlibrary='git clone https://github.com/zixpo/candybar.git'
 alias candybarsample='git clone https://github.com/zixpo/candybar-sample.git'
-#alias nvmupdate='bash ~/Documents/Linux/Divers_Scripts/nvm_updater.sh'
-alias cb='wl-copy'
-alias aalias='kate ~/.zshrc'
+alias aalias='kate $HOME/.zshrc'
 
 ###############
 # ICON PACKS
 ################
 
 ## DIVERS
-alias mapmove='mv ~/AndroidAll/Google_Play_Scraper/*.png $PathIR/icons/'
 alias nball='bash $PathIR/___Emails___/Scripts/nball.sh'
 alias refaire='bash $PathIR/___Emails___/Scripts/refaire.sh'
 alias extractappfiltericons='bash $PathIR/___Emails___/Scripts/extract_appfilter_icons.sh'
-alias translations='bash ~/Thèmes/_Translations/recopie.sh'
 alias ipversion='bash $PathIR/___Emails___/Scripts/versions.sh'
 alias gitcheck='bash $PathIR/___Emails___/Scripts/git_check.sh'
 alias compilation='bash $PathIR/___Emails___/Scripts/compilation.sh'
 
 ## OUVERTURE DES APPFILTERS
-alias xmlalta='kate ~/Thèmes/Alta/app/src/main/res/xml/appfilter.xml'
-alias xmlazulox='kate ~/Thèmes/Azulox/app/src/main/res/xml/appfilter.xml'
-alias xmlblackarmy='kate ~/Thèmes/Black_Army_Diamond/app/src/main/res/xml/appfilter.xml'
-alias xmlcaya='kate ~/Thèmes/Caya/app/src/main/res/xml/appfilter.xml'
-alias xmlciclo='kate ~/Thèmes/Ciclo/app/src/main/res/xml/appfilter.xml'
-alias xmldarkarmy='kate ~/Thèmes/DarkArmyDiamond/app/src/main/res/xml/appfilter.xml'
-alias xmldistraction='kate ~/Thèmes/Distraction_Free/app/src/main/res/xml/appfilter.xml'
-alias xmleclipctic='kate ~/Thèmes/Ecliptic/app/src/main/res/xml/appfilter.xml'
-alias xmlfriendly='kate ~/Thèmes/Friendly/app/src/main/res/xml/appfilter.xml'
-alias xmlgin='kate ~/Thèmes/GIN/app/src/main/res/xml/appfilter.xml'
-alias xmlgoody='kate ~/Thèmes/Goody/app/src/main/res/xml/appfilter.xml'
-alias xmlnubereloaded='kate ~/Thèmes/NubeReloaded/app/src/main/res/xml/appfilter.xml'
-alias xmloscuro='kate ~/Thèmes/Oscuro/app/src/main/res/xml/appfilter.xml'
-alias xmlrayablack='kate ~/Thèmes/Raya_Black/app/src/main/res/xml/appfilter.xml'
-alias xmlrayareloaded='kate ~/Thèmes/RayaReloaded/app/src/main/res/xml/appfilter.xml'
-alias xmlshapy='kate ~/Thèmes/Shapy/app/src/main/res/xml/appfilter.xml'
-alias xmlsinfonia='kate ~/Thèmes/Sinfonia/app/src/main/res/xml/appfilter.xml'
-alias xmlspark='kate ~/Thèmes/Spark/app/src/main/res/xml/appfilter.xml'
-alias xmlstony='kate ~/Thèmes/Stony/app/src/main/res/xml/appfilter.xml'
-alias xmlsupernova='kate ~/Thèmes/Supernova/app/src/main/res/xml/appfilter.xml'
-alias xmlwhirl='kate ~/Thèmes/Whirl/app/src/main/res/xml/appfilter.xml'
-alias xmlwhitart='kate ~/Thèmes/WhitArt/app/src/main/res/xml/appfilter.xml'
+alias xmlalta='kate $HOME/Thèmes/Alta/app/src/main/res/xml/appfilter.xml'
+alias xmlazulox='kate $HOME/Thèmes/Azulox/app/src/main/res/xml/appfilter.xml'
+alias xmlblackarmy='kate $HOME/Thèmes/Black_Army_Diamond/app/src/main/res/xml/appfilter.xml'
+alias xmlcaya='kate $HOME/Thèmes/Caya/app/src/main/res/xml/appfilter.xml'
+alias xmlciclo='kate $HOME/Thèmes/Ciclo/app/src/main/res/xml/appfilter.xml'
+alias xmldarkarmy='kate $HOME/Thèmes/DarkArmyDiamond/app/src/main/res/xml/appfilter.xml'
+alias xmldistraction='kate $HOME/Thèmes/Distraction_Free/app/src/main/res/xml/appfilter.xml'
+alias xmleclipctic='kate $HOME/Thèmes/Ecliptic/app/src/main/res/xml/appfilter.xml'
+alias xmlfriendly='kate $HOME/Thèmes/Friendly/app/src/main/res/xml/appfilter.xml'
+alias xmlgin='kate $HOME/Thèmes/GIN/app/src/main/res/xml/appfilter.xml'
+alias xmlgoody='kate $HOME/Thèmes/Goody/app/src/main/res/xml/appfilter.xml'
+alias xmlnubereloaded='kate $HOME/Thèmes/NubeReloaded/app/src/main/res/xml/appfilter.xml'
+alias xmloscuro='kate $HOME/Thèmes/Oscuro/app/src/main/res/xml/appfilter.xml'
+alias xmlrayablack='kate $HOME/Thèmes/Raya_Black/app/src/main/res/xml/appfilter.xml'
+alias xmlrayareloaded='kate $HOME/Thèmes/RayaReloaded/app/src/main/res/xml/appfilter.xml'
+alias xmlshapy='kate $HOME/Thèmes/Shapy/app/src/main/res/xml/appfilter.xml'
+alias xmlsinfonia='kate $HOME/Thèmes/Sinfonia/app/src/main/res/xml/appfilter.xml'
+alias xmlspark='kate $HOME/Thèmes/Spark/app/src/main/res/xml/appfilter.xml'
+alias xmlstony='kate $HOME/Thèmes/Stony/app/src/main/res/xml/appfilter.xml'
+alias xmlsupernova='kate $HOME/Thèmes/Supernova/app/src/main/res/xml/appfilter.xml'
+alias xmlwhirl='kate $HOME/Thèmes/Whirl/app/src/main/res/xml/appfilter.xml'
+alias xmlwhitart='kate $HOME/Thèmes/WhitArt/app/src/main/res/xml/appfilter.xml'
 
 ## ANDROID STUDIO
-alias mvandroidstudio='bash $PathIR/___Emails___/Scripts/mvandroidstudio.sh'
 alias upandroidstudio='bash $HOME/Documents/Linux/Divers_Scripts/android_studio_update.sh'
 
 ## ICON REQUEST
@@ -143,6 +119,7 @@ alias 2refaire='bash $PathIR/___Emails___/Scripts/2refaire.sh'
 
 ### OUVERTURE DES APPFILTERS / CHANGELOG
 alias irchangelog='bash $PathIR/___Emails___/Scripts/irchangelog.sh'
+alias irfinal='bash $PathIR/___Emails___/Scripts/irfinal.sh'
 
 ### EXISTANT
 alias 0existant='bash $PathIR/___Emails___/Scripts/0existant.sh'
@@ -174,9 +151,9 @@ alias pjsupernova='bash $PathIR/___Emails___/Scripts/pj/supernova.sh'
 alias pjwhirl='bash $PathIR/___Emails___/Scripts/pj/whirl.sh'
 alias pjwhitart='bash $PathIR/___Emails___/Scripts/pj/whitart.sh'
 
-##################################
+#>>>>>>>
 # FZF
-##################################
+#>>>>>>>
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 alias fzfbat='fzf --preview="bat --color=always {}"'
@@ -187,6 +164,12 @@ export FZF_DEFAULT_COMMAND="fd --type f"
 
 # Use fzf for command history search
 bindkey '^R' fzf-history-widget
+#<<<<<<<
+# FZF
+#<<<<<<<
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 #yazi
 function y() {
@@ -200,3 +183,42 @@ function y() {
 
 # Zoxixe
 eval "$(zoxide init zsh)"
+
+#############################
+# OLD
+##############################
+# Android Studio
+#alias mvandroidstudio='bash $PathIR/___Emails___/Scripts/mvandroidstudio.sh'
+#
+# Icon packs
+#alias mapmove='mv ~/AndroidAll/Google_Play_Scraper/*.png $PathIR/icons/'
+#alias translations='bash ~/Thèmes/_Translations/recopie.sh'
+#alias irmap='while read -r old new; do     mv "$old.png" "$new.png"; done < map.txt' # ; rm map.txt'
+#alias irrm='rm -v $(<1.txt) && rm 1.txt'
+#
+# VPN
+#    alias vpnlogin='protonvpn-cli login xxxxxx@proton.me'
+#    alias vpnconnect='protonvpn-cli connect'
+#    alias vpnstatus='protonvpn-cli status'
+#    alias vpndisconnect='protonvpn-cli disconnect'
+#    alias vpnkson='protonvpn-cli ks --on'
+#    alias vpnksperm='protonvpn-cli ks --permanent'
+#    alias vpnksoff='protonvpn-cli ks --off'
+#    alias vpnnetoff='protonvpn-cli netshield --off'
+#    alias vpnnetmal='protonvpn-cli netshield --malware'
+#    alias vpnnetads='protonvpn-cli netshield --ads-malware'
+#    alias vpnhelp='protonvpn-cli --help'
+#    alias vpnfast='protonvpn-cli c -f'
+#    alias vpndoc='cat ~/Documents/Linux/DocProtonVPN_cli.txt'
+#
+# Divers
+#alias nvmupdate='bash ~/Documents/Linux/Divers_Scripts/nvm_updater.sh'
+#alias lsa='eza -la --color=always --group-directories-first' #remplacé par eza zsh plugin
+#alias ls='eza -l --color=always --group-directories-first' #remplacé par eza zsh plugin
+#alias op8p='bash $HOME/AndroidAll/OP8P/backup_sdcard.sh'
+#alias majapt='sudo apt update && sudo apt -y full-upgrade && flatpak update'
+#alias majpk='pkcon refresh && pkcon update'
+#alias winsave='VBoxManage controlvm "Win11" savestate'
+#alias winkill='VBoxManage controlvm "Win11" poweroff'
+#alias winlist='VBoxManage list runningvms'
+#alias wingo='VBoxManage startvm "Win11"'
