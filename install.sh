@@ -646,23 +646,19 @@ fi
 #fi
 
 if check_pkg zsh; then
-    echo -n "- - [ZSHRC] Ajustement des alias par comparatif : "
+    echo "- - [ZSHRC] Ajout des personnalisations"
     if [ ! -f "$ICI/config/alias_listing" ]; then
         echo "Le fichier source des alias n'existe pas."
     elif [ ! -f "$HOME/.zshrc" ]; then
         msg_bold_red "$HOME/.zshrc manquant"
     else
-        # Ajoute chaque ligne du fichier source au fichier cible si elle n'existe pas déjà
-        while IFS= read -r ligne; do
-            if ( ! grep -Fxq "$ligne" $HOME/.zshrc && [[ "$ligne" == "## "* ]] ) || ( ! grep -Fxq "$ligne" $HOME/.zshrc && [[ "$ligne" == "### "* ]] ); then
-                echo "" >> $HOME/.zshrc  # Ajoute une ligne vide avant d'ajouter la ligne commentée uniquement si la ligne à ajouter n'existe pas déjà
-                echo "$ligne" >> $HOME/.zshrc
-            elif ! grep -Fxq "$ligne" $HOME/.zshrc; then
-                echo "$ligne" >> $HOME/.zshrc
-            fi
-        done < "$ICI/config/alias_listing"
+        if [[ $(grep -c "#BEGIN_Perso" "$HOME/.zshrc" ) -eq 1 ]]; then
+            msg_bold_yellow "Les personnalisations sont déjà en place"
+        else
+            cat "$ICI/config/alias_listing" >> "$HOME/.zshrc"
+            msg_bold_green "Personnalisations ajoutées"
+        fi
     fi
-    check_cmd
 
     if [[ ! -f $HOME/Documents/Linux/Divers_Scripts/uarch.sh ]]; then
         echo -n "- - - Déplacement de uarch.sh : "
@@ -844,7 +840,10 @@ if [[ "$VM" = "none" ]]; then
 
     if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
         add_pkg_pacman util-linux
-        if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
+        if [[ $(check_systemd fstrim.timer 2>/dev/null) = "enabled" ]]; then
+            echo -n "- - [fstrim] timer de $device_name déjà activé : "
+            check_cmd
+        else
             echo -n "- - [fstrim] Activation du timer $device_name : "
             sudo systemctl enable fstrim.timer >> "$log_file" 2>&1
             check_cmd
@@ -986,6 +985,19 @@ if [ "$install_type" = 1 ]; then
         fi
     done < "packages/pacman.list"
 
+    if check_pkg virtualbox-host-dkms; then
+    msg_bold_blue "➜ Extension pack pour Virtualbox"
+    latest=$(wget -qO- https://download.virtualbox.org/virtualbox/LATEST.TXT | tr -d '\r\n')
+    if [[ -n $latest ]]; then
+        url="https://download.virtualbox.org/virtualbox/${latest}/Oracle_VirtualBox_Extension_Pack-${latest}.vbox-extpack"
+        echo "Téléchargement de la version ${latest}"
+        wget -P $HOME/Tmp -q --show-progress "$url"
+        msg_bold_green "Extension pack disponible dans ~/Tmp. Prêt pour installation."
+        ask_continue
+    else
+        msg_bold_red "Impossible de récupérer la dernière version connue"
+    fi
+
     msg_bold_blue "➜ Paquets PARU supplémentaires FULL"
     if check_pkg paru; then
         while read -r line
@@ -1009,6 +1021,28 @@ if [ "$install_type" = 1 ]; then
             fi
         done < "packages/paru.list"
     fi
+
+    msg_bold_blue "➜ Paquets FLATPAK supplémentaires FULL"
+    while read -r line
+    do
+        if [[ "$line" == add_full:* ]]; then
+            p=${line#add_full:}
+            if ! check_flatpak "$p"; then
+                echo -n "$sign_green $p : "
+                add_flatpak "$p"
+                check_cmd
+            fi
+        fi
+
+        if [[ "$line" == del_full:* ]]; then
+            p=${line#del_full:}
+            if check_flatpak "$p"; then
+                echo -n "$sign_red $p : "
+                del_flatpak "$p"
+                check_cmd
+            fi
+        fi
+    done < "$ICI/packages/flatpak.list"
 
     if [[ "$VM" = "none" ]]; then
         msg_bold_blue "➜ Service et timer systemd pour sauvegarde perso"
@@ -1052,7 +1086,8 @@ if [ "$install_type" = 1 ]; then
         fi
         if check_pkg protonmail-bridge-core && [[ ! -f "$HOME"/.config/autostart/protonmail.desktop ]]; then
             echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
-            cp "$ICI/config/protonmail.desktop" $HOME/.config/autostart/protonmail.desktop
+            mkdir -p "$HOME"/.config/autostart
+            cp "$ICI/config/protonmail.desktop" "$HOME"/.config/autostart/protonmail.desktop
             check_cmd
         fi
         if check_pkg rust; then
@@ -1070,19 +1105,19 @@ if [ "$install_type" = 1 ]; then
     fi
 fi
 
-#        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
-#        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
-#            echo -n "- - Installation du paquet AUR  : "
-#            add_pkg_paru rtl8821ce-dkms-git
-#            check_cmd
-#
-#            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
-#                echo -n "- - Configuration blacklist.conf  : "
-#                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#                sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-#                check_cmd
-#            fi
-#
+        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
+        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
+            echo -n "- - Installation du paquet AUR  : "
+            add_pkg_paru rtl8821ce-dkms-git
+            check_cmd
+
+            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
+                echo -n "- - Configuration blacklist.conf  : "
+                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+                check_cmd
+            fi
+
 #            # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
 #            # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
 #            # Définir le répertoire cible et les patterns des noms de fichiers
@@ -1126,58 +1161,58 @@ fi
 #                    fi
 #                done
 #            done
-#
-#        else
-#            echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
-#        fi
+
+        else
+            echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
+        fi
 
         # OSheden
-        if [[ ! -d $HOME/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d $HOME/Thèmes/Alta/app/src/main/ ]]; then
+        if [[ ! -d "$HOME"/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d "$HOME"/Thèmes/Alta/app/src/main/ ]]; then
             echo -n "➜➜ Création des liens symboliques : "
-            ln -s $HOME/Thèmes/Alta/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Alta
-            ln -s $HOME/Thèmes/Altess/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Altess
-            ln -s $HOME/Thèmes/Azulox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Azulox
-            ln -s $HOME/Thèmes/Black_Army_Diamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
-            ln -s $HOME/Thèmes/Black_Army_Emerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
-            ln -s $HOME/Thèmes/Black_Army_Omni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyOmni
-            ln -s $HOME/Thèmes/Black_Army_Ruby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmyRuby
-            ln -s $HOME/Thèmes/Black_Army_Sapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/BlackArmySapphire
-            ln -s $HOME/Thèmes/Caya/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Caya
-            ln -s $HOME/Thèmes/Ciclo/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ciclo
-            ln -s $HOME/Thèmes/DarkArmyDiamond/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
-            ln -s $HOME/Thèmes/DarkArmyEmerald/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
-            ln -s $HOME/Thèmes/DarkArmyOmni/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyOmni
-            ln -s $HOME/Thèmes/DarkArmyRuby/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmyRuby
-            ln -s $HOME/Thèmes/DarkArmySapphire/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/DarkArmySapphire
-            ln -s $HOME/Thèmes/Darky/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darky
-            ln -s $HOME/Thèmes/Darly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Darly
-            ln -s $HOME/Thèmes/Distraction_Free/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Distraction
-            ln -s $HOME/Thèmes/Ecliptic/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Ecliptic
-            ln -s $HOME/Thèmes/EclipticBrown/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticBrown
-            ln -s $HOME/Thèmes/EclipticPink/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticPink
-            ln -s $HOME/Thèmes/EclipticRed/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticRed
-            ln -s $HOME/Thèmes/EclipticWhite/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/EclipticWhite
-            ln -s $HOME/Thèmes/Focus/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Focus
-            ln -s $HOME/Thèmes/Friendly/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Friendly
-            ln -s $HOME/Thèmes/GIN/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GIN
-            ln -s $HOME/Thèmes/GoldOx/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/GoldOx
-            ln -s $HOME/Thèmes/Goody/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Goody
-            ln -s $HOME/Thèmes/Lox/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Lox
-            ln -s $HOME/Thèmes/Luzicon/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Luzicon
-            ln -s $HOME/Thèmes/NubeReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/NubeReloaded
-            ln -s $HOME/Thèmes/Oscuro/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Oscuro
-            ln -s $HOME/Thèmes/Raya_Black/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaBlack
-            ln -s $HOME/Thèmes/RayaReloaded/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/RayaReloaded
-            ln -s $HOME/Thèmes/Shapy/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Shapy
-            ln -s $HOME/Thèmes/Sinfonia/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Sinfonia
-            ln -s $HOME/Thèmes/Spark/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Spark
-            ln -s $HOME/Thèmes/Stony/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Stony
-            ln -s $HOME/Thèmes/Supernova/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Supernova
-            ln -s $HOME/Thèmes/Whirl/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whirl
-            ln -s $HOME/Thèmes/WhirlBlack/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhirlBlack
-            ln -s $HOME/Thèmes/Whirless/app/src/main $HOME/AndroidAll/Thèmes_Shorts/Whirless
-            ln -s $HOME/Thèmes/WhitArt/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/WhitArt
-            ln -s $HOME/Thèmes/Whity/app/src/main/ $HOME/AndroidAll/Thèmes_Shorts/Whity
+            ln -s "$HOME"/Thèmes/Alta/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Alta
+            ln -s "$HOME"/Thèmes/Altess/app/src/main "$HOME"/AndroidAll/Thèmes_Shorts/Altess
+            ln -s "$HOME"/Thèmes/Azulox/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Azulox
+            ln -s "$HOME"/Thèmes/Black_Army_Diamond/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/BlackArmyDiamond
+            ln -s "$HOME"/Thèmes/Black_Army_Emerald/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/BlackArmyEmerald
+            ln -s "$HOME"/Thèmes/Black_Army_Omni/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/BlackArmyOmni
+            ln -s "$HOME"/Thèmes/Black_Army_Ruby/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/BlackArmyRuby
+            ln -s "$HOME"/Thèmes/Black_Army_Sapphire/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/BlackArmySapphire
+            ln -s "$HOME"/Thèmes/Caya/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Caya
+            ln -s "$HOME"/Thèmes/Ciclo/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Ciclo
+            ln -s "$HOME"/Thèmes/DarkArmyDiamond/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/DarkArmyDiamond
+            ln -s "$HOME"/Thèmes/DarkArmyEmerald/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/DarkArmyEmerald
+            ln -s "$HOME"/Thèmes/DarkArmyOmni/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/DarkArmyOmni
+            ln -s "$HOME"/Thèmes/DarkArmyRuby/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/DarkArmyRuby
+            ln -s "$HOME"/Thèmes/DarkArmySapphire/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/DarkArmySapphire
+            ln -s "$HOME"/Thèmes/Darky/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Darky
+            ln -s "$HOME"/Thèmes/Darly/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Darly
+            ln -s "$HOME"/Thèmes/Distraction_Free/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Distraction
+            ln -s "$HOME"/Thèmes/Ecliptic/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Ecliptic
+            ln -s "$HOME"/Thèmes/EclipticBrown/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/EclipticBrown
+            ln -s "$HOME"/Thèmes/EclipticPink/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/EclipticPink
+            ln -s "$HOME"/Thèmes/EclipticRed/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/EclipticRed
+            ln -s "$HOME"/Thèmes/EclipticWhite/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/EclipticWhite
+            ln -s "$HOME"/Thèmes/Focus/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Focus
+            ln -s "$HOME"/Thèmes/Friendly/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Friendly
+            ln -s "$HOME"/Thèmes/GIN/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/GIN
+            ln -s "$HOME"/Thèmes/GoldOx/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/GoldOx
+            ln -s "$HOME"/Thèmes/Goody/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Goody
+            ln -s "$HOME"/Thèmes/Lox/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Lox
+            ln -s "$HOME"/Thèmes/Luzicon/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Luzicon
+            ln -s "$HOME"/Thèmes/NubeReloaded/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/NubeReloaded
+            ln -s "$HOME"/Thèmes/Oscuro/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Oscuro
+            ln -s "$HOME"/Thèmes/Raya_Black/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/RayaBlack
+            ln -s "$HOME"/Thèmes/RayaReloaded/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/RayaReloaded
+            ln -s "$HOME"/Thèmes/Shapy/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Shapy
+            ln -s "$HOME"/Thèmes/Sinfonia/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Sinfonia
+            ln -s "$HOME"/Thèmes/Spark/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Spark
+            ln -s "$HOME"/Thèmes/Stony/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Stony
+            ln -s "$HOME"/Thèmes/Supernova/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Supernova
+            ln -s "$HOME"/Thèmes/Whirl/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Whirl
+            ln -s "$HOME"/Thèmes/WhirlBlack/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/WhirlBlack
+            ln -s "$HOME"/Thèmes/Whirless/app/src/main "$HOME"/AndroidAll/Thèmes_Shorts/Whirless
+            ln -s "$HOME"/Thèmes/WhitArt/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/WhitArt
+            ln -s "$HOME"/Thèmes/Whity/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Whity
             check_cmd
         fi
 

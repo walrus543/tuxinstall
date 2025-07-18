@@ -5,24 +5,28 @@
 # PAQUETS POUR TOUS
 ############################
 #add_defaut:alacritty
-add_defaut:kitty
+#add_defaut:btop
+#add_defaut:firefox
+#add_defaut:firefox-i18n-fr
+#add_defaut:firefox-ublock-origin
+#add_defaut:npm
+#add_defaut:tmux
 add_defaut:base-devel
 add_defaut:bat
-#add_defaut:btop
 add_defaut:curl
 add_defaut:dkms
 add_defaut:dosfstools
-add_defaut:dysk
 add_defaut:dust
+add_defaut:dysk
 add_defaut:eza
 add_defaut:fastfetch
 add_defaut:fd
 add_defaut:flatpak
 add_defaut:fzf
 add_defaut:git
-add_defaut:neovim
 add_defaut:inxi
 add_defaut:jq
+add_defaut:kitty
 add_defaut:libappimage
 add_defaut:libnatpmp
 add_defaut:linux-lts-headers
@@ -30,6 +34,7 @@ add_defaut:man-db
 add_defaut:man-pages
 add_defaut:meld
 add_defaut:ncdu
+add_defaut:neovim
 add_defaut:openssh
 add_defaut:pacman-contrib
 add_defaut:pdfgrep
@@ -40,7 +45,6 @@ add_defaut:shellcheck
 add_defaut:tailspin
 add_defaut:tar
 add_defaut:tldr
-#add_defaut:tmux
 add_defaut:trash-cli
 add_defaut:unzip
 add_defaut:vivaldi
@@ -50,67 +54,62 @@ add_defaut:yazi
 add_defaut:zoxide
 add_defaut:zsh
 
-#add_defaut:firefox
-#add_defaut:firefox-i18n-fr
-#add_defaut:firefox-ublock-origin
-#add_defaut:npm
-
 del_defaut:firefox
 
 ############################
 # PAQUETS POUR TOUS SAUF VM
 ############################
+#add_not_vm:ntfs-3g => Détection disque dur externe
+#add_not_vm:python-pyfuse3 => Monter sauvegarde borg
 add_not_vm:android-tools
-add_not_vm:yt-dlp
 add_not_vm:borg
-add_not_vm:smbclient
-add_not_vm:samba
-add_not_vm:qbittorrent
-add_not_vm:perl-rename
-#Détection disque dur externe
 add_not_vm:ntfs-3g
-#Monter sauvegarde borg
+add_not_vm:perl-rename
 add_not_vm:python-pyfuse3
+add_not_vm:qbittorrent
+add_not_vm:samba
+add_not_vm:smbclient
 add_not_vm:vlc
-add_not_vmc:vlc-plugins-all
+add_not_vm:vlc-plugins-all
+add_not_vm:yt-dlp
 
 ############################
 # PAQUETS SI COMPLETE
 ############################
+#add_full:jdk21-openjdk => JDK requis pour compilation Android
+#add_full:jre-openjdk-headless
+#add_full:jre-openjdk-headless => JRE requis pour exécution appli Java
+#add_full:simple-scan
+add_full:adobe-source-han-sans-cn-fonts
+add_full:adobe-source-han-sans-jp-fonts
+add_full:adobe-source-han-sans-kr-fonts
+add_full:cups
+add_full:dos2unix
+add_full:fdupes
+add_full:fdupes
+add_full:hplip
+add_full:imagemagick
+add_full:jdk21-openjdk
+add_full:libreoffice-fresh
+add_full:libreoffice-fresh-fr
+add_full:obsidian
+add_full:pdfarranger
+add_full:print-manager
+add_full:protonmail-bridge-core
+add_full:python-beautifulsoup4
+add_full:python-requests
+add_full:rsync
+add_full:signal-desktop
+add_full:syncthing
 add_full:telegram-desktop
 add_full:thunderbird
 add_full:thunderbird-i18n-fr
 add_full:thunderbird-ublock-origin
 add_full:timeshift
+add_full:ufw
 add_full:virtualbox
 add_full:virtualbox-guest-iso
 add_full:virtualbox-host-dkms
-add_full:syncthing
-add_full:rsync
-#add_full:simple-scan
-add_full:print-manager
-add_full:protonmail-bridge-core
-add_full:obsidian
-add_full:libreoffice-fresh
-add_full:libreoffice-fresh-fr
-#JRE requis pour exécution appli Java
-#add_full:jre-openjdk-headless
-#JDK requis pour compilation Android
-add_full:jdk21-openjdk
-add_full:hplip
-add_full:fdupes
-add_full:pdfarranger
-add_full:signal-desktop
-add_full:cups
-add_full:adobe-source-han-sans-cn-fonts
-add_full:adobe-source-han-sans-jp-fonts
-add_full:adobe-source-han-sans-kr-fonts
-add_full:dos2unix
-add_full:ufw
-add_full:fdupes
-add_full:imagemagick
-add_full:python-beautifulsoup4
-add_full:python-requests
 
 ############################
 # PAQUETS SI LITE
@@ -126,24 +125,24 @@ del_lite:parole
 # PAQUETS SI KDE PLASMA
 ############################
 #add_plasma:kdeconnect
-add_plasma:kio-admin
-add_plasma:partitionmanager
+#add_plasma:qt6-imageformats => Pour les fichiers webp
 add_plasma:gwenview
 add_plasma:kimageformats
 add_plasma:kio-admin
+add_plasma:kio-admin
 add_plasma:kwallet
 add_plasma:okular
+add_plasma:partitionmanager
 add_plasma:qalculate-qt
+add_plasma:qt6-imageformats
 add_plasma:spectacle
 add_plasma:systemdgenie
-#Pour les fichiers webp
-add_plasma:qt6-imageformats
 
 ############################
 # PAQUETS SI XFCE
 ############################
-add_xfce:network-manager-applet
 add_xfce:font-manager
 add_xfce:gnome-keyring
 add_xfce:gvfs-smb
+add_xfce:network-manager-applet
 add_xfce:numlockx

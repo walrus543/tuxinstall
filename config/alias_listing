@@ -1,3 +1,6 @@
+
+#BEGIN_Perso
+
 #############################
 # FUNCTION
 ##############################
@@ -222,3 +225,5 @@ eval "$(zoxide init zsh)"
 #alias winkill='VBoxManage controlvm "Win11" poweroff'
 #alias winlist='VBoxManage list runningvms'
 #alias wingo='VBoxManage startvm "Win11"'
+
+#END_Perso

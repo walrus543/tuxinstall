@@ -112,6 +112,11 @@ executer_action() {
                     msg_bold_red "Échec lors de la création du dossier temporaire"
                     exit 1;
                 fi
+
+            if ! check_pkg python-pyfuse3; then
+                sudo pacman -S --noconfirm --needed python-pyfuse3
+            fi
+
             borg mount "$path_borg"::"$archivename" /tmp/"$hd_name"
             echo "Dossier /tmp/$hd_name prêt."
             msg_bold_yellow "Penser à le démonter une fois terminé !"
