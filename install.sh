@@ -143,10 +143,12 @@ if ! ping -c 1 google.com &> /dev/null; then
 fi
 
 # Le script root doit être lancé en premier
-if [[ ! -f $ICI/.root_finished ]];then
+if [[ $(id -u) -eq "0" ]]; then
+    msg_bold_red "Ne PAS lancer le script avec les droits root (su - root ou sudo)"
+	exit 1;
+else
     sudo ./root_only.sh
 fi
-rm -f $ICI/.root_finished # Plus besoin
 
 ###################
 #### Arch Only ####
@@ -189,12 +191,6 @@ fi
 ###################
 # GÉNÉRALITÉS
 ###################
-# Tester si root
-if [[ $(id -u) -eq "0" ]]; then
-    msg_bold_red "Ne PAS lancer le script avec les droits root (su - root ou sudo)"
-	exit 1;
-fi
-
 # Infos fichier log
 if [[ -f $log_file ]]; then
     echo -n "Suppression du fichier de log existant : "
@@ -218,26 +214,6 @@ if [[ "$install_type" -ne 1 ]] && [[ "$install_type" -ne 2 ]]; then
 fi
 
 rm -f "$ICI/type_install.txt"
-
-
-# msg_bold_yellow "********************************\nInstallation complète ou lite ?\n********************************"
-#while [ "$choix" != "1" ] && [ "$choix" != "2" ]; do
-#
-#    echo "1) Complète"
-#    echo "2) Lite"
-#    echo
-#    read -p "Entrez votre choix (1 ou 2) : " choix
-#
-#    if [ "$choix" = "1" ]; then
-#        install_type=1
-#    elif [ "$choix" = "2" ]; then
-#        install_type=2
-#    else
-#        msg_bold_red "Choix invalide."
-#        echo
-#        install_type=""
-#    fi
-#done
 
 #--------------------------------------
 # [FIN] CHOIX COMPLÈTE OU LITE
@@ -669,10 +645,6 @@ if check_pkg zsh; then
         mkdir -p $HOME/Documents/Linux/Divers_Scripts
         cp $ICI/config/shared.sh $HOME/Documents/Linux/Divers_Scripts
         check_cmd
-        echo -n "- - - Déplacement de borg_menu.sh : "
-        mkdir -p $HOME/Documents/Linux
-        cp $ICI/config/borg_menu.sh $HOME/Documents/Linux
-        check_cmd
     fi
 fi
 
@@ -742,7 +714,7 @@ if check_pkg paru; then
 fi
 
 msg_bold_blue "➜ Fichiers de configuration"
-if ! check_pkg xdg-user-dirs || [[ ! -d $HOME/Documents ]]; then
+if ! check_pkg xdg-user-dirs || [[ ! -d "$HOME"/Documents ]]; then
     echo -n "- - [xdg-user-dirs] Installation : "
     add_pkg_pacman xdg-user-dirs
     check_cmd
@@ -751,61 +723,29 @@ if ! check_pkg xdg-user-dirs || [[ ! -d $HOME/Documents ]]; then
     check_cmd
 fi
 
-if [[ ! -f $HOME/.hidden ]]; then
+if [[ ! -f "$HOME"/.hidden ]]; then
     echo -n "- - Ajout .hidden pour masquer des dossiers du \$HOME : "
-    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > $HOME/.hidden
+    printf "%s\n" "Modèles" "Musique" "Public" "Sync" "UpdateInfo" > "$HOME"/.hidden
     check_cmd
 fi
 
-if check_pkg kitty && [[ ! -f $HOME/.config/kitty/kitty.conf ]]; then
+if check_pkg kitty && [[ ! -f "$HOME"/.config/kitty/kitty.conf ]]; then
     echo -n "- - [Kitty] Fichier de configuration : "
-    mkdir -p $HOME/.config/kitty
-    cp "$ICI/config/kitty.conf" $HOME/.config/kitty
+    mkdir -p "$HOME"/.config/kitty
+    cp "$ICI/config/kitty.conf" "$HOME"/.config/kitty
     check_cmd
     echo -n "- - [Kitty] Thème catppuccin Mocha : "
     kitten theme catppuccin-mocha
     check_cmd
     echo -n "- - [Kitty] Background : "
-    cp "$ICI/config/background.png" $HOME/.config/kitty
+    cp "$ICI/config/background.png" "$HOME"/.config/kitty
     check_cmd
 fi
 
-#if check_pkg alacritty && [[ ! -f $HOME/.config/alacritty/alacritty.toml ]]; then
-#    echo -n "- - [Alacritty] Fichier toml : "
-#    mkdir -p $HOME/.config/alacritty
-#    cp "$ICI/config/alacritty.toml" $HOME/.config/alacritty
-#    check_cmd
-#    if [[ "$VM" != "none" ]] || [[ "$DE" != "KDE" ]]; then
-#        echo -n "- - [Alacritty] Decorations = Full : "
-#        sed -i 's/^decorations =.*/decorations = \"Full\"/' $HOME/.config/alacritty/alacritty.toml
-#    check_cmd
-#    fi
-#fi
-
-#if check_pkg tmux && [[ $(grep -c "unbind" $HOME/.tmux.conf) -lt 1 ]]; then
-#    echo -n "- - [Tmux] TPM : "
-#    mkdir -p $HOME/.tmux/plugins/tpm
-#    git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm >> "$log_file" 2>&1
-#    check_cmd
-#
-#    echo -n "- - [Tmux] tmux.conf : "
-#    cp "$ICI/config/tmux.conf" $HOME/.tmux.conf
-#    check_cmd
-#    echo "${YELLOW}Dans tmux, faire \"Ctrl Space I\" pour charger les plugins de TPM${RESET}" | tee -a $HOME/Tmp/post_installation.txt
-#    ask_continue
-#fi
-
-#TMUX lancé automatiquement
-#if [ "$(sed -n '1p' $HOME/.zshrc)" != 'if [ "$TMUX" = "" ]; then tmux; fi' ]; then
-#    echo -n "- - Lancer tmux par défaut : "
-#    sed -i '1i if [ "$TMUX" = "" ]; then tmux; fi' $HOME/.zshrc
-#    check_cmd
-#fi
-
-if check_pkg neovim && [[ $(grep -c "nocompatible" $HOME/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
+if check_pkg neovim && [[ $(grep -c "nocompatible" "$HOME"/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
     echo -n "- - [NeoVim] Config de base : "
-    mkdir -p $HOME/.config/nvim/
-    cp "$ICI/config/neovim" $HOME/.config/nvim/init.vim
+    mkdir -p "$HOME"/.config/nvim/
+    cp "$ICI/config/neovim" "$HOME"/.config/nvim/init.vim
     check_cmd
 
     echo -n "- - [NeoVim] Plugin manager vim-plug : "
