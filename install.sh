@@ -275,14 +275,14 @@ fi
 # [DEBUT] POUR TOUS
 #++++++++++++++++++++++++++++++++++++++
 msg_bold_blue "➜ Configuration système de base"
-if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]; then
-    echo -n "- - [Pacman] ILoveCandy : "
-    sudo sed -i '/^#ParallelDownloads/a ILoveCandy' /etc/pacman.conf
-    check_cmd
-fi
 if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]; then
     echo -n "- - [Pacman] Téléchargements parallèles : "
     sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+    check_cmd
+fi
+if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]; then
+    echo -n "- - [Pacman] ILoveCandy : "
+    sudo sed -i '/^ParallelDownloads/a ILoveCandy' /etc/pacman.conf
     check_cmd
 fi
 if [[ $(grep -c "^VerbosePkgLists" /etc/pacman.conf) -lt 1 ]]; then
@@ -1046,10 +1046,12 @@ if [ "$install_type" = 1 ]; then
 fi
 
         msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
-        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]] && ! check_pkg rtl8821ce-dkms-git; then # Carte détectée mais paquet manquant
-            echo -n "- - Installation du paquet AUR  : "
-            add_pkg_paru rtl8821ce-dkms-git
-            check_cmd
+        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]]; then # Carte détectée mais paquet manquant
+            if ! check_pkg rtl8821ce-dkms-git; then
+                echo -n "- - Installation du paquet AUR  : "
+                add_pkg_paru rtl8821ce-dkms-git
+                check_cmd
+            fi
 
             if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
                 echo -n "- - Configuration blacklist.conf  : "
@@ -1108,7 +1110,7 @@ fi
 
         # OSheden
         if [[ ! -d "$HOME"/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d "$HOME"/Thèmes/Alta/app/src/main/ ]]; then
-            echo -n "➜➜ Création des liens symboliques : "
+            msg_bold_blue "➜ Création des liens symboliques pour les packs d'icônes"
             ln -s "$HOME"/Thèmes/Alta/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Alta
             ln -s "$HOME"/Thèmes/Altess/app/src/main "$HOME"/AndroidAll/Thèmes_Shorts/Altess
             ln -s "$HOME"/Thèmes/Azulox/app/src/main/ "$HOME"/AndroidAll/Thèmes_Shorts/Azulox
