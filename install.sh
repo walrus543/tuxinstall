@@ -31,6 +31,14 @@ check_pkg()
 {
 	pacman -Q "$1" > /dev/null 2>&1
 }
+check_pacman_status_install()
+{
+	if check_pkg "$1"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+}
+check_pacman_status_uninstall()
+{
+	if ! check_pkg "$1"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+}
 add_pkg_pacman()
 {
     if pacman -Si "$1" > /dev/null 2>&1
@@ -67,7 +75,14 @@ del_flatpak()
 {
 	flatpak uninstall --noninteractive -y "$1" >> "$log_file" 2>&1 && flatpak uninstall --unused  --noninteractive -y >> "$log_file" 2>&1
 }
-
+check_flatpak_status_install()
+{
+    if flatpak info "$1" > /dev/null 2>&1; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+}
+check_flatpak_status_uninstall()
+{
+    if flatpak info "$1" > /dev/null 2>&1; then echo ${BOLD}${RED}KO${RESET}; else echo ${BOLD}${GREEN}OK${RESET}; fi
+}+
 check_cmd()
 {
 if [[ "$pacman_status" != 'false' ]]; then
@@ -342,7 +357,7 @@ do
         if ! check_pkg "$p"; then
             echo -n "$sign_green $p : "
             add_pkg_pacman "$p"
-            check_cmd
+            check_pacman_status_install
         fi
     fi
 
@@ -351,7 +366,7 @@ do
         if check_pkg "$p"; then
             echo -n "$sign_red $p : "
             del_pkg_pacman "$p"
-            check_cmd
+            check_pacman_status_uninstall
         fi
     fi
 
@@ -362,7 +377,7 @@ do
             if ! check_pkg "$p"; then
                 echo -n "$sign_green $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -371,7 +386,7 @@ do
             if check_pkg "$p"; then
                 echo -n "$sign_red $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
 
@@ -382,7 +397,7 @@ do
             if ! check_pkg "$p"; then
                 echo -n "$sign_green 'VM' $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -391,7 +406,7 @@ do
             if check_pkg "$p"; then
                 echo -n "$sign_red 'VM' $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
     fi
@@ -403,7 +418,7 @@ do
             if ! check_pkg "$p"; then
                 echo -n "$sign_green 'Plasma' $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -412,7 +427,7 @@ do
             if check_pkg "$p"; then
                 echo -n "$sign_red 'Plasma' $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
 
@@ -423,7 +438,7 @@ do
             if ! check_pkg "$p"; then
                 echo -n "$sign_green 'Xfce' $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -432,7 +447,7 @@ do
             if check_pkg "$p"; then
                 echo -n "$sign_red 'Xfce' $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
     fi
@@ -463,7 +478,7 @@ do
 		if ! check_flatpak "$p"; then
 			echo -n "$sign_green $p : "
 			add_flatpak "$p"
-			check_cmd
+			check_flatpak_status_install
 		fi
 	fi
 
@@ -472,7 +487,7 @@ do
 		if check_flatpak "$p"; then
 			echo -n "$sign_red $p : "
 			del_flatpak "$p"
-			check_cmd
+			check_flatpak_status_uninstall
 		fi
 	fi
 
@@ -483,7 +498,7 @@ do
             if ! check_flatpak "$p"; then
                 echo -n "$sign_green $p : "
                 add_flatpak "$p"
-                check_cmd
+                check_flatpak_status_install
             fi
         fi
 
@@ -492,7 +507,7 @@ do
             if check_flatpak "$p"; then
                 echo -n "$sign_red $p : "
                 del_flatpak "$p"
-                check_cmd
+                check_flatpak_status_uninstall
             fi
         fi
 
@@ -503,7 +518,7 @@ do
             if ! check_flatpak "$p"; then
                 echo -n "$sign_green $p : "
                 add_flatpak "$p"
-                check_cmd
+                check_flatpak_status_install
             fi
         fi
 
@@ -512,7 +527,7 @@ do
             if check_flatpak "$p"; then
                 echo -n "$sign_red $p : "
                 del_flatpak "$p"
-                check_cmd
+                check_flatpak_status_uninstall
             fi
         fi
     fi
@@ -679,7 +694,7 @@ if check_pkg paru; then
             if ! check_pkg "$p"; then
                 echo -n "$sign_green $p : "
                 add_pkg_paru "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
         if [[ "$line" == del_defaut:* ]]; then
@@ -687,7 +702,7 @@ if check_pkg paru; then
             if check_pkg "$p"; then
                 echo -n "$sign_red $p : "
                 del_pkg_paru "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
 
@@ -698,7 +713,7 @@ if check_pkg paru; then
                 if ! check_pkg "$p"; then
                     echo -n "$sign_green $p : "
                     add_pkg_paru "$p"
-                    check_cmd
+                    check_pacman_status_install
                 fi
             fi
             if [[ "$line" == del_not_vm:* ]]; then
@@ -706,7 +721,7 @@ if check_pkg paru; then
                 if check_pkg "$p"; then
                     echo -n "$sign_red $p : "
                     del_pkg_paru "$p"
-                    check_cmd
+                    check_pacman_status_uninstall
                 fi
             fi
         fi
@@ -780,10 +795,7 @@ if [[ "$VM" = "none" ]]; then
 
     if [[ "$disc_gran" != '0B' ]] && [[ "$disc_max" != '0B' ]]; then
         add_pkg_pacman util-linux
-        if [[ $(check_systemd fstrim.timer 2>/dev/null) = "enabled" ]]; then
-            echo -n "- - [fstrim] timer de $device_name déjà activé : "
-            check_cmd
-        else
+        if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [fstrim] Activation du timer $device_name : "
             sudo systemctl enable fstrim.timer >> "$log_file" 2>&1
             check_cmd
@@ -911,7 +923,7 @@ if [ "$install_type" = 1 ]; then
             if ! check_pkg "$p"; then
                 echo -n "$sign_green $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -920,22 +932,23 @@ if [ "$install_type" = 1 ]; then
             if check_pkg "$p"; then
                 echo -n "$sign_red $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
     done < "packages/pacman.list"
 
     if check_pkg virtualbox-host-dkms; then
-    msg_bold_blue "➜ Extension pack pour Virtualbox"
-    latest=$(wget -qO- https://download.virtualbox.org/virtualbox/LATEST.TXT | tr -d '\r\n')
-    if [[ -n $latest ]]; then
-        url="https://download.virtualbox.org/virtualbox/${latest}/Oracle_VirtualBox_Extension_Pack-${latest}.vbox-extpack"
-        echo "Téléchargement de la version ${latest}"
-        wget -P $HOME/Tmp -q --show-progress "$url"
-        msg_bold_green "Extension pack disponible dans ~/Tmp. Prêt pour installation."
-        ask_continue
-    else
-        msg_bold_red "Impossible de récupérer la dernière version connue"
+        msg_bold_blue "➜ Extension pack pour Virtualbox"
+        latest=$(wget -qO- https://download.virtualbox.org/virtualbox/LATEST.TXT | tr -d '\r\n')
+        if [[ -n $latest ]]; then
+            url="https://download.virtualbox.org/virtualbox/${latest}/Oracle_VirtualBox_Extension_Pack-${latest}.vbox-extpack"
+            echo "Téléchargement de la version ${latest}"
+            wget -P $HOME/Tmp -q --show-progress "$url"
+            msg_bold_green "Extension pack disponible dans ~/Tmp. Prêt pour installation."
+            ask_continue
+        else
+            msg_bold_red "Impossible de récupérer la dernière version connue"
+        fi
     fi
 
     msg_bold_blue "➜ Paquets PARU supplémentaires FULL"
@@ -948,7 +961,7 @@ if [ "$install_type" = 1 ]; then
                 if ! check_pkg "$p"; then
                     echo -n "$sign_green $p : "
                     add_pkg_paru "$p"
-                    check_cmd
+                    check_pacman_status_install
                 fi
             fi
             if [[ "$line" == del_full:* ]]; then
@@ -956,7 +969,7 @@ if [ "$install_type" = 1 ]; then
                 if check_pkg "$p"; then
                     echo -n "$sign_red $p : "
                     del_pkg_paru "$p"
-                    check_cmd
+                    check_pacman_status_uninstall
                 fi
             fi
         done < "packages/paru.list"
@@ -970,7 +983,7 @@ if [ "$install_type" = 1 ]; then
             if ! check_flatpak "$p"; then
                 echo -n "$sign_green $p : "
                 add_flatpak "$p"
-                check_cmd
+                check_flatpak_status_install
             fi
         fi
 
@@ -979,7 +992,7 @@ if [ "$install_type" = 1 ]; then
             if check_flatpak "$p"; then
                 echo -n "$sign_red $p : "
                 del_flatpak "$p"
-                check_cmd
+                check_flatpak_status_uninstall
             fi
         fi
     done < "$ICI/packages/flatpak.list"
@@ -1042,11 +1055,9 @@ if [ "$install_type" = 1 ]; then
                 check_cmd
             fi
         fi
-    fi
-fi
 
         msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
-        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE 2&>1) -eq 1 ]]; then # Carte détectée mais paquet manquant
+        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
             if ! check_pkg rtl8821ce-dkms-git; then
                 echo -n "- - Installation du paquet AUR  : "
                 add_pkg_paru rtl8821ce-dkms-git
@@ -1252,7 +1263,7 @@ elif [ "$install_type" = 2 ]; then
             if ! check_pkg "$p"; then
                 echo -n "$sign_green $p : "
                 add_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_install
             fi
         fi
 
@@ -1261,7 +1272,7 @@ elif [ "$install_type" = 2 ]; then
             if check_pkg "$p"; then
                 echo -n "$sign_red $p : "
                 del_pkg_pacman "$p"
-                check_cmd
+                check_pacman_status_uninstall
             fi
         fi
     done < "packages/pacman.list"
