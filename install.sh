@@ -82,7 +82,7 @@ check_flatpak_status_install()
 check_flatpak_status_uninstall()
 {
     if flatpak info "$1" > /dev/null 2>&1; then echo ${BOLD}${RED}KO${RESET}; else echo ${BOLD}${GREEN}OK${RESET}; fi
-}+
+}
 check_cmd()
 {
 if [[ "$pacman_status" != 'false' ]]; then
