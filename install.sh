@@ -646,7 +646,7 @@ if check_pkg zsh; then
         if [[ $(grep -c "#BEGIN_Perso" "$HOME/.zshrc" ) -eq 1 ]]; then
             msg_bold_yellow "Les personnalisations sont déjà en place"
         else
-            cat "$ICI/config/alias_listing" >> "$HOME/.zshrc"
+            awk '/#BEGIN_Perso/,/#END_Perso/' "$ICI/config/alias_listing" >> "$HOME/.zshrc"
             msg_bold_green "Personnalisations ajoutées"
         fi
     fi
@@ -802,7 +802,7 @@ if [[ "$VM" = "none" ]]; then
         fi
     else
         echo "- - [fstrim] Activation du timer : "
-        echo "$device_name ne semble pas supporter fstrim."
+        msg_bold_red "$device_name ne semble pas supporter fstrim."
     fi
 
     #UFW doit suffire
@@ -1064,7 +1064,7 @@ if [ "$install_type" = 1 ]; then
                 check_cmd
             fi
 
-            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf > /dev/null 2&>1) -lt 1 ]]; then
+            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf) -lt 1 ]]; then
                 echo -n "- - Configuration blacklist.conf  : "
                 sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
                 sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
