@@ -7,3 +7,4 @@ ConditionFileIsExecutable=/home/kratos/Documents/Linux/backup_nettoyage.sh
 [Service]
 Type=oneshot
 ExecStart=/home/kratos/Documents/Linux/backup_nettoyage.sh
+StandardError=file:/home/kratos/Bureau/backup_nettoyage_error.log
