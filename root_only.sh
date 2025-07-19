@@ -141,9 +141,9 @@ if [ "$install_type" = 1 ]; then
     msg_bold_blue "➜ Pare-Feu UFW"
     pacman -S --needed --noconfirm ufw > /dev/null 2>&1
 
-    if check_pkg ufw && [[ $(ufw status | grep -c active) -lt 1 ]]; then
+    if check_pkg ufw && [[ $(ufw status | grep -c inactive) -eq 1 ]]; then
         echo -n " - - Paramétrage des règles : "
-        ufw reset >> "$log_file" 2>&1
+        echo y | ufw reset >> "$log_file" 2>&1 # y pour supprimer les règles existantes - sortie standard
         ufw default deny incoming >> "$log_file" 2>&1
         ufw default allow outgoing >> "$log_file" 2>&1
         ufw allow to 192.168.1.0/24 >> "$log_file" 2>&1
@@ -162,7 +162,7 @@ if [ "$install_type" = 1 ]; then
 
         if [[ $(grep -c 'DEFAULT_FORWARD_POLICY=ACCEPT' /etc/default/ufw) -lt 1 ]]; then
             echo -n "- - Autoriser la police de transfert (VPN...) : "
-            sed -i sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
+            sed -i 's/^DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY=ACCEPT/' /etc/default/ufw
             check_cmd
         fi
 
@@ -172,6 +172,5 @@ fi
 
 msg_bold_green "Opérations terminées."
 echo "Prêt pour lancer le fichier install.sh"
-touch $ICI/.root_finished
 
 exit 0
