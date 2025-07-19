@@ -33,11 +33,11 @@ check_pkg()
 }
 check_pacman_status_install()
 {
-	if check_pkg "$1"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+	if check_pkg "$p"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
 }
 check_pacman_status_uninstall()
 {
-	if ! check_pkg "$1"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+	if ! check_pkg "$p"; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
 }
 add_pkg_pacman()
 {
@@ -77,11 +77,11 @@ del_flatpak()
 }
 check_flatpak_status_install()
 {
-    if flatpak info "$1" > /dev/null 2>&1; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
+    if flatpak info "$p" > /dev/null 2>&1; then echo ${BOLD}${GREEN}OK${RESET}; else echo ${BOLD}${RED}KO${RESET}; fi
 }
 check_flatpak_status_uninstall()
 {
-    if flatpak info "$1" > /dev/null 2>&1; then echo ${BOLD}${RED}KO${RESET}; else echo ${BOLD}${GREEN}OK${RESET}; fi
+    if flatpak info "$p" > /dev/null 2>&1; then echo ${BOLD}${RED}KO${RESET}; else echo ${BOLD}${GREEN}OK${RESET}; fi
 }
 check_cmd()
 {
