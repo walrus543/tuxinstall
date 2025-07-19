@@ -8,3 +8,4 @@ ConditionFileIsExecutable=/home/kratos/Documents/Linux/backup_nettoyage.sh
 Type=oneshot
 ExecStart=/home/kratos/Documents/Linux/backup_nettoyage.sh
 StandardError=file:/home/kratos/Bureau/backup_nettoyage_error.log
+ExecStartPost=/usr/bin/find /home/kratos/Bureau/backup_nettoyage_error.log -type f -empty -delete
