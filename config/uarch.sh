@@ -2,7 +2,7 @@
 
 source "$HOME"/Documents/Linux/Divers_Scripts/shared.sh
 
-msg_bold_blue "MISE À JOUR PACMAN & AUR..."
+msg_bold_blue "MISE À JOUR PACMAN & AUR... !"
     paru
 
 if [ -n "$(flatpak list)" ]; then

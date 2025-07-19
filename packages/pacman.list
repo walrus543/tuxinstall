@@ -16,6 +16,7 @@ add_defaut:bat
 add_defaut:curl
 add_defaut:dkms
 add_defaut:dosfstools
+add_defaut:duf
 add_defaut:dust
 add_defaut:dysk
 add_defaut:eza
