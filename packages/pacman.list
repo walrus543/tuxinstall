@@ -97,6 +97,7 @@ add_full:libreoffice-fresh-fr
 add_full:obsidian
 add_full:pdfarranger
 add_full:print-manager
+add_full:protonmail-bridge
 add_full:protonmail-bridge-core
 add_full:python-beautifulsoup4
 add_full:python-requests

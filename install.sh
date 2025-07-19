@@ -1042,6 +1042,7 @@ if [ "$install_type" = 1 ]; then
             mkdir -p "$HOME"/.config/autostart
             cp "$ICI/config/protonmail.desktop" "$HOME"/.config/autostart/protonmail.desktop
             check_cmd
+            printf "\nUtiliser protonmail-bridge pour avoir le mot de passe pour Thunderbird puis supprimer le paquet !\n" >> $HOME/Tmp/post_installation.txt
         fi
         if check_pkg rust; then
             if [[ ! -f "$HOME"/.cargo/bin/cargo-install-update ]]; then
