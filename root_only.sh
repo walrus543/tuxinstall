@@ -3,10 +3,7 @@
 #################
 ### VARIABLES ###
 #################
-mkdir -p "$HOME/Tmp"
 log_file="$HOME/Tmp/config-arch.log"
-DE=$(echo $XDG_CURRENT_DESKTOP)
-VM=$(systemd-detect-virt)
 ICI=$(dirname "$0")
 
 #Coloration du texte
