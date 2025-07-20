@@ -138,11 +138,9 @@ ask_continue() {
 ### Contrôles de base
 #####################
 
-if [[ -z "$1" ]] # le premier argument est vide (./install.sh sans rien derrière)
-    then
+if [[ -z "$1" ]]; then # le premier argument est vide (./install.sh sans rien derrière)
 	echo "OK" > /dev/null
-elif [[ "$1" == "arch" ]]
-    then
+elif [[ "$1" == "arch" ]]; then
 	echo "OK" > /dev/null
 else
 	echo "Usage incorrect du script :" # $(basename $0) => nom du script lancé
@@ -154,22 +152,14 @@ fi
 # Tester la connexion Internet
 if ! ping -c 1 google.com &> /dev/null; then
     echo "Pas de connexion Internet"
-    exit 2;
-fi
-
-# Le script root doit être lancé en premier
-if [[ $(id -u) -eq "0" ]]; then
-    msg_bold_red "Ne PAS lancer le script avec les droits root (su - root ou sudo)"
-	exit 1;
-else
-    sudo ./root_only.sh
+    exit 1;
 fi
 
 ###################
 #### Arch Only ####
 ###################
 # Easter Egg
-if [[ "$1" = "arch" ]]; then
+if [[ "${1-}" = "arch" ]]; then
     # Afficher le logo Arch Linux
 cat << "EOF"
                     -`
@@ -201,6 +191,16 @@ fi
 if ! check_pkg pacman; then
 	msg_bold_red "Le paquet \"pacman\" n'est pas installé donc cette distribution n'est probablement pas être basée sur Arch :-("
 	exit 2;
+fi
+
+#####################
+### Root first
+#####################
+if [[ $(id -u) -eq "0" ]]; then
+    msg_bold_red "Ne PAS lancer le script avec les droits root (su - root ou sudo)"
+	exit 1;
+else
+    sudo ./root_only.sh
 fi
 
 ###################
