@@ -90,9 +90,9 @@ fi
 # EXÉCUTION
 ###################
 msg_bold_blue "➜ Paramétrages accès root"
-if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && [[ $(grep -c "passwd_timeout" /etc/sudoers.d/00_$SUDO_USER) -lt 1 ]] ; then
-    echo -n "- - [Sudoers] Délai saisie mot de passe : "
-    echo "Defaults passwd_timeout=0" >> /etc/sudoers.d/00_$SUDO_USER
+if [[ -f /etc/sudoers.d/00_$SUDO_USER ]] && [[ $(grep -c "passwd_timeout=0,pwfeedback" /etc/sudoers.d/00_$SUDO_USER) -lt 1 ]] ; then
+    echo -n "- - [Sudoers] Délai de saisie et astérisques du mot de passe : "
+    echo "Defaults passwd_timeout=0,pwfeedback" >> /etc/sudoers.d/00_$SUDO_USER
     check_cmd
 fi
     

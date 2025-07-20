@@ -1251,7 +1251,7 @@ if [ "$install_type" = 1 ]; then
             fi
         fi
 
-        printf "\nConfigurer TIMESHIFT\n" >> $HOME/Tmp/post_installation.txt
+        printf "\n- Configurer TIMESHIFT\n- Refaire la synchro Synchthing avec le téléphone et Windows\n- Webdav Dolphin Zaclys" >> $HOME/Tmp/post_installation.txt
 
     fi #Fin si NON VM
 
