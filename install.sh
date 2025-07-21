@@ -571,16 +571,6 @@ if [[ "$VM" = "none" ]]; then
         msg_bold_red "$device_name ne semble pas supporter fstrim."
     fi
 
-    #UFW doit suffire
-    # local_ip=$(ip a | grep wlan0 | grep inet | awk '{print $2}' | cut -f1 -d '/')
-    # check_local_ip=$(echo "$local_ip" | cut -f1 -d '.')
-    # if [[ $(grep -c "^#ListenAddress 0.0.0.0" /etc/ssh/sshd_config) -eq 1 ]] && [[ "$check_local_ip" -eq 192 ]]; then
-    #     echo -n "- - Limiter SSH au réseau local : "
-    #     sed -i "s/^#ListenAddress 0.0.0.0.*/ListenAddress $local_ip/" /etc/ssh/sshd_config
-    #     #Penser à autoriser les autres PC locaux
-    #     check_cmd
-    # fi
-
     #Suppression du bruit lors de recherches"
     if [[ ! -f /etc/modprobe.d/nobeep.conf ]]; then
         echo -n "- - [Bruit recherche] Création du fichier de configuration : "
@@ -615,11 +605,6 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     msg_bold_blue "➜ Pacman hooks"
-#    if [[ ! -f /usr/share/libalpm/hooks/z_orphans.hook ]]; then
-#        echo -n "- - Ajout de z_orphans.hook : "
-#        sudo cp $ICI/config/z_orphans.hook /usr/share/libalpm/hooks
-#        check_cmd
-#    fi
     if [[ ! -f /usr/share/libalpm/hooks/z_pacnew.hook ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
         sudo cp $ICI/config/z_pacnew.hook /usr/share/libalpm/hooks; check_cmd
@@ -633,14 +618,6 @@ if [[ "$VM" = "none" ]]; then
         msg_bold_blue "➜ Paquets Nvidia"
         sudo pacman -S --needed --noconfirm nvidia nvidia-lts nvidia-utils nvidia-settings &>> "$log_file"; check_cmd
     fi
-
-    #    # NPM
-    #    msg_bold_blue "➜ Paquets Node.js via npm"
-    #    if check_pkg npm && [[ $(npm list -g | grep -c 'clipboard-cli') -lt 1 ]]; then
-    #        echo -n "- - Installation de clipboard-cli : "
-    #        npm install --global clipboard-cli &>> "$log_file"
-    #        check_cmd
-    #    fi
 fi
 
 #--------------------------------------

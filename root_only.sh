@@ -22,10 +22,14 @@ pacman -S --needed --noconfirm meld &> /dev/null
 if [[ $(grep -c "DIFFPROG=/usr/bin/meld" /etc/environment) -lt 1 ]]; then
     path_meld=$(command -v meld)
     echo -n "- - [Pacdiff] Meld par défaut : "
-    echo "DIFFPROG=$path_meld" >> /etc/environment
-    check_cmd
+    echo "DIFFPROG=\"$path_meld\"" >> /etc/environment; check_cmd
 fi
 
+if [[ $(grep -c "SYSTEMD_EDITOR" /etc/environment) -lt 1 ]]; then
+    path_neovim=$(command -v meld)
+    echo -n "- - [Systemd Editor] Neovim par défaut : "
+    echo "SYSTEMD_EDITOR=\"$path_neovim\"" >> /etc/environment; check_cmd
+fi
 
 #++++++++++++++++++++++++++++++++++++++
 # [DEBUT] CHOIX COMPLÈTE OU LITE
