@@ -101,6 +101,7 @@ add_full:protonmail-bridge
 add_full:protonmail-bridge-core
 add_full:python-beautifulsoup4
 add_full:python-requests
+add_full:rclone
 add_full:rsync
 add_full:signal-desktop
 add_full:syncthing
