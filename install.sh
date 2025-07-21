@@ -182,7 +182,7 @@ if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub
     check_cmd
 fi
 
-msg_bold_blue "➜ Mise à jour du système Pacman : "
+msg_bold_blue "➜ Mise à jour du système Pacman"
 sudo pacman -Syu --noconfirm &>> "$log_file"
 
 msg_bold_blue "➜ Paquets PACMAN par défaut"
@@ -452,7 +452,7 @@ fi
 
 if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
     msg_bold_blue "➜ Installation de paru"
-    rustup default stable &>> "$log_file"
+    #rustup default stable &>> "$log_file"
     cd "$ICI"
     git clone https://aur.archlinux.org/paru.git &>> "$log_file"
     cd paru &>> "$log_file" && makepkg -si
