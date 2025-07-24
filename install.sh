@@ -728,17 +728,18 @@ if [ "$install_type" = 1 ]; then
             echo ${YELLOW}"/!\ $HOME/Documents/Linux/backup_nettoyage.sh manquant"${RESET}
             ask_continue
         elif [[ -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
-            if [[ ! -f /etc/systemd/system/backup_nettoyage.service ]]; then
-                echo -n "- - Copie backup_nettoyage.service : "
-                sudo mv $ICI/config/backup_nettoyage.service /etc/systemd/system/; check_cmd
+            if [[ ! -f "$HOME/.config/systemd/user/backup_nettoyage.service" ]]; then
+                echo -n "- - backup_nettoyage.service : "
+                mv $ICI/config/backup_nettoyage.service "$HOME/.config/systemd/user"; check_cmd
             fi
-            if [[ ! -f /etc/systemd/system/backup_nettoyage.timer ]]; then
-                echo -n "- - Copie backup_nettoyage.timer : "
-                sudo mv $ICI/config/backup_nettoyage.timer /etc/systemd/system/; check_cmd
+            if [[ ! -f "$HOME/.config/systemd/user/backup_nettoyage.timer" ]]; then
+                echo -n "- - backup_nettoyage.timer : "
+                mv $ICI/config/backup_nettoyage.timer "$HOME/.config/systemd/user"; check_cmd
             fi
-            if [[ $(check_systemd backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
-                echo -n "- - Activation du service backup_nettoyage.timer : "
-                sudo systemctl enable backup_nettoyage.timer &>> "$log_file"; check_cmd
+            if [[ $(check_systemd_user backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
+                echo -n "- - Activation du service USER backup_nettoyage.timer : "
+                systemctl --user daemon-reload &>> "$log_file"
+                systemctl --user enable backup_nettoyage.timer &>> "$log_file"; check_cmd
             fi
         fi
 
