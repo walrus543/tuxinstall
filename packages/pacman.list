@@ -82,6 +82,7 @@ add_not_vm:yt-dlp
 #add_full:jre-openjdk-headless
 #add_full:jre-openjdk-headless => JRE requis pour exécution appli Java
 #add_full:simple-scan
+add_full:7zip
 add_full:adobe-source-han-sans-cn-fonts
 add_full:adobe-source-han-sans-jp-fonts
 add_full:adobe-source-han-sans-kr-fonts
