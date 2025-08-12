@@ -59,9 +59,8 @@ if [[ "$install_type" == "1" ]]; then
         echo y | ufw reset >> "$log_file" 2>&1
         ufw default deny incoming >> "$log_file" 2>&1
         ufw default allow outgoing >> "$log_file" 2>&1
-        ufw allow to 192.168.1.0/24 >> "$log_file" 2>&1
-        ufw allow from 192.168.1.0/24 >> "$log_file" 2>&1
-        ufw deny 22 >> "$log_file" 2>&1
+        ufw allow from 192.168.1.0/24 to any port 22 >> "$log_file" 2>&1
+        ufw deny to any port 22 >> "$log_file" 2>&1
         ufw enable >> "$log_file" 2>&1
         systemctl enable --now ufw.service >> "$log_file" 2>&1
         check_cmd

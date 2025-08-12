@@ -4,15 +4,12 @@
 ############################
 # PAQUETS POUR TOUS
 ############################
-#add_defaut:alacritty
-#add_defaut:btop
 #add_defaut:firefox
 #add_defaut:firefox-i18n-fr
 #add_defaut:firefox-ublock-origin
-#add_defaut:npm
-#add_defaut:tmux
 add_defaut:base-devel
 add_defaut:bat
+add_defaut:btop
 add_defaut:curl
 add_defaut:dkms
 add_defaut:dosfstools
@@ -47,6 +44,7 @@ add_defaut:tailspin
 add_defaut:tar
 add_defaut:tldr
 add_defaut:trash-cli
+add_defaut:tuned
 add_defaut:unzip
 add_defaut:vivaldi
 add_defaut:wget
@@ -103,7 +101,6 @@ add_full:protonmail-bridge
 add_full:protonmail-bridge-core
 add_full:python-beautifulsoup4
 add_full:python-requests
-add_full:rclone
 add_full:rsync
 add_full:signal-desktop
 add_full:syncthing
@@ -133,6 +130,7 @@ del_lite:parole
 #add_plasma:kdeconnect
 #add_plasma:qt6-imageformats => Pour les fichiers webp
 add_plasma:gwenview
+add_plasma:kdialog
 add_plasma:kimageformats
 add_plasma:kio-admin
 add_plasma:kio-admin

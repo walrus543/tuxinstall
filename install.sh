@@ -604,6 +604,20 @@ if [[ "$VM" = "none" ]]; then
         sudo sed -i 's/^#greeter-setup-script=/greeter-setup-script=\/usr\/bin\/numlockx on/' /etc/lightdm/lightdm.conf; check_cmd
     fi
 
+    if check_pkg tuned && [[ $(check_systemd tuned 2>/dev/null) != "enabled" ]]; then
+        echo -n "- - [Tuned] Activation systemd : "
+        sudo systemctl enable --now tuned &>> "$log_file"; check_cmd
+
+        current_tuned_profile=$(tuned-adm active | cut -f2 -d : | xargs)
+        if [[ "$current_tuned_profile" != 'throughput-performance' ]]; then
+            echo -n "- - [Tuned] Activation du profile throughput-performance : "
+            tuned-adm profile throughput-performance &>> "$log_file"; check_cmd
+        fi
+        if [[ $(cat /proc/sys/vm/swappiness) != 10 ]]; then
+            msg_bold_yellow "[Tuned] wm.snappiness n'est pas définie sur 10."
+        fi
+    fi
+
     msg_bold_blue "➜ Pacman hooks"
     if [[ ! -f /usr/share/libalpm/hooks/z_pacnew.hook ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
@@ -703,6 +717,12 @@ if [ "$install_type" = 1 ]; then
             fi
         done < "packages/paru.list"
     fi
+
+    # davfs2 pour monter du webdav
+    # il est nécessaire d'importer une clé pour mieux le faire à l'écran
+
+    msg_bold_blue "➜ [PARU] Installation de davfs2 pour montage webdav"
+    paru -S --noconfirm --needed davfs2
 
     msg_bold_blue "➜ Paquets FLATPAK supplémentaires FULL"
     while read -r line; do
