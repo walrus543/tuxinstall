@@ -165,11 +165,19 @@ if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]; then
 fi
 if [[ -f /boot/loader/loader.conf ]] && [[ $(grep -c "timeout 1" /boot/loader/loader.conf) -lt 1 ]]; then
     echo -n "- - [Systemd boot] Kernel dernier sauvegardé sélectionné : "
-    sudo sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
+    if grep -q "^default" /boot/loader/loader.conf; then
+        sudo sed -i 's/^default .*$/default @saved/' /boot/loader/loader.conf
+    else
+        echo "default @saved" | sudo tee -a /boot/loader/loader.conf > /dev/null
+    fi
     check_cmd
 
     echo -n "- - [Systemd boot] Timeout de 1s : "
-    sudo sed -i 's/^timeout .*$/timeout 1/' /boot/loader/loader.conf
+    if grep -q "^timeout" /boot/loader/loader.conf; then
+        sudo sed -i 's/^timeout .*$/timeout 1/' /boot/loader/loader.conf
+    else
+        echo "timeout 1" | sudo tee -a /boot/loader/loader.conf > /dev/null
+    fi
     check_cmd
 fi
 if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub) -lt 1 ]]; then
@@ -360,8 +368,8 @@ fi
 # Rétention cache des paquets avec paccache
 if check_pkg pacman-contrib && [[ $(paccache -dv | grep -v .sig | awk -F'-[0-9]' '{print $1}' | sort | uniq -c | sort -nr | head -n 1 | awk '{print $1}') -gt 1 ]]; then
 #Explication variable dans l'ordre : lister tous les paquets conservés, exclure les .sig, ne pas prendre en compte sur les numéros de version, trier, garder la valeur max, afficher la 1ère colonne
-    if [[ "$VM" != "none" ]]; then
-        echo -n "- - [Paccache] Ajustement à 1 version : " && sudo paccache -rk1
+    if [[ "$VM" = "none" ]]; then
+        echo -n "- - [Paccache] Ajustement à 1 version : " && sudo paccache -rk2
     else
         echo -n "- - [Paccache] Ajustement à 0 version : " && sudo paccache -rk0
     fi

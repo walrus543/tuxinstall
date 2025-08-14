@@ -29,3 +29,26 @@ if check_pkg rust; then # rust et donc cargo installé
         fi
     fi
 fi
+
+msg_bold_blue "➜ MISE À JOUR rtl8821ce..."
+if [[ -d ~/Tmp/rtl8821ce ]]; then
+    REPO_DIR="$HOME/Tmp/rtl8821ce"
+    LOG_FILE="$HOME/Tmp/rtl8821ce.txt"
+
+    git -C "$REPO_DIR" pull > "$LOG_FILE" 2>&1
+
+    if grep -q "Déjà à jour." "$LOG_FILE"; then
+        echo "Déjà à jour."
+    else
+        msg_bold_yellow "[INFO] Nouveaux changements détectés, recompilation du module..."
+        cd "$REPO_DIR" || { msg_bol_read "Erreur : impossible d'accéder à $REPO_DIR"; exit 1; }
+
+        sudo ./dkms-remove.sh
+        git pull
+        make clean
+        sudo ./dkms-install.sh
+    fi
+    rm -f "$LOG_FILE"
+else
+    msg_bold_yellow "Dossier de travail non trouvé..."
+fi
