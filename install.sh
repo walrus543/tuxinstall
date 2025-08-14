@@ -976,6 +976,24 @@ if [ "$install_type" = 1 ]; then
             fi
         fi #Fin Android Studio
 
+        #Imprimante (https://wiki.archlinux.org/title/CUPS#Printer_discovery) - DNS-SD & IPP driver
+        if [[ $(check_systemd avahi-daemon.service 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Imprimante] Activation avahi-daemon.service : "
+            sudo systemctl enable avahi-daemon.service &>> "$log_file"; check_cmd
+        fi
+
+        if [[ $(grep -c 'mdns_minimal' /etc/nsswitch.conf) -lt 1 ]]; then
+            echo -n "- - [Imprimante] Modification \"hosts\" de /etc/nsswitch.conf : "
+            sudo sed -i 's/^hosts\:\ mymachines\ resolve\ \[!UNAVAIL=return\]\ files\ myhostname\ dns/hosts\:\ mymachines\ mdns_minimal\ \[NOTFOUND=return\]\ resolve\ \[!UNAVAIL=return\]\ files\ myhostname\ dns/w print_sed.txt' /etc/nsswitch.conf
+            if [ -s print_sed.txt ]; then
+                printf "${BOLD}${GREEN}OK${RESET}\n"
+            else
+                printf "${BOLD}${RED}KO${RESET}\n"
+            fi
+            rm -f print_sed.txt
+        sudo systemctl restart cups.service
+        fi
+
         #Actions manuelles
         echo
         msg_bold_yellow "*******************"

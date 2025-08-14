@@ -94,6 +94,7 @@ add_full:imagemagick
 add_full:jdk21-openjdk
 add_full:libreoffice-fresh
 add_full:libreoffice-fresh-fr
+add_full:nss-mdns
 add_full:obsidian
 add_full:pdfarranger
 add_full:print-manager
@@ -104,6 +105,7 @@ add_full:python-requests
 add_full:rsync
 add_full:signal-desktop
 add_full:syncthing
+add_full:system-config-printer
 add_full:telegram-desktop
 add_full:thunderbird
 add_full:thunderbird-i18n-fr

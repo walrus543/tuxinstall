@@ -61,6 +61,8 @@ if [[ "$install_type" == "1" ]]; then
         ufw default allow outgoing >> "$log_file" 2>&1
         ufw allow from 192.168.1.0/24 to any port 22 >> "$log_file" 2>&1
         ufw deny to any port 22 >> "$log_file" 2>&1
+        ufw allow 53317/tcp >> "$log_file" 2>&1 #LocalSend
+        ufw allow 53317/udp >> "$log_file" 2>&1 #LocalSend
         ufw enable >> "$log_file" 2>&1
         systemctl enable --now ufw.service >> "$log_file" 2>&1
         check_cmd
