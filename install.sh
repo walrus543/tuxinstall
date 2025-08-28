@@ -638,7 +638,7 @@ if [[ "$VM" = "none" ]]; then
 
     if ! check_pkg nvidia && ! check_pkg nvidia-lts && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
         msg_bold_blue "➜ Paquets Nvidia"
-        sudo pacman -S --needed --noconfirm nvidia nvidia-lts nvidia-utils nvidia-settings &>> "$log_file"; check_cmd
+        sudo pacman -S --needed --noconfirm nvidia nvidia-lts nvidia-utils &>> "$log_file"; check_cmd
     fi
 fi
 

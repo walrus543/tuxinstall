@@ -31,6 +31,7 @@ alias boxddbackup='bash $HOME/Documents/Linux/Divers_Scripts/box_dd_backup.sh'
 alias magisk_lineageos='bash $HOME/Documents/Linux/Divers_Scripts/magisk_lineageos.sh'
 alias aya='bash $HOME/Documents/Linux/Divers_Scripts/aya.sh'
 alias gittuxinstall='bash $HOME/Documents/Linux/Divers_Scripts/tuxinstall_git.sh'
+alias obsidianplugins='bash $HOME/Documents/Linux/Divers_Scripts/obsidian_plugins.sh'
 alias od='dolphin . &'
 alias ls='ls -1 --color=always --group-directories-first'
 alias ll='eza -l --group-directories-first'
@@ -86,6 +87,7 @@ alias extractappfiltericons='bash $PathIR/___Emails___/Scripts/extract_appfilter
 alias crowdsourcedappfilters='bash $PathIR/___Emails___/Scripts/crowdsourced_appfilter.sh'
 alias ipversion='bash $PathIR/___Emails___/Scripts/versions.sh'
 alias gitcheck='bash $PathIR/___Emails___/Scripts/git_check.sh'
+alias gitnewtoken='bash $PathIR/___Emails___/Scripts/git_new_token.sh'
 alias compilation='bash $PathIR/___Emails___/Scripts/compilation.sh'
 
 ## OUVERTURE DES APPFILTERS
