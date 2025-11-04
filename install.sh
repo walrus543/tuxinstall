@@ -469,7 +469,7 @@ if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
     echo -n "- - Nettoyage de l'installation : "
     cd "$ICI" && rm -rf "$ICI/paru"; check_cmd
 
-    if check_pkg paru && [[ $(grep -c "^#NewsOnUpgrade" /etc/paru.conf) -lt 1 ]]; then
+    if check_pkg paru && [[ $(grep -c "^#NewsOnUpgrade" /etc/paru.conf) -eq 1 ]]; then
         echo -n "- - Correction de NewsOnUpgrade : "
         sudo sed -i 's/^#NewsOnUpgrade/NewsOnUpgrade/' /etc/paru.conf; check_cmd
     fi
