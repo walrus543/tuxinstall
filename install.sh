@@ -148,16 +148,16 @@ if [[ $(grep -c "^Color" /etc/pacman.conf) -lt 1 ]]; then
     sudo sed -i 's/^#Color/Color/' /etc/pacman.conf
     check_cmd
 fi
-if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]; then
-    echo -n "- - [Makepkg] Compression : "
-    sudo sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
-    check_cmd
-fi
-if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]; then
-    echo -n "- - [Makepkg] Utilisation des coeurs : "
-    sudo sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
-    check_cmd
-fi
+#if [[ $(grep -c "^PKGEXT='.pkg.tar'" /etc/makepkg.conf) -lt 1 ]]; then
+#    echo -n "- - [Makepkg] Compression : "
+#    sudo sed -i "s/^PKGEXT='.pkg.tar.zst'/PKGEXT='.pkg.tar'/" /etc/makepkg.conf
+#    check_cmd
+#fi
+#if [[ $(grep -c "^MAKEFLAGS=\"-j\$(nproc)\"" /etc/makepkg.conf) -lt 1 ]]; then
+#    echo -n "- - [Makepkg] Utilisation des coeurs : "
+#    sudo sed -i 's/^#MAKEFLAGS=.*/MAKEFLAGS=\"-j$(nproc)\"/' /etc/makepkg.conf
+#    check_cmd
+#fi
 if [[ $(grep -c "SystemMaxUse=512M" /etc/systemd/journald.conf) -lt 1 ]]; then
     echo -n "- - [Journald] Taille maximale : "
     sudo sed -i 's/^#SystemMaxUse=.*$/SystemMaxUse=512M/; s/^SystemMaxUse=.*$/SystemMaxUse=512M/' /etc/systemd/journald.conf
