@@ -46,7 +46,6 @@ add_defaut:tldr
 add_defaut:trash-cli
 add_defaut:tuned
 add_defaut:unzip
-add_defaut:vivaldi
 add_defaut:wget
 add_defaut:wl-clipboard
 add_defaut:yazi
@@ -115,6 +114,7 @@ add_full:ufw
 add_full:virtualbox
 add_full:virtualbox-guest-iso
 add_full:virtualbox-host-dkms
+add_defaut:vivaldi
 
 ############################
 # PAQUETS SI LITE
