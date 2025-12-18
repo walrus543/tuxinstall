@@ -132,6 +132,7 @@ del_lite:parole
 #add_plasma:kdeconnect
 #add_plasma:qt6-imageformats => Pour les fichiers webp
 add_plasma:gwenview
+add_plasma:kcalc
 add_plasma:kdialog
 add_plasma:kimageformats
 add_plasma:kio-admin
@@ -139,7 +140,6 @@ add_plasma:kio-admin
 add_plasma:kwallet
 add_plasma:okular
 add_plasma:partitionmanager
-add_plasma:qalculate-qt
 add_plasma:qt6-imageformats
 add_plasma:spectacle
 add_plasma:systemdgenie
