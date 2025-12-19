@@ -86,6 +86,7 @@ add_full:adobe-source-han-sans-kr-fonts
 add_full:calibre
 add_full:cups
 add_full:dos2unix
+add_full:exfat-utils
 add_full:fdupes
 add_full:fdupes
 add_full:hplip
