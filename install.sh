@@ -636,9 +636,17 @@ if [[ "$VM" = "none" ]]; then
         fi
     fi
 
-    if ! check_pkg nvidia && ! check_pkg nvidia-lts && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic nvidia) -gt 0 ]]; then
+    # Dec 2025 : https://archlinux.org/news/nvidia-590-driver-drops-pascal-support-main-packages-switch-to-open-kernel-modules/
+    # Carte graphique GeForce GTX 1050 3 GB Max-Q (Pascal) plus supportée par les paquets nvidia. Faut utiliser celui ci-dessous depuis AUR
+
+    #nvidia-580xx-dkms: Kernel module sources (compiles driver for your kernel) => obligatoire
+    #nvidia-580xx-utils: OpenGL, Vulkan, CUDA libraries and utilities => dépend du dkms
+    #nvidia-580xx-settings: nvidia-settings GUI configuration tool => optionnel
+    #lib32-nvidia-580xx-utils: 32-bit support (required for Steam and many games) => optionnel
+
+    if check_pkg paru && ! check_pkg nvidia-580xx-dkms && [[ $(lspci -vnn | grep -A 12 '\[030[02]\]' | grep -Ei "vga|3d|display|kernel" | grep -ic "GTX 1050") -gt 0 ]]; then
         msg_bold_blue "➜ Paquets Nvidia"
-        sudo pacman -S --needed --noconfirm nvidia nvidia-lts nvidia-utils &>> "$log_file"; check_cmd
+        add_pkg_paru nvidia-580xx-dkms ; check_cmd
     fi
 fi
 
