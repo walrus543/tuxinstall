@@ -1011,6 +1011,23 @@ if [ "$install_type" = 1 ]; then
         sudo systemctl restart cups.service
         fi
 
+        # Proton Pass CLI
+        passcli=$(command -v pass-cli)
+        if [[ -z "$passcli" ]]; then #pass-cli pas installé
+            if [[ $(find ~/.local/bin -type f -iname "pass-cli" | wc -l) -ne 0 ]]; then
+                echo "- - [Proton Pass CLI] PATH à corriger"
+                msg_bold_yellow "Proton Pass \"pass-cli\" installé mais PATH mal défini."
+                echo "➜ Modifier le path dans ${BOLD}.zshrc${RESET} pour ${BOLD}pass-cli${RESET} : export PATH=\"/home/kratosvm/.local/bin:$PATH\"" | tee -a $HOME/Tmp/post_installation.txt
+            else
+                echo -n "- - [[Proton Pass CLI] Installation :"
+                curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
+                check_cmd
+            fi
+        elif [[ $(pass-cli info | rg pm.me | wc -l) -eq 0 ]]; then
+                msg_bold_yellow "Lancement du navigateur pour se connecter à Proton Pass CLI"
+                pass-cli login
+        fi
+
         #Actions manuelles
         echo
         msg_bold_yellow "*******************"
