@@ -1012,12 +1012,11 @@ if [ "$install_type" = 1 ]; then
         fi
 
         # Proton Pass CLI
-        passcli=$(command -v pass-cli)
-        if [[ -z "$passcli" ]]; then #pass-cli pas installé
+        if ! pass-cli info 2> /dev/null; then #pass-cli pas installé
             if [[ $(find ~/.local/bin -type f -iname "pass-cli" | wc -l) -ne 0 ]]; then
                 echo "- - [Proton Pass CLI] PATH à corriger"
                 msg_bold_yellow "Proton Pass \"pass-cli\" installé mais PATH mal défini."
-                echo "➜ Modifier le path dans ${BOLD}.zshrc${RESET} pour ${BOLD}pass-cli${RESET} : export PATH=\"/home/kratosvm/.local/bin:$PATH\"" | tee -a $HOME/Tmp/post_installation.txt
+                echo "➜ Modifier le path dans ${BOLD}.zshrc${RESET} pour ${BOLD}pass-cli${RESET} : export PATH=\"/home/kratosvm/.local/bin:\$PATH\"" | tee -a $HOME/Tmp/post_installation.txt
             else
                 echo -n "- - [[Proton Pass CLI] Installation :"
                 curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
