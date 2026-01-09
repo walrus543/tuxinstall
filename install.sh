@@ -1012,7 +1012,7 @@ if [ "$install_type" = 1 ]; then
         fi
 
         # Proton Pass CLI
-        if ! pass-cli info 2> /dev/null; then #pass-cli pas installé
+        if ! pass-cli --help &> /dev/null; then #pass-cli pas installé
             if [[ $(find ~/.local/bin -type f -iname "pass-cli" | wc -l) -ne 0 ]]; then
                 echo "- - [Proton Pass CLI] PATH à corriger"
                 msg_bold_yellow "Proton Pass \"pass-cli\" installé mais PATH mal défini."
@@ -1022,7 +1022,7 @@ if [ "$install_type" = 1 ]; then
                 curl -fsSL https://proton.me/download/pass-cli/install.sh | bash
                 check_cmd
             fi
-        elif [[ $(pass-cli info | rg pm.me | wc -l) -eq 0 ]]; then
+        elif [[ $(pass-cli info &> /dev/null | grep -c 'pm.me') -eq 0 ]]; then
                 msg_bold_yellow "Lancement du navigateur pour se connecter à Proton Pass CLI"
                 pass-cli login
         fi

@@ -16,6 +16,7 @@ export TERM=xterm # kitty
 export ANDROID_HOME=~/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 #############################
 # ALIAS - GENERAL
