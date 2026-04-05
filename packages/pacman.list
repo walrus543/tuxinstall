@@ -28,6 +28,8 @@ add_defaut:kitty
 add_defaut:libappimage
 add_defaut:libnatpmp
 add_defaut:linux-lts-headers
+add_defaut:lua
+add_defaut:luarocks
 add_defaut:man-db
 add_defaut:man-pages
 add_defaut:meld
