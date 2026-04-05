@@ -536,14 +536,16 @@ if check_pkg kitty && [[ ! -f "$HOME"/.config/kitty/kitty.conf ]]; then
     cp "$ICI/config/background.png" "$HOME"/.config/kitty; check_cmd
 fi
 
-if check_pkg neovim && [[ $(grep -c "nocompatible" "$HOME"/.config/nvim/init.vim 2>/dev/null) -lt 1 ]]; then
-    echo -n "- - [NeoVim] Config de base : "
-    mkdir -p "$HOME"/.config/nvim/ && cp "$ICI/config/neovim" "$HOME"/.config/nvim/init.vim; check_cmd
+if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/dev/null) -lt 1 ]]; then
+    echo -n "- - [NeoVim] Config de base Lua : "
+    mkdir -p "$HOME/.config/nvim/lua/config" && mkdir -p "$HOME/.config/nvim/lua/plugins" && cp "$ICI/config/neovim/init.lua" "$HOME/.config/nvim/init.lua"; check_cmd
 
-    echo -n "- - [NeoVim] Plugin manager vim-plug : "
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' &>> "$log_file"; check_cmd
-    echo "${YELLOW}Taper \"PlugInstall\" en mode commande pour activer les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+    echo -n "- - [NeoVim] Bootstrap Lazy : "
+    cp "$ICI/config/neovim/lazy.lua" "$HOME/.config/nvim/config/lazy.lua"; check_cmd
+
+    echo -n "- - [NeoVim] Catppuccin : "
+    cp "$ICI/config/neovim/catppuccin.lua" "$HOME/.config/nvim/plugins/catppuccin.lua"; check_cmd
+    echo "${YELLOW}Taper \":Lazy\" activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi
 
