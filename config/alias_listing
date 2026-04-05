@@ -33,6 +33,7 @@ alias magisk_lineageos='bash $HOME/Documents/Linux/Divers_Scripts/magisk_lineage
 alias aya='bash $HOME/Documents/Linux/Divers_Scripts/aya.sh'
 alias gittuxinstall='bash $HOME/Documents/Linux/Divers_Scripts/tuxinstall_git.sh'
 alias obsidianplugins='bash $HOME/Documents/Linux/Divers_Scripts/obsidian_plugins.sh'
+alias orphan_lyrics='bash $HOME/Documents/Linux/Divers_Scripts/orphan_lyrics.sh'
 alias od='dolphin . &'
 alias ls='ls -1 --color=always --group-directories-first'
 alias ll='eza -l --group-directories-first'
@@ -61,6 +62,7 @@ PathPartageons=~/PartageVM/Partageons/W10/To_W10
 # ProtonVPN
 ##############
 alias vpnpf='natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 && while true ; do date ; natpmpc -a 1 0 udp 60 -g 10.2.0.1 && natpmpc -a 1 0 tcp 60 -g 10.2.0.1 || { echo -e "ERROR with natpmpc command \a" ; break ; } ; sleep 45 ; done'
+alias passzaclys='echo -n $(pass-cli item view "pass://Main/Zaclys acloud4 Copro/webdav") | wl-copy'
 
 #alias irsup='bash $PathIR/___Emails___/Scripts/irsup.sh'
 alias ir='bash $PathIR/___Emails___/Scripts/ir.sh && cd $PathIR/icons/'

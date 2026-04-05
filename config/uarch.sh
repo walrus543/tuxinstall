@@ -13,6 +13,9 @@ fi
 msg_bold_blue "➜ NETTOYAGE DES DÉPENDANCES..."
 paru -c
 
+msg_bold_blue "➜ NETTOYAGE DU CACHES DES ANCIENS PAQUETS..."
+paccache -rk1
+
 msg_bold_blue "➜ MISE À JOUR POWERLEVEL10K..."
 git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull 
 

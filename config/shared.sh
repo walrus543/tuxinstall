@@ -22,6 +22,9 @@ sleepmid=4
 sleeplong=6
 
 # Fonctions
+msg_bold() {
+    printf "\n${BOLD_ALT}$1${RESET_ALT}\n"
+}
 msg_bold_yellow() {
     printf "\n${YELLOW_ALT}${BOLD_ALT}$1${RESET_ALT}\n"
 }
