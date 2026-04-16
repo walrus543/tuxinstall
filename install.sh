@@ -130,7 +130,7 @@ fi
 msg_bold_blue "➜ Configuration système de base"
 if [[ $(grep -c "^ParallelDownloads" /etc/pacman.conf) -lt 1 ]]; then
     echo -n "- - [Pacman] Téléchargements parallèles : "
-    sudo sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
+    sudo sed -i 's/^#ParallelDownloads.*/ParallelDownloads = 10/' /etc/pacman.conf
     check_cmd
 fi
 if [[ $(grep -c 'ILoveCandy' /etc/pacman.conf) -lt 1 ]]; then
