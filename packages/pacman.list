@@ -106,6 +106,7 @@ add_full:python-beautifulsoup4
 add_full:python-requests
 add_full:rsync
 add_full:signal-desktop
+add_full:strawberry 
 add_full:syncthing
 add_full:system-config-printer
 add_full:telegram-desktop
