@@ -111,6 +111,8 @@ if [[ "$VM" != "none" ]]; then
         check_cmd
         echo -n "- - Droits du dossier PartageVM : "
         if [[ -d /media/sf_PartageVM ]]; then
+            sudo chmod -R 755 /media # requis si dossier créé par vboxservice
+            ln -s /media/sf_PartageVM $HOME/PartageVM
             sudo chown -R $USER:$USER /media/sf_PartageVM/
             check_cmd
         else
