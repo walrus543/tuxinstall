@@ -134,7 +134,9 @@ del_lite:parole
 ############################
 #add_plasma:kdeconnect
 #add_plasma:qt6-imageformats => Pour les fichiers webp
+add_plasma:dolphin
 add_plasma:gwenview
+add_plasma:kate
 add_plasma:kcalc
 add_plasma:kdialog
 add_plasma:kimageformats
