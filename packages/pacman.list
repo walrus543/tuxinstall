@@ -41,7 +41,6 @@ add_defaut:pdfgrep
 add_defaut:pkgfile
 add_defaut:plocate
 add_defaut:ripgrep
-add_defaut:shellcheck
 add_defaut:tailspin
 add_defaut:tar
 add_defaut:tldr
