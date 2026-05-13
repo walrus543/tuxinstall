@@ -10,8 +10,9 @@ if [ -n "$(flatpak list)" ]; then
     flatpak update -y
 fi
 
-msg_bold_blue "➜ NETTOYAGE DES DÉPENDANCES..."
+msg_bold_blue "➜ NETTOYAGE DES DÉPENDANCES ET DU CACHE..."
 paru -c
+#paru -Sc # faire -Scc pour ajouter le cache des paquets installés
 
 msg_bold_blue "➜ NETTOYAGE DU CACHES DES ANCIENS PAQUETS..."
 paccache -rk1

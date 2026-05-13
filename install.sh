@@ -460,6 +460,16 @@ if check_pkg zsh; then
     fi
 fi
 
+msg_bold_blue "➜ Configuration yazi"
+if check_pkg yazi && [[ ! -f $HOME/.config/yazi/theme.toml ]]; then
+    echo -n "- - [Yazi] Téléchargement du thème Catppuccin : "
+    git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp" &>> "$log_file"; check_cmd
+    echo -n "- - [Yazi] Application de Catppuccin Mocha Lavender : "
+    cp "$HOME/Tmp/yazi/themes/latte/catppuccin-latte-lavender.toml" "$HOME/.config/yazi/theme.toml"; check_cmd
+    echo -n "- - [Yazi] Suppression du dépôt local : "
+    rm -rf "$HOME/Tmp/yazi" ; check_cmd
+fi
+
 if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
     msg_bold_blue "➜ Installation de paru"
     #rustup default stable &>> "$log_file"
