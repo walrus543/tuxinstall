@@ -90,6 +90,7 @@ add_full:dos2unix
 add_full:exfat-utils
 add_full:fdupes
 add_full:fdupes
+add_full:gum
 add_full:hplip
 add_full:imagemagick
 add_full:jdk21-openjdk
