@@ -16,8 +16,9 @@ return {
           find_command = {
             "fd",
             "--type", "f",
-            "--extension", "txt",
             "--extension", "log",
+            "--extension", "md",
+            "--extension", "txt",
             "--extension", "sh",
             "--extension", "xml"
            -- "--hidden",       -- inclut fichiers cachés si besoin

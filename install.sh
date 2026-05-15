@@ -564,6 +564,8 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     cp "$ICI/config/neovim/catppuccin.lua" "$HOME/.config/nvim/lua/plugins/catppuccin.lua"; check_cmd
     echo -n "- - [NeoVim] Keymaps : "
     cp "$ICI/config/neovim/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
+    echo -n "- - [NeoVim] Neotree : "
+    cp "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
     cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt

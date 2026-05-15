@@ -16,6 +16,11 @@ add_not_vm:localsend-bin
 add_not_vm:proton-vpn-gtk-app
 
 ############################
+# PAQUETS SI LITE
+############################
+add_lite:lazydocker-bin
+
+############################
 # PAQUETS SI COMPLETE
 ############################
 #add_full:payload-dumper-go-bin
