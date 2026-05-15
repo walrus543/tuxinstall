@@ -114,11 +114,11 @@ if [[ "$VM" != "none" ]]; then
     if [[ $(sudo ls -d /media/sf_PartageVM | wc -l) -eq 1 ]]; then
         sudo chmod 755 /media # requis si dossier créé par vboxservice
         check_cmd
-        #echo -n "- - Raccourci PartageVM dans $HOME : "
-        #if [[ -d /media/sf_PartageVM ]]; then
-        #    ln -s /media/sf_PartageVM $HOME/PartageVM
-        #    check_cmd
-        #fi
+        echo -n "- - Raccourci PartageVM dans $HOME : "
+        if [[ -d /media/sf_PartageVM ]]; then
+            ln -s /media/sf_PartageVM $HOME/PartageVM
+            check_cmd
+        fi
     else
         msg_bold_red "Le dossier habituel PartageVM n'a pas été trouvé"
     fi
