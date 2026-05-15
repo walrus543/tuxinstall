@@ -109,12 +109,15 @@ if [[ "$VM" != "none" ]]; then
         echo -n "- - Ajout du user au groupe vboxsf : "
         sudo usermod -a -G vboxsf $USER
         check_cmd
-        echo -n "- - Droits du dossier PartageVM : "
-        if [[ -d /media/sf_PartageVM ]]; then
+        echo -n "- - Détection du dossier PartageVM : "
+        if [[ $(sudo ls -d /media/sf_PartageVM | wc -l) -eq 1 ]]; then
             sudo chmod 755 /media # requis si dossier créé par vboxservice
-            #sudo chown -R $USER:$USER /media/sf_PartageVM/
             check_cmd
-            ln -s /media/sf_PartageVM $HOME/PartageVM
+            echo -n "- - Raccourci PartageVM dans $HOME : "
+            if [[ -d /media/sf_PartageVM ]]; then
+                ln -s /media/sf_PartageVM $HOME/PartageVM
+                check_cmd
+            fi
         else
             msg_bold_red "Le dossier habituel PartageVM n'a pas été trouvé"
         fi
