@@ -470,7 +470,7 @@ if check_pkg yazi && [[ ! -f $HOME/.config/yazi/theme.toml ]]; then
     mkdir -p "$HOME/Tmp/yazi"
     git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp/yazi" &>> "$log_file"; check_cmd
     echo -n "- - [Yazi] Application de Catppuccin Mocha Lavender : "
-    cp "$HOME/Tmp/yazi/themes/mocha/catppuccin-mocha-lavender.toml" "$HOME/.config/mocha/theme.toml"; check_cmd
+    cp "$HOME/Tmp/yazi/themes/mocha/catppuccin-mocha-lavender.toml" "$HOME/.config/yazi/theme.toml"; check_cmd
     echo -n "- - [Yazi] Suppression du dépôt local : "
     rm -rf "$HOME/Tmp/yazi" ; check_cmd
 fi
