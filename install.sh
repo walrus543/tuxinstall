@@ -111,10 +111,10 @@ if [[ "$VM" != "none" ]]; then
         check_cmd
         echo -n "- - Droits du dossier PartageVM : "
         if [[ -d /media/sf_PartageVM ]]; then
-            sudo chmod -R 755 /media # requis si dossier créé par vboxservice
-            ln -s /media/sf_PartageVM $HOME/PartageVM
-            sudo chown -R $USER:$USER /media/sf_PartageVM/
+            sudo chmod 755 /media # requis si dossier créé par vboxservice
+            #sudo chown -R $USER:$USER /media/sf_PartageVM/
             check_cmd
+            ln -s /media/sf_PartageVM $HOME/PartageVM
         else
             msg_bold_red "Le dossier habituel PartageVM n'a pas été trouvé"
         fi
@@ -463,9 +463,11 @@ fi
 msg_bold_blue "➜ Configuration yazi"
 if check_pkg yazi && [[ ! -f $HOME/.config/yazi/theme.toml ]]; then
     echo -n "- - [Yazi] Téléchargement du thème Catppuccin : "
-    git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp" &>> "$log_file"; check_cmd
+    mkdir "$HOME/.config/yazi"
+    mkdir "$HOME/Tmp/yazi"
+    git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp/yazi" &>> "$log_file"; check_cmd
     echo -n "- - [Yazi] Application de Catppuccin Mocha Lavender : "
-    cp "$HOME/Tmp/yazi/themes/latte/catppuccin-latte-lavender.toml" "$HOME/.config/yazi/theme.toml"; check_cmd
+    cp "$HOME/Tmp/yazi/themes/latte/catppuccin-mocha-lavender.toml" "$HOME/.config/mocha/theme.toml"; check_cmd
     echo -n "- - [Yazi] Suppression du dépôt local : "
     rm -rf "$HOME/Tmp/yazi" ; check_cmd
 fi

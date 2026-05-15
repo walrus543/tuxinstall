@@ -161,6 +161,9 @@ alias pjsupernova='bash $PathIR/___Emails___/Scripts/pj/supernova.sh'
 alias pjwhirl='bash $PathIR/___Emails___/Scripts/pj/whirl.sh'
 alias pjwhitart='bash $PathIR/___Emails___/Scripts/pj/whitart.sh'
 
+alias irgradlesync='bash $PathIR/___Emails___/Scripts/irgradlesync.sh'
+alias irselcompilation='bash $PathIR/___Emails___/Scripts/irselcompilation.sh'
+
 #>>>>>>>
 # FZF
 #>>>>>>>
