@@ -75,5 +75,5 @@ if [[ "$install_type" == "1" ]]; then
     fi
 fi
 
-msg_bold_green "Opérations terminées."
-echo "Prêt pour lancer le fichier install.sh"
+msg_bold_green "Opérations root terminées."
+echo "Lancement de la partie utilisateur..."

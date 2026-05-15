@@ -109,21 +109,21 @@ if [[ "$VM" != "none" ]]; then
         echo -n "- - Ajout du user au groupe vboxsf : "
         sudo usermod -a -G vboxsf $USER
         check_cmd
-        echo -n "- - Détection du dossier PartageVM : "
-        if [[ $(sudo ls -d /media/sf_PartageVM | wc -l) -eq 1 ]]; then
-            sudo chmod 755 /media # requis si dossier créé par vboxservice
+    fi
+    echo -n "- - Détection du dossier PartageVM : "
+    if [[ $(sudo ls -d /media/sf_PartageVM | wc -l) -eq 1 ]]; then
+        sudo chmod 755 /media # requis si dossier créé par vboxservice
+        check_cmd
+        echo -n "- - Raccourci PartageVM dans $HOME : "
+        if [[ -d /media/sf_PartageVM ]]; then
+            ln -s /media/sf_PartageVM $HOME/PartageVM
             check_cmd
-            echo -n "- - Raccourci PartageVM dans $HOME : "
-            if [[ -d /media/sf_PartageVM ]]; then
-                ln -s /media/sf_PartageVM $HOME/PartageVM
-                check_cmd
-            fi
+        fi
         else
             msg_bold_red "Le dossier habituel PartageVM n'a pas été trouvé"
         fi
         msg_bold_yellow "Penser à redémarrer."
         sleep $sleepmid
-    fi
 fi
 #--------------------------------------
 # [FIN] VM ONLY
@@ -466,11 +466,11 @@ fi
 msg_bold_blue "➜ Configuration yazi"
 if check_pkg yazi && [[ ! -f $HOME/.config/yazi/theme.toml ]]; then
     echo -n "- - [Yazi] Téléchargement du thème Catppuccin : "
-    mkdir "$HOME/.config/yazi"
-    mkdir "$HOME/Tmp/yazi"
+    mkdir -p "$HOME/.config/yazi"
+    mkdir -p "$HOME/Tmp/yazi"
     git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp/yazi" &>> "$log_file"; check_cmd
     echo -n "- - [Yazi] Application de Catppuccin Mocha Lavender : "
-    cp "$HOME/Tmp/yazi/themes/latte/catppuccin-mocha-lavender.toml" "$HOME/.config/mocha/theme.toml"; check_cmd
+    cp "$HOME/Tmp/yazi/themes/mocha/catppuccin-mocha-lavender.toml" "$HOME/.config/mocha/theme.toml"; check_cmd
     echo -n "- - [Yazi] Suppression du dépôt local : "
     rm -rf "$HOME/Tmp/yazi" ; check_cmd
 fi
