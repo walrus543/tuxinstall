@@ -22,6 +22,7 @@ add_not_vm:proton-vpn-gtk-app
 #add_full:ventoy-bin
 add_full:lrcget-bin
 add_full:naps2-bin
+add_full:pixelflasher-bin
 #add_full:normcap
 add_full:tesseract-data-eng
 add_full:tesseract-data-fra
