@@ -566,6 +566,8 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     cp "$ICI/config/neovim/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
     echo -n "- - [NeoVim] Neotree : "
     cp "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
+    echo -n "- - [NeoVim] Yanky : "
+    cp "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
     cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
@@ -835,66 +837,66 @@ if [ "$install_type" = 1 ]; then
             fi
         fi
 
-        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
-        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
-            if ! check_pkg rtl8821ce-dkms-git; then
-                echo -n "- - Installation du paquet AUR  : "
-                add_pkg_paru rtl8821ce-dkms-git; check_cmd
-            fi
-
-            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf) -lt 1 ]]; then
-                echo -n "- - Configuration blacklist.conf  : "
-                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
-                sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null; check_cmd
-            fi
-
-#            # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
-#            # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
-#            # Définir le répertoire cible et les patterns des noms de fichiers
-#            # Ça reste visible avec journalctl -b --priority=3
-#            DIR="/boot/loader/entries"
-#            PATTERNS=("linux.conf" "linux-lts.conf")
+#        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
+#        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
+#            if ! check_pkg rtl8821ce-dkms-git; then
+#                echo -n "- - Installation du paquet AUR  : "
+#                add_pkg_paru rtl8821ce-dkms-git; check_cmd
+#            fi
 #
-#            # Fonction pour ajouter ou modifier la ligne dans le fichier
-#            modify_file() {
-#                local file="$1"
-#                local tempfile=$(mktemp)
+#            if [[ $(grep -c "blacklist rtw88_8821ce" /etc/modprobe.d/blacklist.conf) -lt 1 ]]; then
+#                echo -n "- - Configuration blacklist.conf  : "
+#                sudo echo "# https://github.com/tomaspinho/rtl8821ce/tree/master#wi-fi-not-working-for-kernel--59" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null
+#                sudo echo "blacklist rtw88_8821ce" | sudo tee -a /etc/modprobe.d/blacklist.conf > /dev/null; check_cmd
+#            fi
 #
-#                if [ -f "$file" ]; then
-#                    # Lire le fichier et ajouter/modifier la ligne
-#                    while IFS= read -r line; do
-#                        if [[ "$line" =~ ^options\ root= ]]; then
-#                            if [[ "$line" != *"pci=noaer"* ]]; then
-#                                echo "${line} pci=noaer" >> "$tempfile"
-#                            else
-#                                echo "$line" >> "$tempfile"
-#                            fi
-#                        else
-#                            echo "$line" >> "$tempfile"
-#                        fi
-#                    done < "$file"
-#                else
-#                    # Créer le fichier avec la ligne par défaut
-#                    echo "options root= pci=noaer" > "$tempfile"
-#                fi
+##            # Modifier les fichiers linux/linux-lts.conf pour ne pas avoir de remonter d'anomalie dans dmesg
+##            # On ajoute pci=noaer à la fin de la ligne qui commence par options root= (paramètre du noyau)
+##            # Définir le répertoire cible et les patterns des noms de fichiers
+##            # Ça reste visible avec journalctl -b --priority=3
+##            DIR="/boot/loader/entries"
+##            PATTERNS=("linux.conf" "linux-lts.conf")
+##
+##            # Fonction pour ajouter ou modifier la ligne dans le fichier
+##            modify_file() {
+##                local file="$1"
+##                local tempfile=$(mktemp)
+##
+##                if [ -f "$file" ]; then
+##                    # Lire le fichier et ajouter/modifier la ligne
+##                    while IFS= read -r line; do
+##                        if [[ "$line" =~ ^options\ root= ]]; then
+##                            if [[ "$line" != *"pci=noaer"* ]]; then
+##                                echo "${line} pci=noaer" >> "$tempfile"
+##                            else
+##                                echo "$line" >> "$tempfile"
+##                            fi
+##                        else
+##                            echo "$line" >> "$tempfile"
+##                        fi
+##                    done < "$file"
+##                else
+##                    # Créer le fichier avec la ligne par défaut
+##                    echo "options root= pci=noaer" > "$tempfile"
+##                fi
+##
+##                # Remplacer l'ancien fichier par le nouveau
+##                sudo mv "$tempfile" "$file"
+##            }
+##
+##            # Parcourir les motifs de fichiers cibles
+##            for pattern in "${PATTERNS[@]}"; do
+##                # Rechercher les fichiers correspondant au motif
+##                for filepath in "$DIR"/*_"$pattern"; do
+##                    if [ -f "$filepath" ]; then
+##                        modify_file "$filepath"
+##                    fi
+##                done
+##            done
 #
-#                # Remplacer l'ancien fichier par le nouveau
-#                sudo mv "$tempfile" "$file"
-#            }
-#
-#            # Parcourir les motifs de fichiers cibles
-#            for pattern in "${PATTERNS[@]}"; do
-#                # Rechercher les fichiers correspondant au motif
-#                for filepath in "$DIR"/*_"$pattern"; do
-#                    if [ -f "$filepath" ]; then
-#                        modify_file "$filepath"
-#                    fi
-#                done
-#            done
-
-        else
-            echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
-        fi
+#        else
+#            echo ${YELLOW}"- - Carte réseau Realtek RTL8821CE non détectée."${RESET}
+#        fi
 
         # OSheden
         if [[ ! -d "$HOME"/AndroidAll/Thèmes_Shorts/Alta ]] && [[ -d "$HOME"/Thèmes/Alta/app/src/main/ ]]; then

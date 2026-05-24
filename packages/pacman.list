@@ -98,7 +98,7 @@ add_full:libreoffice-fresh
 add_full:libreoffice-fresh-fr
 add_full:nss-mdns
 add_full:obsidian
-add_full:pdfarranger
+#add_full:pdfarranger
 add_full:print-manager
 add_full:protonmail-bridge
 add_full:protonmail-bridge-core
