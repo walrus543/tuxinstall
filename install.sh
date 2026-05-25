@@ -921,6 +921,7 @@ if [ "$install_type" = 1 ]; then
                 [Darly]=Darly
                 [Distraction_Free]=Distraction
                 [Ecliptic]=Ecliptic
+                [EclipticBblue]=EclipticBlue
                 [EclipticBrown]=EclipticBrown
                 [EclipticPink]=EclipticPink
                 [EclipticRed]=EclipticRed
