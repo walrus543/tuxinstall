@@ -20,13 +20,16 @@ matches:
   #      params:
   #        format: "%m/%d/%Y"
 
-  # Print the output of a shell command
-  - trigger: ":shell"
-    replace: "{{output}}"
-    vars:
-      - name: output
-        type: shell
-        params:
-          cmd: "echo 'Hello from your shell'"
+
+  - trigger: :53a
+    replace: 53A Route d'Aix-les-Bains
+
+  - trigger: :53a
+    replace: |
+      53A Route d'Aix-les-Bains
+      74540 Saint-Félix
+
+  - trigger: :53a
+    replace: 53A Route d'Aix-les-Bains 74540 Saint-Félix
 
   # And much more! For more information, visit the docs: https://espanso.org/docs/
