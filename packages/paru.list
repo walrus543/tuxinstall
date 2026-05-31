@@ -25,6 +25,7 @@ add_lite:lazydocker-bin
 ############################
 #add_full:payload-dumper-go-bin
 #add_full:ventoy-bin
+add_full:espanso-wayland
 add_full:lrcget-bin
 add_full:naps2-bin
 add_full:pixelflasher-bin

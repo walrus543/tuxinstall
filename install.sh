@@ -568,6 +568,10 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     cp "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
     echo -n "- - [NeoVim] Yanky : "
     cp "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
+    echo -n "- - [NeoVim] LSP : "
+    cp "$ICI/config/neovim/lsp.lua" "$HOME/.config/nvim/lua/plugins/lsp.lua"; check_cmd
+    echo -n "- - [NeoVim] Mason : "
+    cp "$ICI/config/neovim/mason.lua" "$HOME/.config/nvim/lua/plugins/mason.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
     cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
@@ -702,7 +706,7 @@ fi
 #++++++++++++++++++++++++++++++++++++++
 # [DEBUT] VERSION COMPLÈTE OU LITE
 #++++++++++++++++++++++++++++++++++++++
-if [ "$install_type" = 1 ]; then
+if [ "$install_type" = 1 ]; then # VERSION COMPLETE
     msg_bold_blue "➜ Paquets PACMAN supplémentaires FULL"
     while read -r line; do
         if [[ "$line" == add_full:* ]]; then
@@ -837,6 +841,62 @@ if [ "$install_type" = 1 ]; then
             fi
         fi
 
+        ##########
+        # ESPANSO
+        ##########
+        f_espanso() {
+
+            if ! check_pkg espanso-wayland; then
+                msg_bold_red "Espanso NON installé !"
+                return 1
+            fi
+
+            msg_bold_blue "➜ Traitement de Espanso"
+
+            local espansoversion
+            espansoversion=$(espanso --version)
+            if [[ -z "$espansoversion" ]]; then
+                msg_bold_red "- - [Espanso] Impossible de contrôler la version."
+                return 1
+            fi
+            echo -n "- - [Espanso] Version installée : $espansoversion"
+
+            if [[ $(check_systemd_user espanso.service 2>/dev/null) != "enabled" ]]; then
+                echo -n "[Espanso] Activation du service : "
+                espanso service register &>> "$log_file"; check_cmd
+            else
+                msg_bold_red "- - [Espanso] Impossible d'activer le service utilisateur"
+                return 1
+            fi
+
+            if [[ $(espanso status | grep -c 'is running') -ne 1 ]]; then
+                msg_bold_red "- - [Espanso] Espanso n'est pas en cours d'exécution."
+                return 1
+            fi
+
+            if [[ -f "$ICI/config/espanso/default.yml" ]]; then
+                echo -n "- - [Espanso] Fichier de configuration : "
+                cp "$ICI/config/espanso/default.yml" "$HOME/.config/espanso/config/default.yml"; check_cmd
+            else
+                msg_bold_red "Fichier default.yml manquant".
+                return 1
+            fi
+
+            if [[ -f "$ICI/config/espanso/base.yml" ]]; then
+                echo -n "- - [Espanso] Fichier match : "
+                cp "$ICI/config/espanso/base.yml" "$HOME/.config/espanso/match/base.yml"; check_cmd
+            else
+                msg_bold_red "Fichier base.yml manquant".
+                return 1
+            fi
+
+            msg_bold_green "- - [Espanso] Fin des traitements"
+            return 0
+        }
+
+        # Appel de la fonction
+        f_espanso
+
 #        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
 #        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
 #            if ! check_pkg rtl8821ce-dkms-git; then
@@ -921,7 +981,7 @@ if [ "$install_type" = 1 ]; then
                 [Darly]=Darly
                 [Distraction_Free]=Distraction
                 [Ecliptic]=Ecliptic
-                [EclipticBblue]=EclipticBlue
+                [EclipticBlue]=EclipticBlue
                 [EclipticBrown]=EclipticBrown
                 [EclipticPink]=EclipticPink
                 [EclipticRed]=EclipticRed
@@ -1070,7 +1130,7 @@ if [ "$install_type" = 1 ]; then
 
     fi #Fin si NON VM
 
-elif [ "$install_type" = 2 ]; then
+elif [ "$install_type" = 2 ]; then # VERSION LITE
     msg_bold_blue "➜ Paquets PACMAN supplémentaires LITE"
     while read -r line; do
         if [[ "$line" == add_lite:* ]]; then
