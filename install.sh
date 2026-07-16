@@ -568,10 +568,6 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     cp "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
     echo -n "- - [NeoVim] Yanky : "
     cp "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
-    echo -n "- - [NeoVim] LSP : "
-    cp "$ICI/config/neovim/lsp.lua" "$HOME/.config/nvim/lua/plugins/lsp.lua"; check_cmd
-    echo -n "- - [NeoVim] Mason : "
-    cp "$ICI/config/neovim/mason.lua" "$HOME/.config/nvim/lua/plugins/mason.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
     cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
@@ -1148,6 +1144,23 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
             fi
         fi
     done < "packages/pacman.list"
+
+    if [[ "$DE" = 'XFCE' ]]; then
+        msg_bold_blue "➜ Port forwarding Proton VPN"
+        if ! check_pkg proton-vpn-cli; then
+            msg_bold_yellow "Paquet Proton VPN cli manquant"
+        else
+            mkdir -p ~/.local/bin
+            mkdir -p ~/.config/autostart
+            echo -n "- - Copie du .desktop : "
+            mv "$ICI/config/protonvpn/vpn-portforward.desktop" "$HOME/.config/autostart/"; check_cmd
+            echo -n "- - Copie du script de connexion : "
+            mv "$ICI/config/protonvpn/vpn-portforward.sh" "$HOME/.local/bin/"; check_cmd
+            echo -n "- - Script exécutable : "
+            chmod +x "$HOME/.local/bin/vpn-portforward.sh"; check_cmd
+        fi
+    fi
+
 fi
 #--------------------------------------
 # [FIN] VERSION COMPLÈTE OU LITE

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=VPN Port Forwarding
+Comment=Connexion ProtonVPN + port forwarding NAT-PMP au démarrage de session
+Exec=bash -c 'kitty --title "VPN Port Forwarding" --hold "$HOME/.local/bin/vpn-portforward.sh"'
+Icon=network-vpn
+Terminal=false
+X-GNOME-Autostart-enabled=true
+StartupNotify=false
+Hidden=false

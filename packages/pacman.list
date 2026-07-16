@@ -145,6 +145,7 @@ add_plasma:kimageformats
 add_plasma:kio-admin
 add_plasma:kio-admin
 add_plasma:kwallet
+add_plasma:libnotify
 add_plasma:okular
 add_plasma:partitionmanager
 add_plasma:qt6-imageformats
@@ -157,5 +158,8 @@ add_plasma:systemdgenie
 add_xfce:font-manager
 add_xfce:gnome-keyring
 add_xfce:gvfs-smb
+add_xfce:libnotify
 add_xfce:network-manager-applet
 add_xfce:numlockx
+add_xfce:proton-vpn-cli
+add_xfce:xclip

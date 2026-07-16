@@ -13,7 +13,6 @@ add_defaut:zen-browser-bin
 #add_not_vm:brave-bin
 add_not_vm:downgrade
 add_not_vm:localsend-bin
-add_not_vm:proton-vpn-gtk-app
 
 ############################
 # PAQUETS SI LITE
@@ -27,8 +26,10 @@ add_lite:lazydocker-bin
 #add_full:ventoy-bin
 add_full:espanso-wayland
 add_full:lrcget-bin
+add_full:murmure-bin
 add_full:naps2-bin
 add_full:pixelflasher-bin
+add_full:proton-vpn-gtk-app
 #add_full:normcap
 add_full:tesseract-data-eng
 add_full:tesseract-data-fra

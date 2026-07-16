@@ -33,3 +33,27 @@ if check_pkg rust; then # rust et donc cargo installé
         fi
     fi
 fi
+
+# >>>>>>>>>
+# DOCKER
+# >>>>>>>>>
+if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1 ]]; then
+    msg_bold_blue "➜ DOCKER"
+    msg_bold "Sauvegarde de FreshRSS..."
+    BACKUP_DIR="$HOME/docker/backups/"
+    DATE=$(date +%Y%m%d)
+    SOURCE_DIR="$HOME/docker/freshrss"
+
+    mkdir -p "$BACKUP_DIR"
+    rm -rf "$BACKUP_DIR"/*
+    docker stop freshrss &> /dev/null
+
+    sudo tar -czf "$BACKUP_DIR/freshrss_$DATE.tar.gz" "$SOURCE_DIR"
+
+    docker start freshrss &> /dev/null
+
+    echo "Sauvegarde terminée"
+fi
+# <<<<<<<<<
+# DOCKER
+# <<<<<<<<<

@@ -23,7 +23,5 @@ vim.opt.clipboard = "unnamedplus"
 vim.opt.cursorline = true
 vim.opt.ttyfast = true
 
-vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
-
 -- Charger lazy.nvim
 require("config.lazy")
