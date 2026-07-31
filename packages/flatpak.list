@@ -4,13 +4,13 @@
 #add_defaut:com.usebottles.bottles
 #add_defaut:io.github.cboxdoerfer.FSearch
 #add_defaut:io.github.giantpinkrobots.flatsweep
-add_defaut:com.github.tchx84.Flatseal
-add_defaut:io.github.flattool.Warehouse
 
 ############################
 # PAQUETS POUR TOUS SAUF VM
 ############################
 #add_not_vm:
+add_not_vm:com.github.tchx84.Flatseal
+add_not_vm:io.github.flattool.Warehouse
 
 ############################
 # PAQUETS POUR VM
