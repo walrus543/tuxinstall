@@ -70,6 +70,7 @@ alias ircount='for dir in $(find . -type d); do     echo "${dir}: $(find ${dir} 
 alias ircopyall='bash $PathIR/___Emails___/Scripts/ircopyall.sh'
 alias irfirst='bash $PathIR/___Emails___/Scripts/ir_first_todo.sh'
 alias irfullddl='bash $PathIR/___Emails___/Scripts/irfullddl.sh'
+alias irtmp='echo "IR traités : $(ls ~/PartageVM/Partageons/ENVOI | wc -l)"'
 alias unz='unzip '\''*.zip'\'''
 alias unzsup='unzip '\''*.zip'\'' && rm *.zip'
 alias lss='clear && ls -1 | sed '\''s/\ /\\\ /g'\'''
