@@ -19,6 +19,7 @@ add_defaut:dysk
 add_defaut:eza
 add_defaut:fastfetch
 add_defaut:fd
+add_defaut:filelight
 add_defaut:flatpak
 add_defaut:fzf
 add_defaut:git
