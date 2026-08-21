@@ -1163,6 +1163,20 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
             echo -n "- - Script exécutable : "
             chmod +x "$HOME/.local/bin/vpn-portforward.sh"; check_cmd
         fi
+
+        msg_bold_blue "➜ Docker"
+        if check_pkg docker && [[ $(check_systemd docker.socket 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Docker] Activation de docker.socket : "
+            sudo systemctl enable --now docker.socket &>> "$log_file"; check_cmd
+            echo -n "- - [Docker] Ajout $USER dans le groupe docker : "
+            sudo usermod -aG docker $USER &>> "$log_file"; check_cmd
+            echo -n "- - [Docker] Création des dossiers de base : "
+            mkdir -p ~/docker/backups &>> "$log_file"; check_cmd
+            echo "- - [Docker] Contrôle d'installation"
+            if [[ -z "$(command -v docker)" ]]; then
+                msg_bold_red "Binaire \"docker\" non trouvé"
+            fi
+        fi
     fi
 
 fi

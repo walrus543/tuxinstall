@@ -156,6 +156,8 @@ add_plasma:systemdgenie
 ############################
 # PAQUETS SI XFCE
 ############################
+add_xfce:docker
+add_xfce:docker-compose
 add_xfce:font-manager
 add_xfce:gnome-keyring
 add_xfce:gvfs-smb
