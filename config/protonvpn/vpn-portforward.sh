@@ -38,11 +38,75 @@ notify() {
     fi
 }
 
+# --- 0a) Vérification de l'installation de proton-vpn-cli ------------------
+check_package_installed() {
+    if pacman -Qq proton-vpn-cli >/dev/null 2>&1; then
+        log "Paquet proton-vpn-cli déjà installé."
+        return 0
+    fi
+
+    log "Le paquet proton-vpn-cli n'est pas installé."
+
+    if [[ ! -t 0 ]]; then
+        # Pas de terminal interactif (ex: lancé automatiquement au démarrage) :
+        # impossible de demander confirmation, on abandonne proprement.
+        log "Aucun terminal interactif disponible pour demander confirmation. Abandon."
+        notify "proton-vpn-cli manquant" "Paquet non installé, script arrêté (pas de terminal interactif)."
+        exit 1
+    fi
+
+    read -r -p "proton-vpn-cli n'est pas installé. L'installer maintenant avec 'paru -Syu proton-vpn-cli' ? [o/N] " reponse
+    case "$reponse" in
+        [oO]|[oO][uU][iI])
+            log "Installation de proton-vpn-cli via paru..."
+            if paru -Syu proton-vpn-cli; then
+                log "proton-vpn-cli installé avec succès."
+            else
+                log "Échec de l'installation de proton-vpn-cli. Abandon."
+                notify "Échec installation" "L'installation de proton-vpn-cli a échoué."
+                exit 1
+            fi
+            ;;
+        *)
+            log "Installation refusée par l'utilisateur. Abandon."
+            exit 1
+            ;;
+    esac
+}
+
+# --- 0b) Vérification de la connexion au compte ProtonVPN ------------------
+check_account_logged_in() {
+    local info
+    info="$(protonvpn info 2>&1)"
+
+    if echo "$info" | grep -q "Account: 'None'"; then
+        log "Aucun compte ProtonVPN connecté (Account: 'None')."
+        notify "ProtonVPN non connecté" "Veuillez vous connecter avec 'protonvpn login' avant de relancer ce script."
+        exit 1
+    fi
+
+    log "Compte ProtonVPN connecté."
+}
+
+check_package_installed
+check_account_logged_in
+
+# --- 0c) Activation du port forwarding côté compte/CLI ----------------------
+# Sur le CLI Linux, l'activation du port forwarding est un réglage à part,
+# séparé de la connexion : sans lui, natpmpc échoue avec "the gateway does
+# not support nat-pmp" (errno=111), même sur un serveur qui le supporte.
+# Idempotent : sans effet si déjà activé.
+log "Activation du port forwarding (protonvpn config set port-forwarding on)..."
+protonvpn config set port-forwarding on 2>&1 | tee -a "$LOGFILE"
+
 # --- 1) Connexion VPN --------------------------------------------------
 # La sortie de "connect" est à la fois affichée dans le terminal et loguée,
 # pour vérifier au premier coup d'œil que la connexion se passe bien.
-log "=== Connexion à ProtonVPN (FR) ==="
-protonvpn connect --country FR 2>&1 | tee -a "$LOGFILE"
+log "=== Connexion à ProtonVPN (FR, serveur P2P) ==="
+# --p2p est indispensable : le port forwarding ne fonctionne que sur les
+# serveurs P2P, sinon natpmpc échoue avec "the gateway does not support
+# nat-pmp" même avec le port forwarding activé côté compte.
+protonvpn connect --country FR --p2p 2>&1 | tee -a "$LOGFILE"
 
 # --- Attente active du tunnel -------------------------------------------
 # proton-vpn-cli (officiel) n'expose pas de commande "status" fiable, donc on

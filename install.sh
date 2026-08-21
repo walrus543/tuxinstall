@@ -459,7 +459,9 @@ if check_pkg zsh; then
         echo -n "- - - Déplacement de uarch.sh : "
         mkdir -p $HOME/Documents/Linux/Divers_Scripts && cp $ICI/config/uarch.sh $HOME/Documents/Linux/Divers_Scripts ; check_cmd
         echo -n "- - - Déplacement de shared.sh : "
-        mkdir -p $HOME/Documents/Linux/Divers_Scripts && cp $ICI/config/shared.sh $HOME/Documents/Linux/Divers_Scripts; check_cmd
+        cp $ICI/config/shared.sh $HOME/Documents/Linux/Divers_Scripts; check_cmd
+        echo -n "- - - Déplacement de pdrive_auth.sh : "
+        cp $ICI/config/pdrive_auth.sh $HOME/Documents/Linux/Divers_Scripts ; check_cmd
     fi
 fi
 
@@ -570,7 +572,7 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     cp "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
     cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
-    echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+    #echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi
 
@@ -654,9 +656,11 @@ if [[ "$VM" = "none" ]]; then
     fi
 
     msg_bold_blue "➜ Pacman hooks"
-    if [[ ! -f /usr/share/libalpm/hooks/z_pacnew.hook ]]; then
+    if [[ ! -f /etc/pacman.d/hooks/z_pacnew.hook ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
-        sudo cp $ICI/config/z_pacnew.hook /usr/share/libalpm/hooks; check_cmd
+        # /etc/pacman.d/hooks est le répertoire par défaut (voir /etc/pacman.conf HookDir)
+        # Ancien répertoire utilisé : /usr/share/libalpm/hooks mais c'est là que les paquets installent leurs propres hooks
+        sudo cp $ICI/config/z_pacnew.hook /etc/pacman.d/hooks; check_cmd
         if [[ ! -f $HOME/Documents/Linux/Divers_Scripts/pacman_pacnew.hook ]]; then
             echo -n "- - - Déplacement de pacman_pacnew.hook : "
             mkdir -p $HOME/Documents/Linux/Divers_Scripts && cp $ICI/config/pacman_pacnew.hook $HOME/Documents/Linux/Divers_Scripts; check_cmd

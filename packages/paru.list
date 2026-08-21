@@ -13,6 +13,7 @@ add_defaut:zen-browser-bin
 #add_not_vm:brave-bin
 add_not_vm:downgrade
 add_not_vm:localsend-bin
+add_not_vm:proton-drive-cli-bin
 
 ############################
 # PAQUETS SI LITE
