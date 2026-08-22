@@ -401,7 +401,7 @@ if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
         echo -n "- - [Nerd Font] Regénération du cache des polices : "
         fc-cache -f -v &>> "$log_file"; check_cmd
         echo -n "- - [Nerd Font] Contrôle de l'installation : "
-        if [[ $(fc-list | grep -c "Hack" 2>&1) -gt 0 ]]; then msg_bold_green "OK"; else msg_bold_red "ERREUR"; fi
+        if [[ $(fc-list | grep -c "Hack" 2>&1) -gt 0 ]]; then printf "${GREEN}${BOLD}OK${RESET}\n"; else printf "${RED}${BOLD}ERREUR${RESET}\n"; fi
     fi
 fi
 
