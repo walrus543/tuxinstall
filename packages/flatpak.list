@@ -3,7 +3,7 @@
 ############################
 #add_defaut:com.usebottles.bottles
 #add_defaut:io.github.cboxdoerfer.FSearch
-#add_defaut:io.github.giantpinkrobots.flatsweep
+add_defaut:io.github.giantpinkrobots.flatsweep
 
 ############################
 # PAQUETS POUR TOUS SAUF VM
