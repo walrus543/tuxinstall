@@ -124,7 +124,7 @@ add_defaut:vivaldi
 ############################
 # PAQUETS SI LITE
 ############################
-del_lite:parole
+#del_lite:parole
 
 ############################
 # PAQUETS SI VM

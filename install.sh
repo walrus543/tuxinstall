@@ -605,7 +605,7 @@ if [[ "$VM" = "none" ]]; then
         fi
     else
         echo "- - [fstrim] Activation du timer : "
-        msg_bold_red "$device_name ne semble pas supporter fstrim."
+        msg_bold_yellow "$device_name ne semble pas supporter fstrim."
     fi
 
     #Suppression du bruit lors de recherches"
