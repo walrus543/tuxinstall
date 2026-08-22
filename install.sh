@@ -660,7 +660,10 @@ if [[ "$VM" = "none" ]]; then
         echo -n "- - Ajout de z_pacnew.hook : "
         # /etc/pacman.d/hooks est le répertoire par défaut (voir /etc/pacman.conf HookDir)
         # Ancien répertoire utilisé : /usr/share/libalpm/hooks mais c'est là que les paquets installent leurs propres hooks
-        sudo cp $ICI/config/z_pacnew.hook /etc/pacman.d/hooks; check_cmd
+        sudo mkdir -p /etc/pacman.d/hooks/
+        sudo cp $ICI/config/z_pacnew.hook /etc/pacman.d/hooks/; check_cmd
+        echo -n "- - Ajustement du user de z_pacnew.hook : "
+        sudo sed -i "/^Exec = /s|/home/kratos|${HOME}|g" fichier.cfg; check_cmd
         if [[ ! -f $HOME/Documents/Linux/Divers_Scripts/pacman_pacnew.hook ]]; then
             echo -n "- - - Déplacement de pacman_pacnew.hook : "
             mkdir -p $HOME/Documents/Linux/Divers_Scripts && cp $ICI/config/pacman_pacnew.hook $HOME/Documents/Linux/Divers_Scripts; check_cmd

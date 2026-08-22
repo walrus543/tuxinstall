@@ -81,7 +81,7 @@ check_account_logged_in() {
 
     if echo "$info" | grep -q "Account: 'None'"; then
         log "Aucun compte ProtonVPN connecté (Account: 'None')."
-        notify "ProtonVPN non connecté" "Veuillez vous connecter avec 'protonvpn login' avant de relancer ce script."
+        notify "ProtonVPN non connecté" "Veuillez vous connecter avec 'protonvpn signin' avant de relancer ce script."
         exit 1
     fi
 
