@@ -68,6 +68,7 @@ add_not_vm:ntfs-3g
 add_not_vm:perl-rename
 add_not_vm:python-pyfuse3
 add_not_vm:qbittorrent
+add_not_vm:rsync
 add_not_vm:samba
 add_not_vm:smbclient
 add_not_vm:vlc
@@ -105,7 +106,6 @@ add_full:protonmail-bridge
 add_full:protonmail-bridge-core
 add_full:python-beautifulsoup4
 add_full:python-requests
-add_full:rsync
 add_full:signal-desktop
 add_full:strawberry 
 add_full:syncthing
@@ -156,13 +156,17 @@ add_plasma:systemdgenie
 ############################
 # PAQUETS SI XFCE
 ############################
+del_xfce:parole
+del_xfce:vlc
 add_xfce:docker
 add_xfce:docker-compose
 add_xfce:font-manager
 add_xfce:gnome-keyring
 add_xfce:gvfs-smb
+add_xfce:lazydocker
 add_xfce:libnotify
 add_xfce:network-manager-applet
 add_xfce:numlockx
 add_xfce:proton-vpn-cli
+add_xfce:smplayer
 add_xfce:xclip
