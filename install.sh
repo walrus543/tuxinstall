@@ -5,6 +5,13 @@
 ###############################################################################
 
 set -euo pipefail
+###### POUR DEBUG, 2 options
+#1. Exécuter sudo bash -x se_script.sh 2>&1 | tee debug.log et consulter le log pour savoir où est l'erreur
+#2. Décommenter ceci puis lancer le script :
+#set -Eeuo pipefail
+#trap 'echo "❌ Erreur ligne $LINENO : commande « $BASH_COMMAND » a échoué (code $?)"' ERR
+###### POUR DEBUG
+
 mkdir -p "$HOME/Tmp"
 source variables.sh
 
@@ -1160,9 +1167,9 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
             mkdir -p ~/.local/bin
             mkdir -p ~/.config/autostart
             echo -n "- - Copie du .desktop : "
-            mv "$ICI/config/protonvpn/vpn-portforward.desktop" "$HOME/.config/autostart/"; check_cmd
+            cp "$ICI/config/protonvpn/vpn-portforward.desktop" "$HOME/.config/autostart/"; check_cmd
             echo -n "- - Copie du script de connexion : "
-            mv "$ICI/config/protonvpn/vpn-portforward.sh" "$HOME/.local/bin/"; check_cmd
+            cp "$ICI/config/protonvpn/vpn-portforward.sh" "$HOME/.local/bin/"; check_cmd
             echo -n "- - Script exécutable : "
             chmod +x "$HOME/.local/bin/vpn-portforward.sh"; check_cmd
         fi

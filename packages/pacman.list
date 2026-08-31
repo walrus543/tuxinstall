@@ -91,7 +91,6 @@ add_full:cups
 add_full:dos2unix
 add_full:exfat-utils
 add_full:fdupes
-add_full:fdupes
 add_full:gum
 add_full:hplip
 add_full:imagemagick
@@ -141,7 +140,7 @@ add_plasma:dolphin
 add_plasma:gwenview
 add_plasma:kate
 add_plasma:kcalc
-add_plasma:kdialog
+#add_plasma:kdialog
 add_plasma:kimageformats
 add_plasma:kio-admin
 add_plasma:kio-admin

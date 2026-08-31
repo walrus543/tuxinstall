@@ -7,7 +7,8 @@
 # Variables
 log_file="$HOME/Tmp/config-arch.log"
 DE="${XDG_CURRENT_DESKTOP:-}" # Possible de mettre une valeur par défaut après :- si la variable est vide (expansion paramétrique Bash)
-VM="$(systemd-detect-virt)"
+#VM="$(systemd-detect-virt)"
+VM="$(systemd-detect-virt || true)"
 ICI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Coloration du texte
