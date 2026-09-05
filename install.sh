@@ -1175,9 +1175,9 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         fi
 
         msg_bold_blue "➜ Docker"
-        if check_pkg docker && [[ $(check_systemd docker.socket 2>/dev/null) != "enabled" ]]; then
-            echo -n "- - [Docker] Activation de docker.socket : "
-            sudo systemctl enable --now docker.socket &>> "$log_file"; check_cmd
+        if check_pkg docker && [[ $(check_systemd docker.service 2>/dev/null) != "enabled" ]]; then
+            echo -n "- - [Docker] Activation de docker.service : "
+            sudo systemctl enable --now docker.service &>> "$log_file"; check_cmd
             echo -n "- - [Docker] Ajout $USER dans le groupe docker : "
             sudo usermod -aG docker $USER &>> "$log_file"; check_cmd
             echo -n "- - [Docker] Création des dossiers de base : "
