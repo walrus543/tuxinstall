@@ -28,6 +28,7 @@ add_not_vm:proton-drive-cli-bin
 add_full:espanso-wayland
 add_full:murmure-bin
 add_full:naps2-bin
+add_full:opustags
 add_full:pixelflasher-bin
 add_full:proton-vpn-gtk-app
 #add_full:normcap
