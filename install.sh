@@ -91,7 +91,7 @@ rm -f "$ICI/type_install.txt"
 
 msg_bold_yellow "Pour suivre la progression :"
 echo ${BOLD}"tail -f $log_file"${RESET}
-if ! check_pkg xclip; then sudo pacman -S --noconfirm xclip &>> "$log_file" ; fi
+if ! check_pkg xclip; then sudo pacman -S --noconfirm xclip >> "$log_file" ; fi
 echo "tail -f $log_file" | xclip -selection clipboard
 echo "(commande copiée dans le presse-papier)"
 echo
@@ -109,7 +109,7 @@ if [[ "$VM" != "none" ]]; then
         sudo pacman -S --needed --noconfirm virtualbox-guest-utils >> "$log_file"
         check_cmd
         echo -n "- - Activation de vboxservice.service : "
-        sudo systemctl enable --now vboxservice.service &>> "$log_file"
+        sudo systemctl enable --now vboxservice.service >> "$log_file"
         check_cmd
     fi
     if [[ $(grep vboxsf /etc/group | grep -c $USER) -lt 1 ]]; then
@@ -198,12 +198,12 @@ if [[ -f /etc/default/grub ]] && [[ $(grep -c "GRUB_TIMEOUT=1" /etc/default/grub
     check_cmd
 
     echo -n "- - [Grub] Regénérer grub.cfg : "
-    sudo grub-mkconfig -o /boot/grub/grub.cfg  &>> "$log_file"
+    sudo grub-mkconfig -o /boot/grub/grub.cfg  >> "$log_file"
     check_cmd
 fi
 
 msg_bold_blue "➜ Mise à jour du système Pacman"
-sudo pacman -Syu --noconfirm &>> "$log_file"
+sudo pacman -Syu --noconfirm >> "$log_file"
 
 msg_bold_blue "➜ Paquets PACMAN par défaut"
 while read -r line; do
@@ -369,11 +369,11 @@ fi
 
 if [[ $(check_systemd paccache.timer 2>/dev/null) != "enabled" ]]; then
     echo -n "- - [Paccache] Activation du timer : "
-    sudo systemctl enable paccache.timer &>> "$log_file"; check_cmd
+    sudo systemctl enable paccache.timer >> "$log_file"; check_cmd
 fi
 if check_pkg openssh && [[ $(check_systemd sshd.service 2>/dev/null) != "enabled" ]]; then
     echo -n "- - [SSH] Activation du service : "
-    sudo systemctl enable sshd.service &>> "$log_file"; check_cmd
+    sudo systemctl enable sshd.service >> "$log_file"; check_cmd
 fi
 
 
@@ -390,7 +390,7 @@ fi
 
 if check_pkg syncthing && [[ $(check_systemd_user syncthing.service 2>/dev/null) != "enabled" ]]; then
     echo -n "[Syncthing] Activation du service : "
-    systemctl --user enable syncthing.service &>> "$log_file"; check_cmd
+    systemctl --user enable syncthing.service >> "$log_file"; check_cmd
 fi
 
 #Nerd Font
@@ -399,14 +399,14 @@ if [[ $(fc-list | grep -c "Hack" 2>&1 ) -lt 1 ]]; then
     echo -n "- - [Nerd Font] Téléchargement de la police HACK : "
     derniere_version=$(curl -s https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
     url_telechargement="https://github.com/ryanoasis/nerd-fonts/releases/download/${derniere_version}/Hack.zip"
-    curl -L -o $HOME/Tmp/Hack.zip "$url_telechargement" &>> "$log_file"; check_cmd
+    curl -L -o $HOME/Tmp/Hack.zip "$url_telechargement" >> "$log_file"; check_cmd
 
     if [[ -f $HOME/Tmp/Hack.zip ]]; then
         echo -n "- - [Nerd Font] Décompression de l'archive : "
-        sudo unzip $HOME/Tmp/Hack.zip -d /usr/share/fonts &>> "$log_file"; check_cmd
+        sudo unzip $HOME/Tmp/Hack.zip -d /usr/share/fonts >> "$log_file"; check_cmd
 
         echo -n "- - [Nerd Font] Regénération du cache des polices : "
-        fc-cache -f -v &>> "$log_file"; check_cmd
+        fc-cache -f -v >> "$log_file"; check_cmd
         echo -n "- - [Nerd Font] Contrôle de l'installation : "
         if [[ $(fc-list | grep -c "Hack" 2>&1) -gt 0 ]]; then printf "${GREEN}${BOLD}OK${RESET}\n"; else printf "${RED}${BOLD}ERREUR${RESET}\n"; fi
     fi
@@ -415,19 +415,19 @@ fi
 msg_bold_blue "➜ Configuration shell"
 if check_pkg zsh && [[ ! -d $HOME/.oh-my-zsh ]]; then
     echo "- - [Oh My ZSH] Installation"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # &>> "$log_file"  # pas dans les logs pour le définir comme shell par défaut
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # >> "$log_file"  # pas dans les logs pour le définir comme shell par défaut
 fi
 if check_pkg zsh && [[ ! -d $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
     echo -n "- - [ZSH Plugin] Installation zsh-autosuggestions : "
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions &>> "$log_file"; check_cmd
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions >> "$log_file"; check_cmd
 fi
 if check_pkg zsh && [[ ! -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]]; then
     echo -n "- - [ZSH Plugin] Installation zsh-syntax-highlighting : "
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting &>> "$log_file"; check_cmd
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting >> "$log_file"; check_cmd
 fi
 if check_pkg zsh && [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
     echo -n "- - [ZSH Thème] Installation powerlevel10k : "
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k &>> "$log_file"; check_cmd
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k >> "$log_file"; check_cmd
     echo -n "- - [ZSH Thème] Définir powerlevel10k par défaut : "
     sed -i 's/^ZSH_THEME.*$/ZSH_THEME=\"powerlevel10k\/powerlevel10k\"/' $HOME/.zshrc; check_cmd
 fi
@@ -477,7 +477,7 @@ if check_pkg yazi && [[ ! -f $HOME/.config/yazi/theme.toml ]]; then
     echo -n "- - [Yazi] Téléchargement du thème Catppuccin : "
     mkdir -p "$HOME/.config/yazi"
     mkdir -p "$HOME/Tmp/yazi"
-    git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp/yazi" &>> "$log_file"; check_cmd
+    git clone https://github.com/catppuccin/yazi.git "$HOME/Tmp/yazi" >> "$log_file"; check_cmd
     echo -n "- - [Yazi] Application de Catppuccin Mocha Lavender : "
     cp "$HOME/Tmp/yazi/themes/mocha/catppuccin-mocha-lavender.toml" "$HOME/.config/yazi/theme.toml"; check_cmd
     echo -n "- - [Yazi] Suppression du dépôt local : "
@@ -486,10 +486,10 @@ fi
 
 if ! check_pkg paru && check_pkg git && check_pkg base-devel; then
     msg_bold_blue "➜ Installation de paru"
-    #rustup default stable &>> "$log_file"
+    #rustup default stable >> "$log_file"
     cd "$ICI"
-    git clone https://aur.archlinux.org/paru.git &>> "$log_file"
-    cd paru &>> "$log_file" && makepkg -si
+    git clone https://aur.archlinux.org/paru.git >> "$log_file"
+    cd paru >> "$log_file" && makepkg -si
     echo -n "- - Statut de l'installation : "
     pacman -Q paru > /dev/null; check_cmd
     echo -n "- - Nettoyage de l'installation : "
@@ -608,7 +608,7 @@ if [[ "$VM" = "none" ]]; then
         add_pkg_pacman util-linux
         if [[ $(check_systemd fstrim.timer 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [fstrim] Activation du timer $device_name : "
-            sudo systemctl enable fstrim.timer &>> "$log_file"; check_cmd
+            sudo systemctl enable fstrim.timer >> "$log_file"; check_cmd
         fi
     else
         echo "- - [fstrim] Activation du timer : "
@@ -650,12 +650,12 @@ if [[ "$VM" = "none" ]]; then
 
     if check_pkg tuned && [[ $(check_systemd tuned 2>/dev/null) != "enabled" ]]; then
         echo -n "- - [Tuned] Activation systemd : "
-        sudo systemctl enable --now tuned &>> "$log_file"; check_cmd
+        sudo systemctl enable --now tuned >> "$log_file"; check_cmd
 
         current_tuned_profile=$(tuned-adm active | cut -f2 -d : | xargs)
         if [[ "$current_tuned_profile" != 'throughput-performance' ]]; then
             echo -n "- - [Tuned] Activation du profile throughput-performance : "
-            tuned-adm profile throughput-performance &>> "$log_file"; check_cmd
+            tuned-adm profile throughput-performance >> "$log_file"; check_cmd
         fi
         if [[ $(cat /proc/sys/vm/swappiness) != 10 ]]; then
             msg_bold_yellow "[Tuned] wm.snappiness n'est pas définie sur 10."
@@ -816,24 +816,24 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
             fi
             if [[ $(check_systemd_user backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
                 echo -n "- - Activation du service USER backup_nettoyage.timer : "
-                systemctl --user daemon-reload &>> "$log_file"
-                systemctl --user enable backup_nettoyage.timer &>> "$log_file"; check_cmd
+                systemctl --user daemon-reload >> "$log_file"
+                systemctl --user enable backup_nettoyage.timer >> "$log_file"; check_cmd
             fi
         fi
 
         msg_bold_blue "➜ Configuration pour installation ${BOLD}Complète${RESET}"
         if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Timeshift] Activation du service : "
-            sudo systemctl enable cronie.service &>> "$log_file"; check_cmd
+            sudo systemctl enable cronie.service >> "$log_file"; check_cmd
         fi
 
         if check_pkg cups && [[ $(check_systemd cups.socket 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Cups] Activation de cups.socket : "
-            sudo systemctl enable --now cups.socket &>> "$log_file"; check_cmd
+            sudo systemctl enable --now cups.socket >> "$log_file"; check_cmd
         fi
         if [[ $(check_systemd cups.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Cups] Activation de cups.service : "
-            sudo systemctl enable --now cups.service &>> "$log_file"; check_cmd
+            sudo systemctl enable --now cups.service >> "$log_file"; check_cmd
         fi
         if check_pkg protonmail-bridge-core && [[ ! -f "$HOME"/.config/autostart/protonmail.desktop ]]; then
             echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
@@ -843,11 +843,11 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
         if check_pkg rust; then
             if [[ ! -f "$HOME"/.cargo/bin/cargo-install-update ]]; then
                 echo -n "- - [Cargo] Installation de cargo-update : "
-                cargo install cargo-update &>> "$log_file"; check_cmd
+                cargo install cargo-update >> "$log_file"; check_cmd
             fi
             if [[ ! -f "$HOME"/.cargo/bin/arx ]]; then
                 echo -n "- - [Cargo] Installation de arx : "
-                cargo install arx &>> "$log_file"; check_cmd
+                cargo install arx >> "$log_file"; check_cmd
             fi
         fi
 
@@ -873,7 +873,7 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
 #
 #            if [[ $(check_systemd_user espanso.service 2>/dev/null) != "enabled" ]]; then
 #                echo -n "[Espanso] Activation du service : "
-#                espanso service register &>> "$log_file"; check_cmd
+#                espanso service register >> "$log_file"; check_cmd
 #            else
 #                msg_bold_red "- - [Espanso] Impossible d'activer le service utilisateur"
 #                return 1
@@ -1094,7 +1094,7 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
         #Imprimante (https://wiki.archlinux.org/title/CUPS#Printer_discovery) - DNS-SD & IPP driver
         if [[ $(check_systemd avahi-daemon.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Imprimante] Activation avahi-daemon.service : "
-            sudo systemctl enable avahi-daemon.service &>> "$log_file"; check_cmd
+            sudo systemctl enable avahi-daemon.service >> "$log_file"; check_cmd
         fi
 
         if [[ $(grep -c 'mdns_minimal' /etc/nsswitch.conf) -lt 1 ]]; then
@@ -1168,8 +1168,8 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         if ! check_pkg proton-vpn-cli; then
             msg_bold_yellow "Paquet Proton VPN cli manquant"
         else
-            mkdir -p ~/.local/bin
-            mkdir -p ~/.config/autostart
+            mkdir -p ~/.local/bin >> "$log_file"
+            mkdir -p ~/.config/autostart >> "$log_file"
             echo -n "- - Copie du .desktop : "
             cp "$ICI/config/protonvpn/vpn-portforward.desktop" "$HOME/.config/autostart/"; check_cmd
             echo -n "- - Copie du script de connexion : "
@@ -1181,11 +1181,11 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         msg_bold_blue "➜ Docker"
         if check_pkg docker && [[ $(check_systemd docker.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Docker] Activation de docker.service : "
-            sudo systemctl enable --now docker.service &>> "$log_file"; check_cmd
+            sudo systemctl enable --now docker.service >> "$log_file"; check_cmd
             echo -n "- - [Docker] Ajout $USER dans le groupe docker : "
-            sudo usermod -aG docker $USER &>> "$log_file"; check_cmd
+            sudo usermod -aG docker $USER >> "$log_file"; check_cmd
             echo -n "- - [Docker] Création des dossiers de base : "
-            mkdir -p ~/docker/backups &>> "$log_file"; check_cmd
+            mkdir -p ~/docker/backups >> "$log_file"; check_cmd
             echo "- - [Docker] Contrôle d'installation"
             if [[ -z "$(command -v docker)" ]]; then
                 msg_bold_red "Binaire \"docker\" non trouvé"
@@ -1193,11 +1193,15 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         fi
 
         msg_bold_blue "➜ Contrôle d'espace disque"
-        mkdir -p ~/.config/systemd/user
+        mkdir -p ~/.config/systemd/user >> "$log_file"
         echo -n "- - Copie de disk-space-check.service : "
         cp "$ICI/config/disk_space/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
         echo -n "- - Copie de disk-space-check.timer : "
         cp "$ICI/config/disk_space/disk-space-check.timer" "$HOME/.config/systemd/user/"; check_cmd
+        echo -n "- - Actualisation du daemon utilisateur : "
+        systemctl --user daemon-reload >> "$log_file"; check_cmd
+        echo -n "- - Activation du timer : "
+        systemctl --user enable --now disk-space-check.timer >> "$log_file"; check_cmd
     fi
 
 fi
