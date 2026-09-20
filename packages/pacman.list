@@ -97,6 +97,7 @@ add_full:gum
 add_full:hplip
 add_full:imagemagick
 add_full:jdk21-openjdk
+add_full:keepassxc
 add_full:libreoffice-fresh
 add_full:libreoffice-fresh-fr
 add_full:nss-mdns
