@@ -1,0 +1,6 @@
+[Unit]
+Description=Vérification de l'espace disque disponible
+
+[Service]
+Type=oneshot
+ExecStart=%h/.scripts/check-disk-space.sh

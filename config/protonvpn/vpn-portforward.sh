@@ -137,38 +137,50 @@ log "=== Démarrage de la boucle de port forwarding ==="
 notify "VPN connecté" "Démarrage du port forwarding..."
 
 # --- 2) Boucle natpmpc + 3) extraction et copie du port --------------------
-# On utilise stdbuf pour désactiver le buffering et traiter chaque ligne
-# dès qu'elle est produite (important car natpmpc tourne dans une boucle).
-{
-    while true; do
-        date
-        natpmpc -a 1 0 udp 60 -g "$GATEWAY" && natpmpc -a 1 0 tcp 60 -g "$GATEWAY" \
-            || { echo -e "ERROR with natpmpc command \a"; break; }
-        sleep "$NATPMPC_INTERVAL"
-    done
-} | stdbuf -oL cat | {
-    port_copied=false
-    while IFS= read -r line; do
-        echo "$line" >> "$LOGFILE"
+# On récupère les sorties de natpmpc (udp puis tcp) dans des variables au
+# lieu de les faire passer ligne à ligne dans un pipe : comme les deux
+# appels renvoient chacun une ligne "Mapped public port" pour le MÊME
+# port, un traitement ligne à ligne matchait deux fois par itération et
+# produisait un log en double. Ici on n'en extrait qu'un seul par tour de
+# boucle, et on ne log/notifie que lorsque le port change réellement
+# (silence total sinon, plus de spam "toujours mappé" à chaque cycle).
+last_port=""
+while true; do
+    log "--- Nouveau cycle natpmpc ---"
 
-        if [[ "$line" =~ Mapped\ public\ port\ ([0-9]+) ]]; then
-            port="${BASH_REMATCH[1]}"
-            if ! $port_copied; then
-                printf '%s' "$port" | xclip -selection clipboard
-                log "Port mappé : $port (copié dans le presse-papier)"
-                notify "Port forwarding actif" "Port public : $port (copié)"
-                port_copied=true
-            else
-                # Le port ne change pas d'un renouvellement à l'autre : on
-                # se contente de logguer la confirmation, sans re-copier
-                # ni renotifier à chaque itération de la boucle (45s).
-                log "Port toujours mappé : $port (déjà copié, pas de nouvelle copie)"
-            fi
-        fi
+    out_udp="$(natpmpc -a 1 0 udp 60 -g "$GATEWAY" 2>&1)"
+    rc_udp=$?
+    echo "$out_udp" >> "$LOGFILE"
 
-        if [[ "$line" == *"ERROR with natpmpc command"* ]]; then
-            log "Erreur natpmpc, arrêt du script."
-            notify "Erreur port forwarding" "La boucle natpmpc s'est arrêtée."
+    out_tcp=""
+    rc_tcp=1
+    if [[ $rc_udp -eq 0 ]]; then
+        out_tcp="$(natpmpc -a 1 0 tcp 60 -g "$GATEWAY" 2>&1)"
+        rc_tcp=$?
+        echo "$out_tcp" >> "$LOGFILE"
+    fi
+
+    if [[ $rc_udp -ne 0 || $rc_tcp -ne 0 ]]; then
+        log "Erreur natpmpc, arrêt du script."
+        notify "Erreur port forwarding" "La boucle natpmpc s'est arrêtée."
+        break
+    fi
+
+    # On extrait le port depuis la sortie udp (il est identique côté tcp).
+    port="$(grep -oE 'Mapped public port [0-9]+' <<< "$out_udp" | head -1 | grep -oE '[0-9]+')"
+
+    if [[ -n "$port" ]]; then
+        if [[ "$port" != "$last_port" ]]; then
+            printf '%s' "$port" | xclip -selection clipboard
+            log "Port mappé : $port (copié dans le presse-papier)"
+            notify "Port forwarding actif" "Port public : $port (copié)"
+            last_port="$port"
         fi
-    done
-}
+        # Port inchangé par rapport au cycle précédent : on ne log rien,
+        # pour éviter le bruit répétitif toutes les ${NATPMPC_INTERVAL}s.
+    else
+        log "Aucun port détecté dans la sortie natpmpc, à surveiller."
+    fi
+
+    sleep "$NATPMPC_INTERVAL"
+done

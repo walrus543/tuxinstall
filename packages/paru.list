@@ -25,7 +25,7 @@ add_not_vm:proton-drive-cli-bin
 ############################
 #add_full:payload-dumper-go-bin
 #add_full:ventoy-bin
-add_full:espanso-wayland
+#add_full:espanso-wayland
 add_full:murmure-bin
 add_full:naps2-bin
 add_full:opustags

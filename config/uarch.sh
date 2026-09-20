@@ -18,7 +18,7 @@ paru -c
 #paru -Sc # faire -Scc pour ajouter le cache des paquets installés
 
 msg_bold_blue "➜ NETTOYAGE DU CACHES DES ANCIENS PAQUETS..."
-paccache -rk1
+paccache -rk2
 
 msg_bold_blue "➜ MISE À JOUR POWERLEVEL10K..."
 git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull 

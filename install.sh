@@ -854,58 +854,58 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
         ##########
         # ESPANSO
         ##########
-        f_espanso() {
-
-            if ! check_pkg espanso-wayland; then
-                msg_bold_red "Espanso NON installé !"
-                return 1
-            fi
-
-            msg_bold_blue "➜ Traitement de Espanso"
-
-            local espansoversion
-            espansoversion=$(espanso --version)
-            if [[ -z "$espansoversion" ]]; then
-                msg_bold_red "- - [Espanso] Impossible de contrôler la version."
-                return 1
-            fi
-            echo -n "- - [Espanso] Version installée : $espansoversion"
-
-            if [[ $(check_systemd_user espanso.service 2>/dev/null) != "enabled" ]]; then
-                echo -n "[Espanso] Activation du service : "
-                espanso service register &>> "$log_file"; check_cmd
-            else
-                msg_bold_red "- - [Espanso] Impossible d'activer le service utilisateur"
-                return 1
-            fi
-
-            if [[ $(espanso status | grep -c 'is running') -ne 1 ]]; then
-                msg_bold_red "- - [Espanso] Espanso n'est pas en cours d'exécution."
-                return 1
-            fi
-
-            if [[ -f "$ICI/config/espanso/default.yml" ]]; then
-                echo -n "- - [Espanso] Fichier de configuration : "
-                cp "$ICI/config/espanso/default.yml" "$HOME/.config/espanso/config/default.yml"; check_cmd
-            else
-                msg_bold_red "Fichier default.yml manquant".
-                return 1
-            fi
-
-            if [[ -f "$ICI/config/espanso/base.yml" ]]; then
-                echo -n "- - [Espanso] Fichier match : "
-                cp "$ICI/config/espanso/base.yml" "$HOME/.config/espanso/match/base.yml"; check_cmd
-            else
-                msg_bold_red "Fichier base.yml manquant".
-                return 1
-            fi
-
-            msg_bold_green "- - [Espanso] Fin des traitements"
-            return 0
-        }
-
-        # Appel de la fonction
-        f_espanso
+#        f_espanso() {
+#
+#            if ! check_pkg espanso-wayland; then
+#                msg_bold_red "Espanso NON installé !"
+#                return 1
+#            fi
+#
+#            msg_bold_blue "➜ Traitement de Espanso"
+#
+#            local espansoversion
+#            espansoversion=$(espanso --version)
+#            if [[ -z "$espansoversion" ]]; then
+#                msg_bold_red "- - [Espanso] Impossible de contrôler la version."
+#                return 1
+#            fi
+#            echo -n "- - [Espanso] Version installée : $espansoversion"
+#
+#            if [[ $(check_systemd_user espanso.service 2>/dev/null) != "enabled" ]]; then
+#                echo -n "[Espanso] Activation du service : "
+#                espanso service register &>> "$log_file"; check_cmd
+#            else
+#                msg_bold_red "- - [Espanso] Impossible d'activer le service utilisateur"
+#                return 1
+#            fi
+#
+#            if [[ $(espanso status | grep -c 'is running') -ne 1 ]]; then
+#                msg_bold_red "- - [Espanso] Espanso n'est pas en cours d'exécution."
+#                return 1
+#            fi
+#
+#            if [[ -f "$ICI/config/espanso/default.yml" ]]; then
+#                echo -n "- - [Espanso] Fichier de configuration : "
+#                cp "$ICI/config/espanso/default.yml" "$HOME/.config/espanso/config/default.yml"; check_cmd
+#            else
+#                msg_bold_red "Fichier default.yml manquant".
+#                return 1
+#            fi
+#
+#            if [[ -f "$ICI/config/espanso/base.yml" ]]; then
+#                echo -n "- - [Espanso] Fichier match : "
+#                cp "$ICI/config/espanso/base.yml" "$HOME/.config/espanso/match/base.yml"; check_cmd
+#            else
+#                msg_bold_red "Fichier base.yml manquant".
+#                return 1
+#            fi
+#
+#            msg_bold_green "- - [Espanso] Fin des traitements"
+#            return 0
+#        }
+#
+#        # Appel de la fonction
+#        f_espanso
 
 #        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
 #        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
@@ -1160,6 +1160,10 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
     done < "packages/pacman.list"
 
     if [[ "$DE" = 'XFCE' ]]; then
+        msg_bold_yellow "Penser au backup docker dans Proton Drive > Backup"
+        msg_bold_yellow "chmod +x sur les .scripts"
+        sleep $sleepmid
+
         msg_bold_blue "➜ Port forwarding Proton VPN"
         if ! check_pkg proton-vpn-cli; then
             msg_bold_yellow "Paquet Proton VPN cli manquant"
@@ -1187,6 +1191,13 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
                 msg_bold_red "Binaire \"docker\" non trouvé"
             fi
         fi
+
+        msg_bold_blue "➜ Contrôle d'espace disque"
+        mkdir -p ~/.config/systemd/user
+        echo -n "- - Copie de disk-space-check.service : "
+        cp "$ICI/config/disk_space/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
+        echo -n "- - Copie de disk-space-check.timer : "
+        cp "$ICI/config/disk_space/disk-space-check.timer" "$HOME/.config/systemd/user/"; check_cmd
     fi
 
 fi
