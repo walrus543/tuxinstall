@@ -93,6 +93,7 @@ add_full:cups
 add_full:dos2unix
 add_full:exfat-utils
 add_full:fdupes
+add_full:flameshot
 add_full:gum
 add_full:hplip
 add_full:imagemagick

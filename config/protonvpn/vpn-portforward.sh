@@ -27,6 +27,7 @@ WAIT_INTERVAL=3              # secondes entre 2 tentatives (soit jusqu'à 10 + 2
 LOGDIR="$HOME/.local/share/vpn-portforward"
 LOGFILE="$LOGDIR/vpn-portforward.log"
 mkdir -p "$LOGDIR"
+rm -f "$LOGFILE"   # pas d'historique conservé : on repart d'un log vide à chaque lancement
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') | $*" | tee -a "$LOGFILE"
@@ -146,8 +147,6 @@ notify "VPN connecté" "Démarrage du port forwarding..."
 # (silence total sinon, plus de spam "toujours mappé" à chaque cycle).
 last_port=""
 while true; do
-    log "--- Nouveau cycle natpmpc ---"
-
     out_udp="$(natpmpc -a 1 0 udp 60 -g "$GATEWAY" 2>&1)"
     rc_udp=$?
     echo "$out_udp" >> "$LOGFILE"
