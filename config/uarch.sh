@@ -47,6 +47,7 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     BACKUP_DIR="$HOME/docker/backups/"
     SOURCE_DIRS=(
         "$HOME/docker/freshrss"
+        "$HOME/docker/portainer_ce/data/"
         "$HOME/.cross-seed"
         "$HOME/.prowlarr"
         "$HOME/.apprise"

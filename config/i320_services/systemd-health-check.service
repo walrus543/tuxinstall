@@ -1,0 +1,7 @@
+# ~/.config/systemd/user/systemd-health-check.service
+[Unit]
+Description=Vérification des unités systemd en échec
+
+[Service]
+Type=oneshot
+ExecStart=%h/.scripts/systemd-health-check.sh

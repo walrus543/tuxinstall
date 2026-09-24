@@ -1204,11 +1204,17 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         echo -n "- - Copie de vpn-guard.timer : "
         cp "$ICI/config/i320_services/vpn-guard.timer" "$HOME/.config/systemd/user/"; check_cmd
 
+        echo -n "- - Copie de systemd-health-check : "
+        cp "$ICI/config/i320_services/systemd-health-check.service" "$HOME/.config/systemd/user/"; check_cmd
+        echo -n "- - Copie de systemd-health-check.timer : "
+        cp "$ICI/config/i320_services/systemd-health-check.timer" "$HOME/.config/systemd/user/"; check_cmd
+
         echo -n "- - Actualisation du daemon utilisateur : "
         systemctl --user daemon-reload >> "$log_file"; check_cmd
         echo -n "- - Activation des timers : "
         systemctl --user enable --now disk-space-check.timer >> "$log_file"; check_cmd
         systemctl --user enable --now vpn-guard.timer >> "$log_file"; check_cmd
+        systemctl --user enable --now systemd-health-check.timer >> "$log_file"; check_cmd
 
     fi
 
