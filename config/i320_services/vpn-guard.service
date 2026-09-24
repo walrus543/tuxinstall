@@ -1,0 +1,7 @@
+# ~/.config/systemd/user/vpn-guard.service
+[Unit]
+Description=Vérification de la présence du tunnel VPN
+
+[Service]
+Type=oneshot
+ExecStart=%h/.scripts/vpn-guard.sh

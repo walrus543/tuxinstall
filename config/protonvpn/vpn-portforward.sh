@@ -4,6 +4,7 @@
 # 1) Connexion à ProtonVPN (pays FR)
 # 2) Boucle de port forwarding (natpmpc)
 # 3) Copie du port mappé dans le presse-papier X11 (xclip)
+# 4) Démarre les conteneurs Docker dépendants du VPN, les arrête à la sortie
 #
 # Dépendances : proton-vpn-cli (officiel, https://github.com/ProtonVPN/proton-vpn-cli),
 #               natpmpc, xclip, iputils (ping), (optionnel) notify-send, xfce4-terminal
@@ -26,6 +27,7 @@ MAX_WAIT_ATTEMPTS=20         # nombre de tentatives de vérification de connecti
 WAIT_INTERVAL=3              # secondes entre 2 tentatives (soit jusqu'à 10 + 20*3 = 70s max)
 LOGDIR="$HOME/.local/share/vpn-portforward"
 LOGFILE="$LOGDIR/vpn-portforward.log"
+DOCKER_STACKS=(prowlarr radarr cross_seed)
 mkdir -p "$LOGDIR"
 rm -f "$LOGFILE"   # pas d'historique conservé : on repart d'un log vide à chaque lancement
 
@@ -39,6 +41,29 @@ notify() {
     fi
 }
 
+start_docker_stacks() {
+    log "Démarrage des conteneurs dépendants du VPN (${DOCKER_STACKS[*]})..."
+    for stack in "${DOCKER_STACKS[@]}"; do
+        (cd ~/docker/"$stack" && docker compose up -d) 2>&1 | tee -a "$LOGFILE"
+    done
+}
+
+stop_docker_stacks() {
+    log "Arrêt des conteneurs dépendants du VPN (${DOCKER_STACKS[*]})..."
+    for stack in "${DOCKER_STACKS[@]}"; do
+        (cd ~/docker/"$stack" && docker compose stop) 2>&1 | tee -a "$LOGFILE"
+    done
+}
+
+# Hook de déconnexion : s'exécute que le script se termine proprement
+# (Ctrl+C, kill, fermeture du terminal) ou après une erreur natpmpc.
+cleanup() {
+    log "=== Arrêt du script : nettoyage ==="
+    stop_docker_stacks
+    notify "VPN déconnecté" "Conteneurs arrêtés."
+}
+trap cleanup EXIT INT TERM
+
 # --- 0a) Vérification de l'installation de proton-vpn-cli ------------------
 check_package_installed() {
     if pacman -Qq proton-vpn-cli >/dev/null 2>&1; then
@@ -49,8 +74,6 @@ check_package_installed() {
     log "Le paquet proton-vpn-cli n'est pas installé."
 
     if [[ ! -t 0 ]]; then
-        # Pas de terminal interactif (ex: lancé automatiquement au démarrage) :
-        # impossible de demander confirmation, on abandonne proprement.
         log "Aucun terminal interactif disponible pour demander confirmation. Abandon."
         notify "proton-vpn-cli manquant" "Paquet non installé, script arrêté (pas de terminal interactif)."
         exit 1
@@ -93,26 +116,14 @@ check_package_installed
 check_account_logged_in
 
 # --- 0c) Activation du port forwarding côté compte/CLI ----------------------
-# Sur le CLI Linux, l'activation du port forwarding est un réglage à part,
-# séparé de la connexion : sans lui, natpmpc échoue avec "the gateway does
-# not support nat-pmp" (errno=111), même sur un serveur qui le supporte.
-# Idempotent : sans effet si déjà activé.
 log "Activation du port forwarding (protonvpn config set port-forwarding on)..."
 protonvpn config set port-forwarding on 2>&1 | tee -a "$LOGFILE"
 
 # --- 1) Connexion VPN --------------------------------------------------
-# La sortie de "connect" est à la fois affichée dans le terminal et loguée,
-# pour vérifier au premier coup d'œil que la connexion se passe bien.
 log "=== Connexion à ProtonVPN (FR, serveur P2P) ==="
-# --p2p est indispensable : le port forwarding ne fonctionne que sur les
-# serveurs P2P, sinon natpmpc échoue avec "the gateway does not support
-# nat-pmp" même avec le port forwarding activé côté compte.
 protonvpn connect --country FR --p2p 2>&1 | tee -a "$LOGFILE"
 
 # --- Attente active du tunnel -------------------------------------------
-# proton-vpn-cli (officiel) n'expose pas de commande "status" fiable, donc on
-# vérifie directement ce qui nous intéresse : la passerelle NAT-PMP doit
-# répondre avant de lancer natpmpc. PC ancien -> on patiente au besoin.
 log "Attente initiale de ${INITIAL_WAIT}s avant de tester le tunnel..."
 sleep "$INITIAL_WAIT"
 
@@ -134,17 +145,17 @@ if ! $connected; then
     exit 1
 fi
 
+log "=== Tunnel VPN confirmé ==="
+notify "VPN connecté" "Démarrage des conteneurs et du port forwarding..."
+
+# Le tunnel est confirmé actif : on démarre les conteneurs AVANT d'entrer
+# dans la boucle infinie de renouvellement du port (sinon ce code ne
+# s'exécuterait jamais).
+start_docker_stacks
+
 log "=== Démarrage de la boucle de port forwarding ==="
-notify "VPN connecté" "Démarrage du port forwarding..."
 
 # --- 2) Boucle natpmpc + 3) extraction et copie du port --------------------
-# On récupère les sorties de natpmpc (udp puis tcp) dans des variables au
-# lieu de les faire passer ligne à ligne dans un pipe : comme les deux
-# appels renvoient chacun une ligne "Mapped public port" pour le MÊME
-# port, un traitement ligne à ligne matchait deux fois par itération et
-# produisait un log en double. Ici on n'en extrait qu'un seul par tour de
-# boucle, et on ne log/notifie que lorsque le port change réellement
-# (silence total sinon, plus de spam "toujours mappé" à chaque cycle).
 last_port=""
 while true; do
     out_udp="$(natpmpc -a 1 0 udp 60 -g "$GATEWAY" 2>&1)"
@@ -165,7 +176,6 @@ while true; do
         break
     fi
 
-    # On extrait le port depuis la sortie udp (il est identique côté tcp).
     port="$(grep -oE 'Mapped public port [0-9]+' <<< "$out_udp" | head -1 | grep -oE '[0-9]+')"
 
     if [[ -n "$port" ]]; then
@@ -175,11 +185,11 @@ while true; do
             notify "Port forwarding actif" "Port public : $port (copié)"
             last_port="$port"
         fi
-        # Port inchangé par rapport au cycle précédent : on ne log rien,
-        # pour éviter le bruit répétitif toutes les ${NATPMPC_INTERVAL}s.
     else
         log "Aucun port détecté dans la sortie natpmpc, à surveiller."
     fi
 
     sleep "$NATPMPC_INTERVAL"
 done
+
+# Le trap EXIT (cleanup) se charge d'arrêter les conteneurs ici.

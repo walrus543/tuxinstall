@@ -1,0 +1,10 @@
+# ~/.config/systemd/user/vpn-guard.timer
+[Unit]
+Description=Timer de surveillance VPN
+
+[Timer]
+OnCalendar=*:0/2
+Persistent=true
+
+[Install]
+WantedBy=timers.target

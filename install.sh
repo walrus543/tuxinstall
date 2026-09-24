@@ -1192,16 +1192,24 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
             fi
         fi
 
-        msg_bold_blue "➜ Contrôle d'espace disque"
+        msg_bold_blue "➜ Services systemd"
         mkdir -p ~/.config/systemd/user >> "$log_file"
         echo -n "- - Copie de disk-space-check.service : "
-        cp "$ICI/config/disk_space/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
+        cp "$ICI/config/i320_services/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
         echo -n "- - Copie de disk-space-check.timer : "
-        cp "$ICI/config/disk_space/disk-space-check.timer" "$HOME/.config/systemd/user/"; check_cmd
+        cp "$ICI/config/i320_services/disk-space-check.timer" "$HOME/.config/systemd/user/"; check_cmd
+
+        echo -n "- - Copie de vpn-guard.service : "
+        cp "$ICI/config/i320_services/vpn-guard.service" "$HOME/.config/systemd/user/"; check_cmd
+        echo -n "- - Copie de vpn-guard.timer : "
+        cp "$ICI/config/i320_services/vpn-guard.timer" "$HOME/.config/systemd/user/"; check_cmd
+
         echo -n "- - Actualisation du daemon utilisateur : "
         systemctl --user daemon-reload >> "$log_file"; check_cmd
-        echo -n "- - Activation du timer : "
+        echo -n "- - Activation des timers : "
         systemctl --user enable --now disk-space-check.timer >> "$log_file"; check_cmd
+        systemctl --user enable --now vpn-guard.timer >> "$log_file"; check_cmd
+
     fi
 
 fi
