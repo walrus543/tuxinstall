@@ -48,6 +48,8 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     SOURCE_DIRS=(
         "$HOME/docker/freshrss"
         "$HOME/docker/portainer_ce/data/"
+        "$HOME/docker/vikunja/db"
+        "$HOME/docker/vikunja/files"
         "$HOME/.cross-seed"
         "$HOME/.prowlarr"
         "$HOME/.apprise"
@@ -56,6 +58,7 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
         "$HOME/.radarr"
         "$HOME/.scripts"
         "$HOME/.config/qBittorrent"
+        "$HOME/.config/vpn-portforward"
     )
     COMPOSE_FILES=(
     "$HOME/docker/docker-compose.yml"
@@ -65,8 +68,9 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     "$HOME/docker/radarr/docker-compose.yml"
     "$HOME/docker/diun/docker-compose.yml"
     "$HOME/docker/ntfy/docker-compose.yml"
+    "$HOME/docker/vikunja/docker-compose.yml"
     )
-    CONTAINERS_TO_STOP=(freshrss cross-seed diun ntfy radarr)
+    CONTAINERS_TO_STOP=(freshrss cross-seed diun ntfy radarr vikunja)
 
     mkdir -p "$BACKUP_DIR"
     rm -rf "$BACKUP_DIR"/*

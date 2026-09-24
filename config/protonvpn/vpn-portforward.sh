@@ -28,6 +28,20 @@ WAIT_INTERVAL=3              # secondes entre 2 tentatives (soit jusqu'à 10 + 2
 LOGDIR="$HOME/.local/share/vpn-portforward"
 LOGFILE="$LOGDIR/vpn-portforward.log"
 DOCKER_STACKS=(prowlarr radarr cross_seed)
+
+# --- Configuration qBittorrent (WebUI) --------------------------------------
+QBIT_URL="http://192.168.1.199:8088"
+QBIT_COOKIE_JAR="$LOGDIR/qbit-cookie.txt"
+QBIT_ENV_FILE="$HOME/.config/vpn-portforward/qbit.env"
+
+if [[ -f "$QBIT_ENV_FILE" ]]; then
+    # shellcheck source=/dev/null
+    source "$QBIT_ENV_FILE"
+else
+    log "Fichier d'identifiants qBittorrent introuvable ($QBIT_ENV_FILE)."
+fi
+# --- Configuration qBittorrent (WebUI) --------------------------------------
+
 mkdir -p "$LOGDIR"
 rm -f "$LOGFILE"   # pas d'historique conservé : on repart d'un log vide à chaque lancement
 
@@ -63,6 +77,59 @@ cleanup() {
     notify "VPN déconnecté" "Conteneurs arrêtés."
 }
 trap cleanup EXIT INT TERM
+
+# --- Configuration qBittorrent (lancement) ----------------------------------
+QBIT_BIN="qbittorrent"        # adapte si le binaire s'appelle autrement chez toi
+QBIT_LAUNCH_WAIT_ATTEMPTS=18   # 18 x 10s = 3 min max
+QBIT_LAUNCH_WAIT_INTERVAL=10
+
+launch_qbittorrent() {
+    if pgrep -x "$QBIT_BIN" >/dev/null; then
+        log "qBittorrent déjà lancé, pas de nouveau démarrage."
+        return 0
+    fi
+
+    log "Lancement de qBittorrent..."
+    setsid "$QBIT_BIN" </dev/null &>>"$LOGFILE" &
+    disown
+}
+
+wait_for_qbittorrent_ready() {
+    log "Attente de la disponibilité de la WebUI qBittorrent (${QBIT_URL})..."
+    for ((i = 1; i <= QBIT_LAUNCH_WAIT_ATTEMPTS; i++)); do
+        http_code=$(curl -sS -o /dev/null -w '%{http_code}' -m 5 "${QBIT_URL}")
+        if [[ "$http_code" == "200" ]]; then
+            log "WebUI qBittorrent disponible (tentative $i/$QBIT_LAUNCH_WAIT_ATTEMPTS)."
+            return 0
+        fi
+        log "Tentative $i/$QBIT_LAUNCH_WAIT_ATTEMPTS : WebUI pas encore prête, nouvel essai dans ${QBIT_LAUNCH_WAIT_INTERVAL}s..."
+        sleep "$QBIT_LAUNCH_WAIT_INTERVAL"
+    done
+
+    log "WebUI qBittorrent injoignable après $((QBIT_LAUNCH_WAIT_ATTEMPTS * QBIT_LAUNCH_WAIT_INTERVAL))s."
+    notify "Échec qBittorrent" "La WebUI n'a jamais répondu, le port ne sera pas configuré automatiquement."
+    return 1
+}
+
+set_qbittorrent_port() {
+    local port="$1"
+
+    curl -sS -c "$QBIT_COOKIE_JAR" \
+        --data "username=${QBIT_USER}&password=${QBIT_PASS}" \
+        "${QBIT_URL}/api/v2/auth/login" >> "$LOGFILE" 2>&1
+
+    local http_code
+    http_code=$(curl -sS -o /dev/null -w '%{http_code}' -b "$QBIT_COOKIE_JAR" \
+        --data "json={\"listen_port\":${port}}" \
+        "${QBIT_URL}/api/v2/app/setPreferences")
+
+    if [[ "$http_code" == "200" ]]; then
+        log "Port qBittorrent mis à jour : $port"
+    else
+        log "Échec de la mise à jour du port qBittorrent (HTTP $http_code)"
+        notify "Erreur qBittorrent" "Échec de la mise à jour du port d'écoute."
+    fi
+}
 
 # --- 0a) Vérification de l'installation de proton-vpn-cli ------------------
 check_package_installed() {
@@ -146,11 +213,15 @@ if ! $connected; then
 fi
 
 log "=== Tunnel VPN confirmé ==="
-notify "VPN connecté" "Démarrage des conteneurs et du port forwarding..."
+notify "VPN connecté" "Démarrage de qBittorrent et des conteneurs..."
 
-# Le tunnel est confirmé actif : on démarre les conteneurs AVANT d'entrer
-# dans la boucle infinie de renouvellement du port (sinon ce code ne
-# s'exécuterait jamais).
+launch_qbittorrent
+if wait_for_qbittorrent_ready; then
+    qbit_ready=true
+else
+    qbit_ready=false
+fi
+
 start_docker_stacks
 
 log "=== Démarrage de la boucle de port forwarding ==="
@@ -183,6 +254,11 @@ while true; do
             printf '%s' "$port" | xclip -selection clipboard
             log "Port mappé : $port (copié dans le presse-papier)"
             notify "Port forwarding actif" "Port public : $port (copié)"
+            if $qbit_ready; then
+                set_qbittorrent_port "$port"
+            else
+                log "qBittorrent non disponible, port non transmis automatiquement."
+            fi
             last_port="$port"
         fi
     else

@@ -1160,9 +1160,10 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
     done < "packages/pacman.list"
 
     if [[ "$DE" = 'XFCE' ]]; then
-        msg_bold_yellow "Penser au backup docker dans Proton Drive > Backup"
+        msg_bold_yellow "Récupérer le backup Proton Drive > Backup"
         msg_bold_yellow "chmod +x sur les .scripts"
-        sleep $sleepmid
+        msg_bold_yellow "chmod 600 ~/.config/vpn-portforward/qbit.env"
+        ask_continue
 
         msg_bold_blue "➜ Port forwarding Proton VPN"
         if ! check_pkg proton-vpn-cli; then
