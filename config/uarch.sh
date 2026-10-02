@@ -17,7 +17,7 @@ msg_bold_blue "➜ NETTOYAGE DES DÉPENDANCES ET DU CACHE..."
 paru -c
 #paru -Sc # faire -Scc pour ajouter le cache des paquets installés
 
-msg_bold_blue "➜ NETTOYAGE DU CACHES DES ANCIENS PAQUETS..."
+msg_bold_blue "➜ NETTOYAGE DU CACHE DES ANCIENS PAQUETS..."
 paccache -rk2
 
 msg_bold_blue "➜ MISE À JOUR POWERLEVEL10K..."
@@ -56,6 +56,8 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
         "$HOME/.diun"
         "$HOME/.ntfy"
         "$HOME/.radarr"
+        "$HOME/.sonarr"
+        "$HOME/.lidarr"
         "$HOME/.scripts"
         "$HOME/.config/qBittorrent"
         "$HOME/.config/vpn-portforward"
@@ -66,6 +68,8 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     "$HOME/docker/prowlarr/docker-compose.yml"
     "$HOME/docker/apprise/docker-compose.yml"
     "$HOME/docker/radarr/docker-compose.yml"
+    "$HOME/docker/sonarr/docker-compose.yml"
+    "$HOME/docker/lidarr/docker-compose.yml"
     "$HOME/docker/diun/docker-compose.yml"
     "$HOME/docker/ntfy/docker-compose.yml"
     "$HOME/docker/vikunja/docker-compose.yml"

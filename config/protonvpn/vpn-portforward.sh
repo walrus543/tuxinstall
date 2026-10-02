@@ -27,7 +27,7 @@ MAX_WAIT_ATTEMPTS=20         # nombre de tentatives de vérification de connecti
 WAIT_INTERVAL=3              # secondes entre 2 tentatives (soit jusqu'à 10 + 20*3 = 70s max)
 LOGDIR="$HOME/.local/share/vpn-portforward"
 LOGFILE="$LOGDIR/vpn-portforward.log"
-DOCKER_STACKS=(prowlarr radarr cross_seed)
+DOCKER_STACKS=(prowlarr radarr sonarr lidarr cross_seed)
 
 # --- Configuration qBittorrent (WebUI) --------------------------------------
 QBIT_URL="http://192.168.1.199:8088"

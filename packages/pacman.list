@@ -46,6 +46,7 @@ add_defaut:tailspin
 add_defaut:tar
 add_defaut:tldr
 add_defaut:trash-cli
+add_defaut:tree
 add_defaut:tuned
 add_defaut:unzip
 add_defaut:wget

@@ -1,0 +1,9 @@
+[Unit]
+Description=Proton Mail Bridge (mode service)
+
+[Service]
+ExecStart=/usr/bin/protonmail-bridge-core --noninteractive
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

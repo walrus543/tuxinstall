@@ -13,6 +13,7 @@ set -euo pipefail
 ###### POUR DEBUG
 
 mkdir -p "$HOME/Tmp"
+mkdir -p ~/.config/systemd/user >> "$log_file"
 source variables.sh
 
 #####################
@@ -835,11 +836,14 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
             echo -n "- - [Cups] Activation de cups.service : "
             sudo systemctl enable --now cups.service >> "$log_file"; check_cmd
         fi
-        if check_pkg protonmail-bridge-core && [[ ! -f "$HOME"/.config/autostart/protonmail.desktop ]]; then
+
+        if check_pkg protonmail-bridge-core && [[ $(check_systemd_user protonmail-bridge.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
-            mkdir -p "$HOME"/.config/autostart && cp "$ICI/config/protonmail.desktop" "$HOME"/.config/autostart/protonmail.desktop; check_cmd
-            printf "\nUtiliser protonmail-bridge pour avoir le mot de passe pour Thunderbird puis supprimer le paquet !\n" >> $HOME/Tmp/post_installation.txt
+            mv "$ICI/config/protonmail-bridge.service" "$HOME/.config/systemd/user"
+            systemctl --user daemon-reload >> "$log_file"
+            systemctl --user enable --now protonmail-bridge.service >> "$log_file"; check_cmd
         fi
+
         if check_pkg rust; then
             if [[ ! -f "$HOME"/.cargo/bin/cargo-install-update ]]; then
                 echo -n "- - [Cargo] Installation de cargo-update : "
@@ -1194,7 +1198,6 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         fi
 
         msg_bold_blue "➜ Services systemd"
-        mkdir -p ~/.config/systemd/user >> "$log_file"
         echo -n "- - Copie de disk-space-check.service : "
         cp "$ICI/config/i320_services/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
         echo -n "- - Copie de disk-space-check.timer : "
