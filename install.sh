@@ -555,31 +555,29 @@ if [[ ! -f "$HOME"/.hidden ]]; then
 fi
 
 if check_pkg kitty && [[ ! -f "$HOME"/.config/kitty/kitty.conf ]]; then
-    echo -n "- - [Kitty] Fichier de configuration : "
-    mkdir -p "$HOME"/.config/kitty && cp "$ICI/config/kitty.conf" "$HOME"/.config/kitty; check_cmd
+    echo -n "- - [Kitty] Fichiers de configuration : "
+    mkdir -p "$HOME"/.config/kitty && mv "$ICI/config/kitty/"* "$HOME/.config/kitty"; check_cmd
     echo -n "- - [Kitty] Thème catppuccin Mocha : "
     kitten theme catppuccin-mocha; check_cmd
-    echo -n "- - [Kitty] Background : "
-    cp "$ICI/config/background.png" "$HOME"/.config/kitty; check_cmd
 fi
 
 if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/dev/null) -lt 1 ]]; then
     echo -n "- - [NeoVim] Config de base Lua : "
-    mkdir -p "$HOME/.config/nvim/lua/config" && mkdir -p "$HOME/.config/nvim/lua/plugins" && cp "$ICI/config/neovim/init.lua" "$HOME/.config/nvim/init.lua"; check_cmd
+    mkdir -p "$HOME/.config/nvim/lua/config" && mkdir -p "$HOME/.config/nvim/lua/plugins" && mv "$ICI/config/neovim/init.lua" "$HOME/.config/nvim/init.lua"; check_cmd
 
     echo -n "- - [NeoVim] Bootstrap Lazy : "
-    cp "$ICI/config/neovim/lazy.lua" "$HOME/.config/nvim/lua/config/lazy.lua"; check_cmd
+    mv "$ICI/config/neovim/lazy.lua" "$HOME/.config/nvim/lua/config/lazy.lua"; check_cmd
 
     echo -n "- - [NeoVim] Catppuccin : "
-    cp "$ICI/config/neovim/catppuccin.lua" "$HOME/.config/nvim/lua/plugins/catppuccin.lua"; check_cmd
+    mv "$ICI/config/neovim/catppuccin.lua" "$HOME/.config/nvim/lua/plugins/catppuccin.lua"; check_cmd
     echo -n "- - [NeoVim] Keymaps : "
-    cp "$ICI/config/neovim/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
+    mv "$ICI/config/neovim/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
     echo -n "- - [NeoVim] Neotree : "
-    cp "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
+    mv "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
     echo -n "- - [NeoVim] Yanky : "
-    cp "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
+    mv "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
-    cp "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
+    mv "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     #echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi
@@ -595,7 +593,7 @@ fi
 if [[ "$VM" = "none" ]]; then
     if [[ ! -f /etc/samba/smb.conf ]]; then
         echo -n "- - [SAMBA] Fichier smb.conf : "
-        sudo cp "$ICI/config/smb.conf" /etc/samba; check_cmd
+        sudo mv "$ICI/config/smb.conf" /etc/samba; check_cmd
     fi
 
     #fstrim pour SSD
@@ -671,7 +669,7 @@ if [[ "$VM" = "none" ]]; then
         sudo mkdir -p /etc/pacman.d/hooks/
         sudo cp $ICI/config/z_pacnew.hook /etc/pacman.d/hooks/; check_cmd
         echo -n "- - Ajustement du user de z_pacnew.hook : "
-        sudo sed -i "/^Exec = /s|/home/kratos|${HOME}|g" fichier.cfg; check_cmd
+        sudo sed -i "/^Exec = /s|/home/kratos|${HOME}|g" /etc/pacman.d/hooks/z_pacnew.hook; check_cmd
         if [[ ! -f $HOME/Documents/Linux/Divers_Scripts/pacman_pacnew.hook ]]; then
             echo -n "- - - Déplacement de pacman_pacnew.hook : "
             mkdir -p $HOME/Documents/Linux/Divers_Scripts && cp $ICI/config/pacman_pacnew.hook $HOME/Documents/Linux/Divers_Scripts; check_cmd
@@ -809,11 +807,11 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
         elif [[ -f $HOME/Documents/Linux/backup_nettoyage.sh ]]; then
             if [[ ! -f "$HOME/.config/systemd/user/backup_nettoyage.service" ]]; then
                 echo -n "- - backup_nettoyage.service : "
-                mv $ICI/config/backup_nettoyage.service "$HOME/.config/systemd/user"; check_cmd
+                mv $ICI/config/systemd_user/backup_nettoyage.service "$HOME/.config/systemd/user"; check_cmd
             fi
             if [[ ! -f "$HOME/.config/systemd/user/backup_nettoyage.timer" ]]; then
                 echo -n "- - backup_nettoyage.timer : "
-                mv $ICI/config/backup_nettoyage.timer "$HOME/.config/systemd/user"; check_cmd
+                mv $ICI/config/systemd_user/backup_nettoyage.timer "$HOME/.config/systemd/user"; check_cmd
             fi
             if [[ $(check_systemd_user backup_nettoyage.timer 2>/dev/null) != "enabled" ]]; then
                 echo -n "- - Activation du service USER backup_nettoyage.timer : "
@@ -823,6 +821,8 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
         fi
 
         msg_bold_blue "➜ Configuration pour installation ${BOLD}Complète${RESET}"
+        echo "${YELLOW}Penser à paramétrer NextDNS${RESET}" | tee -a $HOME/Tmp/post_installation.txt
+
         if check_pkg timeshift && [[ $(check_systemd cronie.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [Timeshift] Activation du service : "
             sudo systemctl enable cronie.service >> "$log_file"; check_cmd
@@ -839,7 +839,7 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
 
         if check_pkg protonmail-bridge-core && [[ $(check_systemd_user protonmail-bridge.service 2>/dev/null) != "enabled" ]]; then
             echo -n "- - [ProtonMail Bridge Core] Démarrage auto : "
-            mv "$ICI/config/protonmail-bridge.service" "$HOME/.config/systemd/user"
+            mv "$ICI/config/systemd_user/protonmail-bridge.service" "$HOME/.config/systemd/user"
             systemctl --user daemon-reload >> "$log_file"
             systemctl --user enable --now protonmail-bridge.service >> "$log_file"; check_cmd
         fi
@@ -854,62 +854,6 @@ if [ "$install_type" = 1 ]; then # VERSION COMPLETE
                 cargo install arx >> "$log_file"; check_cmd
             fi
         fi
-
-        ##########
-        # ESPANSO
-        ##########
-#        f_espanso() {
-#
-#            if ! check_pkg espanso-wayland; then
-#                msg_bold_red "Espanso NON installé !"
-#                return 1
-#            fi
-#
-#            msg_bold_blue "➜ Traitement de Espanso"
-#
-#            local espansoversion
-#            espansoversion=$(espanso --version)
-#            if [[ -z "$espansoversion" ]]; then
-#                msg_bold_red "- - [Espanso] Impossible de contrôler la version."
-#                return 1
-#            fi
-#            echo -n "- - [Espanso] Version installée : $espansoversion"
-#
-#            if [[ $(check_systemd_user espanso.service 2>/dev/null) != "enabled" ]]; then
-#                echo -n "[Espanso] Activation du service : "
-#                espanso service register >> "$log_file"; check_cmd
-#            else
-#                msg_bold_red "- - [Espanso] Impossible d'activer le service utilisateur"
-#                return 1
-#            fi
-#
-#            if [[ $(espanso status | grep -c 'is running') -ne 1 ]]; then
-#                msg_bold_red "- - [Espanso] Espanso n'est pas en cours d'exécution."
-#                return 1
-#            fi
-#
-#            if [[ -f "$ICI/config/espanso/default.yml" ]]; then
-#                echo -n "- - [Espanso] Fichier de configuration : "
-#                cp "$ICI/config/espanso/default.yml" "$HOME/.config/espanso/config/default.yml"; check_cmd
-#            else
-#                msg_bold_red "Fichier default.yml manquant".
-#                return 1
-#            fi
-#
-#            if [[ -f "$ICI/config/espanso/base.yml" ]]; then
-#                echo -n "- - [Espanso] Fichier match : "
-#                cp "$ICI/config/espanso/base.yml" "$HOME/.config/espanso/match/base.yml"; check_cmd
-#            else
-#                msg_bold_red "Fichier base.yml manquant".
-#                return 1
-#            fi
-#
-#            msg_bold_green "- - [Espanso] Fin des traitements"
-#            return 0
-#        }
-#
-#        # Appel de la fonction
-#        f_espanso
 
 #        msg_bold_blue "➜ Carte réseau Realtek RTL8821CE"
 #        if [[ $(lspci | grep -E -i 'network|ethernet|wireless|wi-fi' | grep -c RTL8821CE) -eq 1 ]]; then # Carte détectée mais paquet manquant
@@ -1198,27 +1142,14 @@ elif [ "$install_type" = 2 ]; then # VERSION LITE
         fi
 
         msg_bold_blue "➜ Services systemd"
-        echo -n "- - Copie de disk-space-check.service : "
-        cp "$ICI/config/i320_services/disk-space-check.service" "$HOME/.config/systemd/user/"; check_cmd
-        echo -n "- - Copie de disk-space-check.timer : "
-        cp "$ICI/config/i320_services/disk-space-check.timer" "$HOME/.config/systemd/user/"; check_cmd
-
-        echo -n "- - Copie de vpn-guard.service : "
-        cp "$ICI/config/i320_services/vpn-guard.service" "$HOME/.config/systemd/user/"; check_cmd
-        echo -n "- - Copie de vpn-guard.timer : "
-        cp "$ICI/config/i320_services/vpn-guard.timer" "$HOME/.config/systemd/user/"; check_cmd
-
-        echo -n "- - Copie de systemd-health-check : "
-        cp "$ICI/config/i320_services/systemd-health-check.service" "$HOME/.config/systemd/user/"; check_cmd
-        echo -n "- - Copie de systemd-health-check.timer : "
-        cp "$ICI/config/i320_services/systemd-health-check.timer" "$HOME/.config/systemd/user/"; check_cmd
-
-        echo -n "- - Actualisation du daemon utilisateur : "
-        systemctl --user daemon-reload >> "$log_file"; check_cmd
-        echo -n "- - Activation des timers : "
-        systemctl --user enable --now disk-space-check.timer >> "$log_file"; check_cmd
-        systemctl --user enable --now vpn-guard.timer >> "$log_file"; check_cmd
-        systemctl --user enable --now systemd-health-check.timer >> "$log_file"; check_cmd
+            echo -n "- - Copie des services et timers : "
+            cp "$ICI/config/systemd_user/i320/" "$HOME/.config/systemd/user/"; check_cmd
+            echo -n "- - Actualisation du daemon utilisateur : "
+            systemctl --user daemon-reload >> "$log_file"; check_cmd
+            echo -n "- - Activation des timers : "
+            systemctl --user enable --now disk-space-check.timer >> "$log_file"; check_cmd
+            systemctl --user enable --now vpn-guard.timer >> "$log_file"; check_cmd
+            systemctl --user enable --now systemd-health-check.timer >> "$log_file"; check_cmd
 
     fi
 

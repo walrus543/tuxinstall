@@ -44,6 +44,8 @@ alias cb='wl-copy'
 alias ee='exit'
 alias icat="kitten icat"
 alias mve='f(){ ext="${1##*.}"; base="${1%.*}"; mv -- "$1" "$2.$ext"; }; f'
+alias torrentsclean='python3 $HOME/.scripts/torrent-cleanup.py'
+alias ssh='kitten ssh'
 
 ######
 # ARCH
