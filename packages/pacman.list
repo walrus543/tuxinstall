@@ -166,7 +166,7 @@ add_xfce:docker-compose
 add_xfce:font-manager
 add_xfce:gnome-keyring
 add_xfce:gvfs-smb
-add_xfce:lazydocker
+#add_xfce:lazydocker
 add_xfce:libnotify
 add_xfce:network-manager-applet
 add_xfce:numlockx

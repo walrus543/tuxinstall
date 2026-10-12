@@ -566,18 +566,18 @@ if check_pkg neovim && [[ $(grep -c "require" "$HOME"/.config/nvim/init.lua 2>/d
     mkdir -p "$HOME/.config/nvim/lua/config" && mkdir -p "$HOME/.config/nvim/lua/plugins" && mv "$ICI/config/neovim/init.lua" "$HOME/.config/nvim/init.lua"; check_cmd
 
     echo -n "- - [NeoVim] Bootstrap Lazy : "
-    mv "$ICI/config/neovim/lazy.lua" "$HOME/.config/nvim/lua/config/lazy.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/config/lazy.lua" "$HOME/.config/nvim/lua/config/lazy.lua"; check_cmd
 
     echo -n "- - [NeoVim] Catppuccin : "
-    mv "$ICI/config/neovim/catppuccin.lua" "$HOME/.config/nvim/lua/plugins/catppuccin.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/plugins/catppuccin.lua" "$HOME/.config/nvim/lua/plugins/catppuccin.lua"; check_cmd
     echo -n "- - [NeoVim] Keymaps : "
-    mv "$ICI/config/neovim/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/plugins/keymaps.lua" "$HOME/.config/nvim/lua/plugins/keymaps.lua"; check_cmd
     echo -n "- - [NeoVim] Neotree : "
-    mv "$ICI/config/neovim/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/plugins/neotree.lua" "$HOME/.config/nvim/lua/plugins/neotree.lua"; check_cmd
     echo -n "- - [NeoVim] Yanky : "
-    mv "$ICI/config/neovim/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/plugins/yanky.lua" "$HOME/.config/nvim/lua/plugins/yanky.lua"; check_cmd
     echo -n "- - [NeoVim] Telescope : "
-    mv "$ICI/config/neovim/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
+    mv "$ICI/config/neovim/lua/plugins/telescope.lua" "$HOME/.config/nvim/lua/plugins/telescope.lua"; check_cmd
     #echo "${YELLOW}Taper \":Lazy\" pour activer lazy.nvim et les plugins${RESET}" | tee -a $HOME/Tmp/post_installation.txt
     ask_continue
 fi

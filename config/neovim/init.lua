@@ -19,7 +19,31 @@ vim.opt.colorcolumn = "80"
 vim.opt.filetype = "on"
 vim.opt.syntax = "on"
 vim.opt.mouse = "a"
+
 vim.opt.clipboard = "unnamedplus"
+-- En SSH : copier via OSC 52 (Kitty le supporte nativement)
+if vim.env.SSH_TTY then
+  local osc52 = require("vim.ui.clipboard.osc52")
+
+  -- Le "paste" renvoie simplement le contenu du registre interne de Neovim,
+  -- car Kitty demande une confirmation pour lire le presse-papier local.
+  local function paste()
+    return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+  end
+
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = osc52.copy("+"),
+      ["*"] = osc52.copy("*"),
+    },
+    paste = {
+      ["+"] = paste,
+      ["*"] = paste,
+    },
+  }
+end
+
 vim.opt.cursorline = true
 vim.opt.ttyfast = true
 
