@@ -1,0 +1,10 @@
+# ~/.config/systemd/user/systemd-health-check.timer
+[Unit]
+Description=Timer de surveillance systemd
+
+[Timer]
+OnCalendar=*:0/10
+Persistent=true
+
+[Install]
+WantedBy=timers.target

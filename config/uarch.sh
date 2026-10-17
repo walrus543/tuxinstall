@@ -10,7 +10,14 @@ msg_bold_blue "➜ MISE À JOUR PACMAN & AUR..."
 
 if [ -n "$(flatpak list)" ]; then
     msg_bold_blue "➜ MISE À JOUR FLATPAK..."
-    flatpak update -y
+
+    if [[ -n "${SSH_CONNECTION:-}" ]]; then
+        # pour ne pas avoir d'erreurs d'autorisations
+        flatpak list --user
+        flatpak list --system
+    else
+        flatpak update -y
+    fi
 fi
 
 msg_bold_blue "➜ NETTOYAGE DES DÉPENDANCES ET DU CACHE..."
@@ -47,7 +54,7 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     BACKUP_DIR="$HOME/docker/backups/"
     SOURCE_DIRS=(
         "$HOME/docker/freshrss"
-        "$HOME/docker/portainer_ce/data/"
+        "$HOME/docker/portainer/portainer_ce/data/"
         "$HOME/docker/vikunja/db"
         "$HOME/docker/vikunja/files"
         "$HOME/.cross-seed"
@@ -64,6 +71,7 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
     COMPOSE_FILES=(
     "$HOME/docker/docker-compose.yml"
     "$HOME/docker/cross_seed/docker-compose.yml"
+    "$HOME/docker/portainer/docker-compose.yml"
     "$HOME/docker/prowlarr/docker-compose.yml"
     "$HOME/docker/apprise/docker-compose.yml"
     "$HOME/docker/radarr/docker-compose.yml"
