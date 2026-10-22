@@ -23,8 +23,8 @@ add_not_vm:io.github.flattool.Warehouse
 #add_full:page.kramo.Cartridges
 add_full:com.rustdesk.RustDesk
 add_full:io.missioncenter.MissionCenter
-add_full:io.github.alainm23.planify
-add_full:org.upscayl.Upscayl
+#add_full:io.github.alainm23.planify
+#add_full:org.upscayl.Upscayl
 
 ############################
 # PAQUETS SI LITE

@@ -13,8 +13,8 @@ if [ -n "$(flatpak list)" ]; then
 
     if [[ -n "${SSH_CONNECTION:-}" ]]; then
         # pour ne pas avoir d'erreurs d'autorisations
-        flatpak list --user
-        flatpak list --system
+        flatpak update --user
+        sudo flatpak update --system
     else
         flatpak update -y
     fi
