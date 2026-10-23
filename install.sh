@@ -591,10 +591,11 @@ fi
 # [DEBUT] FAUT PAS ETRE DANS UNE VM
 #++++++++++++++++++++++++++++++++++++++
 if [[ "$VM" = "none" ]]; then
-    if [[ ! -f /etc/samba/smb.conf ]]; then
-        echo -n "- - [SAMBA] Fichier smb.conf : "
-        sudo mv "$ICI/config/smb.conf" /etc/samba; check_cmd
-    fi
+    # Plus nécessaire normalement
+    #if [[ ! -f /etc/samba/smb.conf ]]; then
+    #    echo -n "- - [SAMBA] Fichier smb.conf : "
+    #    sudo mv "$ICI/config/smb.conf" /etc/samba; check_cmd
+    #fi
 
     #fstrim pour SSD
     #DISC_GRAN et DISC_MAX ne doivent pas avoir de valeur égale à 0
