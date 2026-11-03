@@ -5,7 +5,7 @@
 # PAQUETS POUR TOUS
 ############################
 add_defaut:downgrade
-add_defaut:zen-browser-bin
+add_defaut:floorp-bin
 
 ############################
 # PAQUETS POUR TOUS SAUF VM

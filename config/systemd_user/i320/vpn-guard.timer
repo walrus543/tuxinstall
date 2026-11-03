@@ -3,7 +3,7 @@
 Description=Timer de surveillance VPN
 
 [Timer]
-OnCalendar=*:0/2
+OnCalendar=minutely
 Persistent=true
 
 [Install]

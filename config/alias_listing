@@ -46,6 +46,8 @@ alias icat="kitten icat"
 alias mve='f(){ ext="${1##*.}"; base="${1%.*}"; mv -- "$1" "$2.$ext"; }; f'
 alias torrentsclean='python3 $HOME/.scripts/torrent-cleanup.py'
 alias ssh='kitten ssh'
+alias mfreebox='bash $HOME/Documents/Linux/Divers_Scripts/freebox_mount.sh'
+alias ufreebox='bash $HOME/Documents/Linux/Divers_Scripts/freebox_umount.sh'
 
 ######
 # ARCH

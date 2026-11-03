@@ -65,6 +65,7 @@ del_defaut:firefox
 #add_not_vm:python-pyfuse3 => Monter sauvegarde borg
 add_not_vm:android-tools
 add_not_vm:borg
+add_not_vm:librewolf
 add_not_vm:ntfs-3g
 add_not_vm:perl-rename
 add_not_vm:python-pyfuse3

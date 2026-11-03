@@ -53,34 +53,39 @@ if [[ $(grep -c 'ideapad 320' /sys/devices/virtual/dmi/id/product_version) -eq 1
 
     BACKUP_DIR="$HOME/docker/backups/"
     SOURCE_DIRS=(
+        "$HOME/docker/agora/data"
+        "$HOME/docker/arcane/"
+        "$HOME/docker/beszel"
         "$HOME/docker/freshrss"
         "$HOME/docker/portainer/portainer_ce/data/"
         "$HOME/docker/vikunja/db"
         "$HOME/docker/vikunja/files"
-        "$HOME/.cross-seed"
-        "$HOME/.prowlarr"
-        "$HOME/.apprise"
-        "$HOME/.diun"
-        "$HOME/.ntfy"
-        "$HOME/.radarr"
-        "$HOME/.lidarr"
-        "$HOME/.scripts"
         "$HOME/.config/qBittorrent"
         "$HOME/.config/vpn-portforward"
+        "$HOME/.cross-seed"
+        "$HOME/.apprise"
+        "$HOME/.diun"
+        "$HOME/.lidarr"
+        "$HOME/.local/share/qBittorrent"
+        "$HOME/.ntfy"
+        "$HOME/.prowlarr"
+        "$HOME/.radarr"
+        "$HOME/.scripts"
     )
     COMPOSE_FILES=(
     "$HOME/docker/docker-compose.yml"
+    "$HOME/docker/agora/docker-compose.yml"
+    "$HOME/docker/apprise/docker-compose.yml"
     "$HOME/docker/cross_seed/docker-compose.yml"
+    "$HOME/docker/diun/docker-compose.yml"
+    "$HOME/docker/lidarr/docker-compose.yml"
+    "$HOME/docker/ntfy/docker-compose.yml"
     "$HOME/docker/portainer/docker-compose.yml"
     "$HOME/docker/prowlarr/docker-compose.yml"
-    "$HOME/docker/apprise/docker-compose.yml"
     "$HOME/docker/radarr/docker-compose.yml"
-    "$HOME/docker/lidarr/docker-compose.yml"
-    "$HOME/docker/diun/docker-compose.yml"
-    "$HOME/docker/ntfy/docker-compose.yml"
     "$HOME/docker/vikunja/docker-compose.yml"
     )
-    CONTAINERS_TO_STOP=(freshrss cross-seed diun ntfy radarr vikunja)
+    CONTAINERS_TO_STOP=(arcane beszel cross-seed diun freshrss ntfy portainer lidarr vikunja)
 
     mkdir -p "$BACKUP_DIR"
     rm -rf "$BACKUP_DIR"/*
