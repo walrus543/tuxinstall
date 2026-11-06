@@ -155,7 +155,7 @@ add_plasma:okular
 add_plasma:partitionmanager
 add_plasma:qt6-imageformats
 add_plasma:spectacle
-add_plasma:systemdgenie
+#add_plasma:systemdgenie
 
 ############################
 # PAQUETS SI XFCE
